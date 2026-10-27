@@ -27,6 +27,11 @@ const User = sequelize.define('User', {
   address: {
     type: DataTypes.STRING,
   },
+
+  refresh_token: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
   role: {
     type: DataTypes.ENUM('admin', 'customer'),
     defaultValue: 'customer',
@@ -35,5 +40,6 @@ const User = sequelize.define('User', {
   tableName: 'users',
   timestamps: false,
 });
+
 
 module.exports = User;

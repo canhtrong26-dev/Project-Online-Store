@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');  
-
+ 
 const verifyToken = (req, res, next) => {  
   const authHeader = req.headers['authorization'];  // CÓ SẴN — đọc header từ fe gửi về
   const token = authHeader && authHeader.split(' ')[1]; // lấy phần sau "Bearer "

@@ -2,7 +2,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');         
 const { User } = require('../models/index');
 
-// Đăng ký
+const ACCESS_TOKEN_EXPIRES = '15m';
+const REFRESH_TOKEN_EXPIRES = '7d';
+
+//// Đăng ký
 const register = async (req, res) => {      
   try {
     const { name, email, password, phone, address } = req.body;
@@ -51,28 +54,39 @@ const login = async (req, res) => {
     const accessToken  = jwt.sign(              
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: '15m' }
+      { expiresIn: ACCESS_TOKEN_EXPIRES }
     );
 
-    //rồi đến refreshToken
+    //rồi đến refreshToken 
       const refreshToken = jwt.sign(
       { id: user.id },
       process.env.JWT_REFRESH_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: REFRESH_TOKEN_EXPIRES }
     );
     
+      // Lưu refresh token vào DB
+      await User.update(
+        { refresh_token: refreshToken },
+        { where: { id: user.id } }
+      );
+
     res.json({ message: 'Đăng nhập thành công!', accessToken, refreshToken, user });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-
   const refreshAccessToken = async (req, res) => {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) {
       return res.status(401).json({ message: 'Không có refresh token!' });
+    }
+
+    // Tìm user có refresh token này
+    const user = await User.findOne({ where: { refresh_token: refreshToken } });
+    if (!user) {
+      return res.status(401).json({ message: 'Refresh token không hợp lệ!' });
     }
 
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
@@ -91,4 +105,16 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login, refreshAccessToken };
+
+     const logout = async (req, res) => {
+      try {
+        const { id } = req.user;  //lấy từ middleware
+        await User.update({ refresh_token: null }, { where: { id } });
+        res.json({ message: 'Đăng xuất thành công!' });
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    };
+
+
+module.exports = { register, login, refreshAccessToken, logout };
