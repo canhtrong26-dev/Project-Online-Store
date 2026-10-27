@@ -47,17 +47,48 @@ const login = async (req, res) => {
       return res.status(400).json({ message: 'Sai mật khẩu!' });
     }
 
-    // sau khi đáp ứng đủ cấc bước trên thì tạo token
-    const token = jwt.sign(              
+    // sau khi đáp ứng đủ cấc bước trên thì tạo accessToken
+    const accessToken  = jwt.sign(              
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '15m' }
     );
 
-    res.json({ message: 'Đăng nhập thành công!', token, user });
+    //rồi đến refreshToken
+      const refreshToken = jwt.sign(
+      { id: user.id },
+      process.env.JWT_REFRESH_SECRET,
+      { expiresIn: '7d' }
+    );
+    
+    res.json({ message: 'Đăng nhập thành công!', accessToken, refreshToken, user });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = { register, login };
+
+  const refreshAccessToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(401).json({ message: 'Không có refresh token!' });
+    }
+
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ message: 'Refresh token không hợp lệ!' });
+      }
+      const accessToken = jwt.sign(
+        { id: decoded.id },
+        process.env.JWT_SECRET,
+        { expiresIn: '15m' }
+      );
+      res.json({ accessToken });
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { register, login, refreshAccessToken };

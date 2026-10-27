@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');  
 
 const verifyToken = (req, res, next) => {  
-  const authHeader = req.headers['authorization'];  // CÓ SẴN — đọc header
+  const authHeader = req.headers['authorization'];  // CÓ SẴN — đọc header từ fe gửi về
   const token = authHeader && authHeader.split(' ')[1]; // lấy phần sau "Bearer "
 
   if (!token) {
@@ -17,6 +17,7 @@ const verifyToken = (req, res, next) => {
   });
 };
 
+//kiểm tra quyền admin
 const verifyAdmin = (req, res, next) => {
   verifyToken(req, res, () => {
     if (req.user.role !== 'admin') {
