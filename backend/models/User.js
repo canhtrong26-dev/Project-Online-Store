@@ -29,10 +29,6 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
   },
 
-  refresh_token: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
   role: {
     type: DataTypes.ENUM('admin', 'customer'),
     defaultValue: 'customer',
