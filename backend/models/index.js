@@ -3,6 +3,7 @@ const Product = require('./Product');
 const User = require('./User');
 const Order = require('./Order');
 const OrderItem = require('./OrderItem');
+const Session = require('./Session');
 
 //khai báo quan hệ khóa chính
 Category.hasMany(Product, { foreignKey: 'category_id' }); //1 category có nhiều product
@@ -17,4 +18,8 @@ OrderItem.belongsTo(Order, { foreignKey: 'order_id' });
 Product.hasMany(OrderItem, { foreignKey: 'product_id' }); 
 OrderItem.belongsTo(Product, { foreignKey: 'product_id' }); 
 
-module.exports = { Category, Product, User, Order, OrderItem };
+User.hasMany(Session, { foreignKey: 'user_id' });
+Session.belongsTo(User, { foreignKey: 'user_id' });
+
+
+module.exports = { Category, Product, User, Order, OrderItem ,Session };

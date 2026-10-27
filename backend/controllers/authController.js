@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');          
 const jwt = require('jsonwebtoken');         
-const { User } = require('../models/index');
-
+const { User, Session } = require('../models/index');
 const ACCESS_TOKEN_EXPIRES = '15m';
 const REFRESH_TOKEN_EXPIRES = '7d';
 
@@ -63,12 +62,13 @@ const login = async (req, res) => {
       process.env.JWT_REFRESH_SECRET,
       { expiresIn: REFRESH_TOKEN_EXPIRES }
     );
+
     
       // Lưu refresh token vào DB
-      await User.update(
-        { refresh_token: refreshToken },
-        { where: { id: user.id } }
-      );
+      await Session.create({
+      user_id: user.id,
+      refresh_token: refreshToken,
+    });
 
     res.json({ message: 'Đăng nhập thành công!', accessToken, refreshToken, user });
   } catch (error) {
@@ -84,10 +84,11 @@ const login = async (req, res) => {
     }
 
     // Tìm user có refresh token này
-    const user = await User.findOne({ where: { refresh_token: refreshToken } });
-    if (!user) {
+   const session = await Session.findOne({ where: { refresh_token: refreshToken } });
+    if (!session) {
       return res.status(401).json({ message: 'Refresh token không hợp lệ!' });
     }
+
 
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
       if (err) {
@@ -109,7 +110,7 @@ const login = async (req, res) => {
      const logout = async (req, res) => {
       try {
         const { id } = req.user;  //lấy từ middleware
-        await User.update({ refresh_token: null }, { where: { id } });
+        await Session.destroy({ where: { user_id: id } });
         res.json({ message: 'Đăng xuất thành công!' });
       } catch (error) {
         res.status(500).json({ message: error.message });
