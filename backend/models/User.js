@@ -1,11 +1,12 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { v4: uuidv4 } = require('uuid'); 
 
 const User = sequelize.define('User', {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(8),
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: () => uuidv4().substring(0, 8), //tự tạo random 8 kí tự in hoa, thường, số,.
   },
   name: {
     type: DataTypes.STRING,

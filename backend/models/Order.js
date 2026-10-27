@@ -8,7 +8,7 @@ const Order = sequelize.define('Order', {
     autoIncrement: true,
   },
   user_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(8),
   },
   total: {
     type: DataTypes.DECIMAL(10, 2),

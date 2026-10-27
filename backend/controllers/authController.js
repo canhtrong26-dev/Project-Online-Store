@@ -1,10 +1,11 @@
 const bcrypt = require('bcryptjs');          
 const jwt = require('jsonwebtoken');         
 const { User, Session } = require('../models/index');
+
 const ACCESS_TOKEN_EXPIRES = '15m';
 const REFRESH_TOKEN_EXPIRES = '7d';
 
-//// Đăng ký
+// Đăng ký
 const register = async (req, res) => {      
   try {
     const { name, email, password, phone, address } = req.body;

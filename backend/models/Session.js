@@ -8,7 +8,7 @@ const Session = sequelize.define('Session', {
     autoIncrement: true,
   },
   user_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(8),
     allowNull: false,
   },
   refresh_token: {
