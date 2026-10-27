@@ -1,4 +1,4 @@
-# Online Store — Backend API
+# Online Store — Backend API.
 
 ## Công nghệ
 - Node.js + Express
