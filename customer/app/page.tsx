@@ -69,7 +69,7 @@ export default function Home() {
                 selectedCategory === null || product.category_id === selectedCategory
 
           ).map((product: any) => (
-          <div key={product.id} className="border border-gray-300 rounded-lg p-4 hover:shadow-md transition-shadow transition-transform transform hover:-translate-y-1">
+          <div key={product.id} className="border border-gray-300 rounded-lg p-4 hover:shadow-md transition-shadow transition-transform transform-[900ms] hover:-translate-y-1">
             <Image
               src={product.image_url}
               alt={product.name}
