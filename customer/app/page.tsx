@@ -19,7 +19,7 @@ export default function Home() {
 
     const addToCart = (product: any) => {       
     const cart = JSON.parse(                    
-      localStorage.getItem('cart') || '[]'       // CÓ SẴN của JS
+      localStorage.getItem('cart') || '[]'    
     );
 
     const existingItem = cart.find((item: any) => item.id === product.id);
@@ -37,14 +37,12 @@ export default function Home() {
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));  
-    toast.success(<span>Đã thêm <b>{product.name}</b> vào giỏ hàng!</span>,);    
+    toast.success(<p>Đã thêm <b>{product.name}</b> vào giỏ hàng!</p>,);    
   };
 
 
   return (
     <main className="max-w-full  mx-auto px-20 py-8">
-
-     
       <div className="flex gap-3 mb-8">
         <button
           onClick={() => setSelectedCategory(null)}
@@ -65,7 +63,12 @@ export default function Home() {
      
       <h2 className="text-2xl font-bold mb-4">Sản phẩm</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {products.map((product: any) => (
+        {products
+          .filter((product: any) =>
+
+                selectedCategory === null || product.category_id === selectedCategory
+
+          ).map((product: any) => (
           <div key={product.id} className="border border-gray-300 rounded-lg p-4 hover:shadow-md transition-shadow transition-transform transform hover:-translate-y-1">
             <Image
               src={product.image_url}
