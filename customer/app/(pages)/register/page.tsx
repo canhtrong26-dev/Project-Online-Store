@@ -1,13 +1,12 @@
 'use client';
 
-import { useForm } from 'react-hook-form';        
-import { zodResolver } from '@hookform/resolvers/zod'; 
-import { z } from 'zod';                           
-import { register as registerAPI } from '@/lib/api'; 
-import { useRouter } from 'next/navigation';        
-import toast from 'react-hot-toast';               
-import Link from 'next/link';                      
-
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { register as registerAPI } from '@/lib/api';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 const schema = z.object({
   name: z.string().min(1, 'Nhập tên đi'),
@@ -17,20 +16,20 @@ const schema = z.object({
   address: z.string().min(1, 'Nhập địa chỉ đi'),
 });
 
-type RegisterForm = z.infer<typeof schema>;  
+type RegisterForm = z.infer<typeof schema>;
 
 export default function RegisterPage() {
-  const router = useRouter();  
+  const router = useRouter();
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterForm>({
-    resolver: zodResolver(schema)  
+    resolver: zodResolver(schema)
   });
 
   const onSubmit = async (data: RegisterForm) => {
     const res = await registerAPI(data);
     if (res.message === 'Đăng ký thành công!') {
       toast.success('Đăng ký thành công!');
-      router.push('/login');  //huyển sang trang login
+      router.push('/login');
     } else {
       toast.error(res.message || 'Đăng ký thất bại!');
     }
@@ -44,27 +43,27 @@ export default function RegisterPage() {
 
         <div>
           <input {...register('name')} placeholder="Họ tên" className="w-full border p-2 rounded"/>
-          {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+          {errors.name && <p className="text-red-500 pt-2 text-sm">{errors.name.message}</p>}
         </div>
 
         <div>
           <input {...register('email')} placeholder="Email" className="w-full border p-2 rounded"/>
-          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+          {errors.email && <p className="text-red-500 pt-2 text-sm">{errors.email.message}</p>}
         </div>
 
         <div>
           <input {...register('password')} type="password" placeholder="Mật khẩu" className="w-full border p-2 rounded"/>
-          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+          {errors.password && <p className="text-red-500 pt-2 text-sm">{errors.password.message}</p>}
         </div>
 
         <div>
           <input {...register('phone')} placeholder="Số điện thoại" className="w-full border p-2 rounded"/>
-          {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
+          {errors.phone && <p className="text-red-500 pt-2 text-sm">{errors.phone.message}</p>}
         </div>
 
         <div>
           <input {...register('address')} placeholder="Địa chỉ" className="w-full border p-2 rounded"/>
-          {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
+          {errors.address && <p className="text-red-500 pt-2 text-sm">{errors.address.message}</p>}
         </div>
 
         <button
