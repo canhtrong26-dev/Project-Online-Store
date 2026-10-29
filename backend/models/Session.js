@@ -15,6 +15,11 @@ const Session = sequelize.define('Session', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
+
+  expires_at: {              //ngày hết hạn của refresh token
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
 }, {
   tableName: 'sessions',
   timestamps: true,
