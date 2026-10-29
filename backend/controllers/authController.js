@@ -16,6 +16,12 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'Email đã tồn tại!' });
     }
 
+    // Thêm dòng này — kiểm tra phone đã tồn tại chưa
+    const existingPhone = await User.findOne({ where: { phone } });
+    if (existingPhone) {
+      return res.status(400).json({ message: 'Số điện thoại đã tồn tại!' });
+    }
+
     //băm password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -69,6 +75,7 @@ const login = async (req, res) => {
       await Session.create({
       user_id: user.id,
       refresh_token: refreshToken,
+      expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
     res.json({ message: 'Đăng nhập thành công!', accessToken, refreshToken, user });

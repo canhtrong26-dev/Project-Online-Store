@@ -23,7 +23,6 @@ export const login = async (data: object) => {
   return res.json();
 };
 
-
 //gọi API đăng ký
 export const register = async (data: object) => {
   const res = await fetch(`${API_URL}/auth/register`, {
@@ -33,7 +32,6 @@ export const register = async (data: object) => {
   });
   return res.json();
 };
-
 
 //gọi API tạo đơn hàng
 export const createOrder = async (data: object, token: string) => {
