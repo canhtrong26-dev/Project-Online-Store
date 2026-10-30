@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'Server đang chạy!' });
 });
 
-sequelize.sync({ alter: true }).then(() => {  
+sequelize.sync({ force: false }).then(() => {  
   console.log('Kết nối DB thành công!');
   app.listen(PORT, () => {                       
     console.log(`Server chạy tại http://localhost:${PORT}`);

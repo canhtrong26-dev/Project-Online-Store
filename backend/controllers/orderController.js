@@ -18,17 +18,45 @@ const getAll = async (req, res) => {
 // Thêm order mới
 const create = async (req, res) => {
   try {
-    const { user_id, total, items } = req.body;
-    const order = await Order.create({ user_id, total });
-    // Tạo từng order item
+    const { items } = req.body;        //lấy product + quantity từ checkout/page.tsx rồi tự tính ra total
+    const user_id = req.user.id;       //láy từ accessToken trong authControllers (token + admin(customer))
+
+    // Kiểm tra cart không rỗng
+    if (!items || items.length === 0) {
+      return res.status(400).json({ message: 'Giỏ hàng trống!' });
+    }
+
+    // Kiểm tra quantity hợp lệ
     for (const item of items) {
+      if (!item.quantity || item.quantity <= 0) {
+        return res.status(400).json({ message: 'Số lượng không hợp lệ!' });
+      }
+    }
+
+    // BE tự tính total không tin FE
+    let total = 0;
+    for (const item of items) {
+      const product = await Product.findByPk(item.product_id);
+      if (!product) {
+        return res.status(400).json({ message: "Sản phẩm không tồn tại!" });
+      }
+      total = total + product.price * item.quantity;
+    }
+
+    // Tạo order chính
+    const order = await Order.create({ user_id, total });
+
+    // Tạo order chi tiết từ order chính ở trên
+    for (const item of items) {
+      const product = await Product.findByPk(item.product_id);
       await OrderItem.create({
         order_id: order.id,
         product_id: item.product_id,
         quantity: item.quantity,
-        price: item.price,
+        price: product.price,  // giá thật từ DB
       });
     }
+
     res.status(201).json(order);
   } catch (error) {
     res.status(500).json({ message: error.message });
