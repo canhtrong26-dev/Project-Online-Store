@@ -55,8 +55,6 @@ export default function CheckoutPage() {
       items: cart.map((item) => ({
         product_id: item.id,
         quantity: item.quantity,
-        price: item.price,
-        
       })),
     };
 
@@ -65,7 +63,7 @@ export default function CheckoutPage() {
     if (res.id) {
       localStorage.removeItem('cart');  // xóa cart trong localStorage của trình duyệt
       toast.success('Đặt hàng thành công!');
-      setTimeout(() => router.push('/'), 2000);  //redirect sau 2 giây
+      setTimeout(() => router.push('/'), 3000);  //redirect sau 3 giây
     } else {
       toast.error(res.message || 'Đặt hàng thất bại!');
     }
