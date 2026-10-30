@@ -19,7 +19,7 @@ const getAll = async (req, res) => {
 const create = async (req, res) => {
   try {
     const { items } = req.body;        //lấy product + quantity từ checkout/page.tsx rồi tự tính ra total
-    const user_id = req.user.id;       //láy từ accessToken trong authControllers (token + admin(customer))
+    const user_id = req.user.id;  // lấy id của user từ accessToken (đã được verifyToken giải mã)
 
     // Kiểm tra cart không rỗng
     if (!items || items.length === 0) {

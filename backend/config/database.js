@@ -8,7 +8,7 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: 'mariadb',  // ← đổi từ mysql sang mariadb
+    dialect: 'mariadb',  //đổi từ mysql sang mariadb
     logging: false,
     dialectOptions: {
       connectTimeout: 60000
