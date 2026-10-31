@@ -15,6 +15,25 @@ const getAll = async (req, res) => {
   }
 };
 
+
+
+    //Lấy đơn hàng của user đang login
+const getMyOrders = async (req, res) => {
+  try {
+    const user_id = req.user.id;  // lấy từ token
+    const orders = await Order.findAll({
+      where: { user_id },  //chỉ lấy đơn của user này
+      include: [
+        { model: OrderItem, include: [Product] }  // kèm chi tiết sản phẩm
+      ],
+      order: [['createdAt', 'DESC']]  // mới nhất lên trên
+    });
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Thêm order mới
 const create = async (req, res) => {
   try {
@@ -87,4 +106,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAll, create, update, remove };
+module.exports = { getAll, create, update, remove, getMyOrders };

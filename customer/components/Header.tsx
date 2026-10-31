@@ -18,6 +18,9 @@ export default function Header() {
           <Link href="/" className="text-gray-600 hover:text-green-600">
             Trang chủ
           </Link>
+          <Link href="/order" className="text-gray-600 hover:text-green-600">
+            Đơn hàng
+          </Link>
           <Link href="/login" className="text-gray-600 hover:text-green-600">
             Đăng nhập
           </Link>
@@ -25,7 +28,6 @@ export default function Header() {
             Đăng ký
           </Link>
         </nav>
-
         
         <Link href="/cart" className="text-gray-600 flex items-center justify-center hover:text-green-600">
         <Image 

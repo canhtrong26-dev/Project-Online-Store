@@ -45,3 +45,13 @@ export const createOrder = async (data: object, token: string) => {
   });
   return res.json();
 };
+
+// Lấy đơn hàng của user đang login
+export const getMyOrders = async (token: string) => {
+  const res = await fetch(`${API_URL}/orders/my-orders`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return res.json();
+};
