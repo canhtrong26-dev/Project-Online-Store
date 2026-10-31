@@ -1,6 +1,3 @@
-const { Sequelize } = require('sequelize');
-require('dotenv').config();
-
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -8,12 +5,13 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: 'mariadb',  //đổi từ mysql sang mariadb
+    dialect: 'mariadb',
     logging: false,
     dialectOptions: {
-      connectTimeout: 60000
+      connectTimeout: 60000,
+      ssl: {
+        rejectUnauthorized: true
+      }
     }
   }
-);
-
-module.exports = sequelize;
+)
