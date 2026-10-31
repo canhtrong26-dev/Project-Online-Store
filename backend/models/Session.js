@@ -16,7 +16,7 @@ const Session = sequelize.define('Session', {
     allowNull: false,
   },
 
-  expires_at: {              //ngày hết hạn của refresh token
+  expires_at: {              //cột ngày hết hạn của refresh token
     type: DataTypes.DATE,
     allowNull: false,
   },

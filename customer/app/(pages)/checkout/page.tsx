@@ -20,6 +20,7 @@ type CheckoutForm = z.infer<typeof schema>;
 export default function CheckoutPage() {
   const router = useRouter();
   const [cart, setCart] = useState<any[]>([]);
+  const [isOrdered, setIsOrdered] = useState(false);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<CheckoutForm>({
     resolver: zodResolver(schema)
@@ -61,6 +62,7 @@ export default function CheckoutPage() {
     const res = await createOrder(orderData, token);
 
     if (res.id) {
+      setIsOrdered(true);
       localStorage.removeItem('cart');  // xóa cart trong localStorage của trình duyệt
       toast.success('Đặt hàng thành công!');
       setTimeout(() => router.push('/'), 3000);  //redirect sau 3 giây
@@ -75,8 +77,6 @@ export default function CheckoutPage() {
 
      
       <div className="border rounded-lg p-4 mb-6">
-
-        
 
 
         <h2 className="font-semibold mb-3">Đơn hàng của bạn:</h2>
@@ -113,7 +113,7 @@ export default function CheckoutPage() {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isOrdered}
           className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50"
         >
           {isSubmitting ? 'Đang xử lý...' : 'Đặt hàng'}
