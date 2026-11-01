@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');         
 const { User, Session } = require('../models/index');
 
-const ACCESS_TOKEN_EXPIRES = '15m';
+const ACCESS_TOKEN_EXPIRES = '6d';
 const REFRESH_TOKEN_EXPIRES = '7d';
 
 // Đăng ký

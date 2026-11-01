@@ -5,7 +5,9 @@ const getToken = () => localStorage.getItem('adminToken')
 
 // Lấy tất cả sản phẩm
 export const getProducts = async () => {
-  const res = await fetch(`${API_URL}/products`)
+  const res = await fetch(`${API_URL}/products`, {
+    headers: { Authorization: `Bearer ${getToken()}` }
+  })
   return res.json()
 }
   // Lấy danh mục
@@ -67,6 +69,14 @@ export const updateOrder = async (id, status) => {
       'Authorization': `Bearer ${getToken()}`
     },
     body: JSON.stringify({ status })
+  })
+  return res.json()
+}
+
+// Lấy tất cả khách hàng
+export const getUsers = async () => {
+  const res = await fetch(`${API_URL}/users`, {
+    headers: { 'Authorization': `Bearer ${getToken()}` }
   })
   return res.json()
 }
