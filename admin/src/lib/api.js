@@ -8,9 +8,6 @@ export const getProducts = async () => {
   const res = await fetch(`${API_URL}/products`)
   return res.json()
 }
-
-
-
   // Lấy danh mục
 export const getCategories = async () => {
   const res = await fetch(`${API_URL}/categories`)
@@ -48,6 +45,28 @@ export const deleteProduct = async (id) => {
   const res = await fetch(`${API_URL}/products/${id}`, {
     method: 'DELETE',
     headers: { 'Authorization': `Bearer ${getToken()}` }
+  })
+  return res.json()
+}
+
+
+// Lấy tất cả đơn hàng
+export const getOrders = async () => {
+  const res = await fetch(`${API_URL}/orders`, {
+    headers: { 'Authorization': `Bearer ${getToken()}` }
+  })
+  return res.json()
+}
+
+// Cập nhật trạng thái đơn hàng
+export const updateOrder = async (id, status) => {
+  const res = await fetch(`${API_URL}/orders/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${getToken()}`
+    },
+    body: JSON.stringify({ status })
   })
   return res.json()
 }
