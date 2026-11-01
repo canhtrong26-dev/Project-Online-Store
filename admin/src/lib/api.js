@@ -5,7 +5,9 @@ const getToken = () => localStorage.getItem('adminToken')
 
 // Lấy tất cả sản phẩm
 export const getProducts = async () => {
-  const res = await fetch(`${API_URL}/products`)
+  const res = await fetch(`${API_URL}/products`, {
+    headers: { Authorization: `Bearer ${getToken()}` }
+  })
   return res.json()
 }
   // Lấy danh mục
