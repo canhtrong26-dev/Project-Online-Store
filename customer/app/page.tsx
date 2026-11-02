@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getProducts, getCategories } from '@/lib/api'; 
 import Image from 'next/image';  
 import toast from 'react-hot-toast'; 
+import Link from 'next/link'
 
 export default function Home() {
   const [products, setProducts] = useState([]);       
@@ -74,14 +75,16 @@ export default function Home() {
 
           ).map((product: any) => (
           <div key={product.id} className="border border-gray-300 rounded-lg p-4 hover:shadow-md transition-shadow transition-transform transform-[900ms] hover:-translate-y-1">
-            <Image
-              src={product.image_url}
-              alt={product.name}
-              width={300}
-              height={160}
-              className="w-full h-40 object-cover rounded mb-2"
-            />
-            <h3 className="font-semibold text-lg">{product.name}</h3>
+            <Link href={`/product/${product.id}`}>
+              <Image
+                src={product.image_url}
+                alt={product.name}
+                width={300}
+                height={160}
+                className="w-full h-40 object-cover rounded mb-2"
+              />
+              <h3 className="font-semibold text-lg hover:text-green-600">{product.name}</h3>
+            </Link>
             <p className="text-green-600 text-sm">
               {product.price.toLocaleString()}đ
             </p>

@@ -46,4 +46,14 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAll, create, update, remove };
+// Lấy sản phẩm theo id
+const getOne = async (req, res) => {
+  const product = await Product.findByPk(req.params.id, {
+    include: [{ model: Category }]
+  })
+  if (!product) return res.status(404).json({ message: 'Không tìm thấy!' })
+  res.json(product)
+}
+
+module.exports = { getAll, getOne, create, update, remove }
+
