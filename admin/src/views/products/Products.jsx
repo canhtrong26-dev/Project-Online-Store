@@ -9,6 +9,7 @@ const Products = () => {
   const [form, setForm] = useState({
     name: '', price: '', image_url: '', description: '', category_id: ''
   })
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     fetchProducts()
@@ -70,6 +71,13 @@ const Products = () => {
         </button>
       </div>
 
+      <input
+        className="form-control mb-3"
+        placeholder="Tìm kiếm sản phẩm..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+        
       {showForm && (
         <form onSubmit={handleSubmit} className="border p-3 mb-4 rounded">
           <h5>{editProduct ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}</h5>
@@ -109,7 +117,10 @@ const Products = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map((p) => (
+          
+          {products
+          .filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
+          .map((p) => (
             <tr key={p.id}>
               <td>{p.id}</td>
               <td>{p.name}</td>
