@@ -72,3 +72,11 @@ export const updateOrder = async (id, status) => {
   })
   return res.json()
 }
+
+// Lấy tất cả khách hàng
+export const getUsers = async () => {
+  const res = await fetch(`${API_URL}/users`, {
+    headers: { 'Authorization': `Bearer ${getToken()}` }
+  })
+  return res.json()
+}

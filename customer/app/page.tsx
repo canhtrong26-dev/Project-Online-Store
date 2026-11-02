@@ -10,10 +10,14 @@ export default function Home() {
   const [categories, setCategories] = useState([]);   
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
-  useEffect(() => {                                 
-    getProducts().then(data => setProducts(data));
-    getCategories().then(data => setCategories(data));
-  }, []);
+  useEffect(() => {
+  getProducts().then(data => {
+    if (Array.isArray(data)) setProducts(data)
+  });
+  getCategories().then(data => {
+    if (Array.isArray(data)) setCategories(data)
+  });
+}, []);
 
 
 
