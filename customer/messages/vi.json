@@ -1,0 +1,65 @@
+{
+  "header": {
+    "home": "Trang chủ",
+    "order": "Đơn hàng",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "logout": "Đăng xuất",
+    "cart": "Giỏ hàng",
+    "hello": "Xin chào"
+  },
+  "home": {
+    "all": "Tất cả",
+    "products": "Sản phẩm",
+    "addToCart": "Thêm vào giỏ hàng"
+  },
+  "register": {
+    "title": "Đăng ký",
+    "name": "Họ tên",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "phone": "Số điện thoại",
+    "address": "Địa chỉ",
+    "submit": "Đăng ký",
+    "hasAccount": "Đã có tài khoản?",
+    "login": "Đăng nhập"
+  },
+"login": {
+  "title": "Đăng nhập",
+  "email": "Email",
+  "password": "Mật khẩu",
+  "submit": "Đăng nhập",
+  "noAccount": "Chưa có tài khoản?",
+  "register": "Đăng ký"
+},
+"order": {
+  "title": "Đơn hàng của tôi",
+  "empty": "Bạn chưa có đơn hàng nào.",
+  "order": "Đơn",
+  "total": "Tổng",
+  "pending": "Đang xử lý",
+  "completed": "Hoàn thành"
+},
+"cart": {
+  "title": "Giỏ hàng",
+  "empty": "Giỏ hàng trống!",
+  "continueShopping": "Tiếp tục mua sắm",
+  "total": "Tổng",
+  "checkout": "Đặt hàng"
+},
+"checkout": {
+  "title": "Thanh toán",
+  "yourOrder": "Đơn hàng của bạn",
+  "total": "Tổng",
+  "shippingInfo": "Thông tin giao hàng",
+  "name": "Họ tên",
+  "phone": "Số điện thoại",
+  "address": "Địa chỉ",
+  "submit": "Đặt hàng"
+},
+"product": {
+  "loading": "Đang tải...",
+  "back": "Quay lại",
+  "addToCart": "Thêm vào giỏ hàng"
+}
+}

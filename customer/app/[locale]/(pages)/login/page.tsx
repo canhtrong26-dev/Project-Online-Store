@@ -7,6 +7,7 @@ import { login as loginAPI } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { useTranslations, useLocale } from 'next-intl';
 
 const schema = z.object({
   email: z.string().email('Email không hợp lệ'),
@@ -17,6 +18,8 @@ type LoginForm = z.infer<typeof schema>;
 
 export default function LoginPage() {
   const router = useRouter();
+  const t = useTranslations('login');
+  const locale = useLocale();
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(schema)
@@ -29,7 +32,7 @@ export default function LoginPage() {
       localStorage.setItem('refreshToken', res.refreshToken);
       localStorage.setItem('user', JSON.stringify(res.user));
       toast.success('Đăng nhập thành công!');
-      router.push('/');
+      router.push(`/${locale}`);
     } else {
       toast.error(res.message || 'Đăng nhập thất bại!');
     }
@@ -37,27 +40,26 @@ export default function LoginPage() {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border dark:border-gray-700 dark:bg-gray-800 rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-6 text-center dark:text-white">Đăng nhập</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center dark:text-white">{t('title')}</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div>
-          <input {...register('email')} aria-label="Email" placeholder="Email" className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
+          <input {...register('email')} placeholder={t('email')} className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
           {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
         </div>
         <div>
-          <input {...register('password')} aria-label="Mật khẩu" type="password" placeholder="Mật khẩu" className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
+          <input {...register('password')} type="password" placeholder={t('password')} className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
           {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
         </div>
         <button
-          aria-label="Đăng nhập vào tài khoản"
           type="submit"
           disabled={isSubmitting}
           className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50"
         >
-          {isSubmitting ? 'Đang xử lý...' : 'Đăng nhập'}
+          {isSubmitting ? '...' : t('submit')}
         </button>
       </form>
       <p className="text-center mt-4 text-sm dark:text-gray-300">
-        Chưa có tài khoản? <Link href="/register" className="text-green-600 hover:underline">Đăng ký</Link>
+        {t('noAccount')} <Link href={`/${locale}/register`} className="text-green-600 hover:underline">{t('register')}</Link>
       </p>
     </div>
   );

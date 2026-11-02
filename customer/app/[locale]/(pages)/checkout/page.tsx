@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { createOrder } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { useTranslations, useLocale } from 'next-intl';
 
 const schema = z.object({
   name: z.string().min(1, 'Nhập tên đi'),
@@ -18,6 +19,8 @@ type CheckoutForm = z.infer<typeof schema>;
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const t = useTranslations('checkout');
+  const locale = useLocale();
   const [cart, setCart] = useState<any[]>([]);
   const [isOrdered, setIsOrdered] = useState(false);
 
@@ -29,13 +32,13 @@ export default function CheckoutPage() {
     const token = localStorage.getItem('accessToken');
     if (!token) {
       toast.error('Vui lòng đăng nhập trước!');
-      router.push('/login');
+      router.push(`/${locale}/login`);
       return;
     }
     const cartData = JSON.parse(localStorage.getItem('cart') || '[]');
     if (cartData.length === 0) {
       toast.error('Giỏ hàng trống!');
-      router.push('/');
+      router.push(`/${locale}`);
       return;
     }
     setCart(cartData);
@@ -54,7 +57,7 @@ export default function CheckoutPage() {
       setIsOrdered(true);
       localStorage.removeItem('cart');
       toast.success('Đặt hàng thành công!');
-      setTimeout(() => router.push('/'), 3000);
+      setTimeout(() => router.push(`/${locale}`), 3000);
     } else {
       toast.error(res.message || 'Đặt hàng thất bại!');
     }
@@ -62,10 +65,10 @@ export default function CheckoutPage() {
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-8 min-h-screen dark:bg-gray-900">
-      <h1 className="text-2xl font-bold mb-6 dark:text-white">Thanh toán</h1>
+      <h1 className="text-2xl font-bold mb-6 dark:text-white">{t('title')}</h1>
 
       <div className="border dark:border-gray-700 dark:bg-gray-800 rounded-lg p-4 mb-6">
-        <h2 className="font-semibold mb-3 dark:text-white">Đơn hàng của bạn:</h2>
+        <h2 className="font-semibold mb-3 dark:text-white">{t('yourOrder')}:</h2>
         {cart.map((item) => (
           <div key={item.id} className="flex justify-between py-2 border-b dark:border-gray-700">
             <span className="dark:text-gray-300">{item.name} x{item.quantity}</span>
@@ -73,32 +76,28 @@ export default function CheckoutPage() {
           </div>
         ))}
         <div className="flex justify-between font-bold mt-3 dark:text-white">
-          <span>Tổng:</span>
+          <span>{t('total')}:</span>
           <span>{total.toLocaleString()}đ</span>
         </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <h2 className="font-semibold dark:text-white">Thông tin giao hàng:</h2>
+        <h2 className="font-semibold dark:text-white">{t('shippingInfo')}:</h2>
         <div>
-          <input {...register('name')} aria-label="Họ tên" placeholder="Họ tên" className="w-full border dark:border-gray-600 dark:bg-gray-800 dark:text-white p-2 rounded"/>
+          <input {...register('name')} placeholder={t('name')} className="w-full border dark:border-gray-600 dark:bg-gray-800 dark:text-white p-2 rounded"/>
           {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
         </div>
         <div>
-          <input {...register('phone')} aria-label="Số điện thoại" placeholder="Số điện thoại" className="w-full border dark:border-gray-600 dark:bg-gray-800 dark:text-white p-2 rounded"/>
+          <input {...register('phone')} placeholder={t('phone')} className="w-full border dark:border-gray-600 dark:bg-gray-800 dark:text-white p-2 rounded"/>
           {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
         </div>
         <div>
-          <input {...register('address')} aria-label="Địa chỉ" placeholder="Địa chỉ" className="w-full border dark:border-gray-600 dark:bg-gray-800 dark:text-white p-2 rounded"/>
+          <input {...register('address')} placeholder={t('address')} className="w-full border dark:border-gray-600 dark:bg-gray-800 dark:text-white p-2 rounded"/>
           {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
         </div>
-        <button
-          aria-label="Xác nhận đặt hàng"
-          type="submit"
-          disabled={isSubmitting || isOrdered}
-          className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50"
-        >
-          {isSubmitting ? 'Đang xử lý...' : 'Đặt hàng'}
+        <button type="submit" disabled={isSubmitting || isOrdered}
+          className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50">
+          {isSubmitting ? '...' : t('submit')}
         </button>
       </form>
     </main>

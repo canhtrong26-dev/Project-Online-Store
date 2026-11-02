@@ -1,0 +1,65 @@
+{
+  "header": {
+    "home": "Home",
+    "order": "Orders",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "cart": "Cart",
+    "hello": "Hello"
+  },
+  "home": {
+    "all": "All",
+    "products": "Products",
+    "addToCart": "Add to cart"
+  },
+  "register": {
+    "title": "Register",
+    "name": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "phone": "Phone number",
+    "address": "Address",
+    "submit": "Register",
+    "hasAccount": "Already have an account?",
+    "login": "Login"
+  },
+"login": {
+  "title": "Login",
+  "email": "Email",
+  "password": "Password",
+  "submit": "Login",
+  "noAccount": "Don't have an account?",
+  "register": "Register"
+},
+"order": {
+  "title": "My Orders",
+  "empty": "You have no orders yet.",
+  "order": "Order",
+  "total": "Total",
+  "pending": "Pending",
+  "completed": "Completed"
+},
+"cart": {
+  "title": "Cart",
+  "empty": "Your cart is empty!",
+  "continueShopping": "Continue shopping",
+  "total": "Total",
+  "checkout": "Checkout"
+},
+"checkout": {
+  "title": "Checkout",
+  "yourOrder": "Your order",
+  "total": "Total",
+  "shippingInfo": "Shipping information",
+  "name": "Full name",
+  "phone": "Phone number",
+  "address": "Address",
+  "submit": "Place order"
+},
+"product": {
+  "loading": "Loading...",
+  "back": "Go back",
+  "addToCart": "Add to cart"
+}
+}

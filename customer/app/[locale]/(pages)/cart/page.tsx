@@ -4,8 +4,11 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function CartPage() {
+  const t = useTranslations('cart');
+  const locale = useLocale();
   const [cart, setCart] = useState<any[]>([]);
 
   useEffect(() => {
@@ -23,9 +26,7 @@ export default function CartPage() {
 
   const decrease = (id: number) => {
     const newCart = cart.map((item) =>
-      item.id === id && item.quantity > 1
-        ? { ...item, quantity: item.quantity - 1 }
-        : item
+      item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
     );
     setCart(newCart);
     localStorage.setItem('cart', JSON.stringify(newCart));
@@ -42,13 +43,13 @@ export default function CartPage() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8 min-h-screen dark:bg-gray-900">
-      <h1 className="text-2xl font-bold mb-6 dark:text-white">Giỏ hàng</h1>
+      <h1 className="text-2xl font-bold mb-6 dark:text-white">{t('title')}</h1>
 
       {cart.length === 0 ? (
         <div className="text-center py-10">
-          <p className="text-gray-500 dark:text-gray-400 mb-4">Giỏ hàng trống!</p>
-          <Link href="/" className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600">
-            Tiếp tục mua sắm
+          <p className="text-gray-500 dark:text-gray-400 mb-4">{t('empty')}</p>
+          <Link href={`/${locale}`} className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600">
+            {t('continueShopping')}
           </Link>
         </div>
       ) : (
@@ -61,18 +62,18 @@ export default function CartPage() {
                 <p className="text-green-600">{item.price.toLocaleString()}đ</p>
               </div>
               <div className="flex items-center gap-2">
-                <button aria-label={`Giảm số lượng ${item.name}`} onClick={() => decrease(item.id)} className="w-8 h-8 border dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">-</button>
+                <button onClick={() => decrease(item.id)} className="w-8 h-8 border dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">-</button>
                 <span className="dark:text-white">{item.quantity}</span>
-                <button aria-label={`Tăng số lượng ${item.name}`} onClick={() => increase(item.id)} className="w-8 h-8 border dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">+</button>
+                <button onClick={() => increase(item.id)} className="w-8 h-8 border dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">+</button>
               </div>
               <p className="font-bold w-24 text-right dark:text-white">{(item.price * item.quantity).toLocaleString()}đ</p>
-              <button aria-label={`Xóa sản phẩm ${item.name} khỏi giỏ hàng`} onClick={() => remove(item.id)} className="text-red-500 hover:text-red-700">✕</button>
+              <button onClick={() => remove(item.id)} className="text-red-500 hover:text-red-700">✕</button>
             </div>
           ))}
           <div className="mt-6 flex justify-between items-center">
-            <p className="text-xl font-bold dark:text-white">Tổng: {total.toLocaleString()}đ</p>
-            <Link href="/checkout" className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600">
-              Đặt hàng
+            <p className="text-xl font-bold dark:text-white">{t('total')}: {total.toLocaleString()}đ</p>
+            <Link href={`/${locale}/checkout`} className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600">
+              {t('checkout')}
             </Link>
           </div>
         </>
