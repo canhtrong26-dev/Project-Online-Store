@@ -1,36 +1,152 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Online Store — Customer
 
-## Getting Started
+Trang mua sắm dành cho khách hàng, xây dựng bằng Next.js 16 App Router.
 
-First, run the development server:
+---
+
+## Mục lục
+
+1. [Tính năng](#tính-năng)
+2. [Công nghệ](#công-nghệ)
+3. [Cài đặt](#cài-đặt)
+4. [Các trang](#các-trang)
+5. [Cấu trúc thư mục](#cấu-trúc-thư-mục)
+6. [Đa ngôn ngữ (i18n)](#đa-ngôn-ngữ-i18n)
+7. [Lỗi thường gặp](#lỗi-thường-gặp)
+
+---
+
+## Tính năng
+
+- Đăng ký, đăng nhập, đăng xuất
+- Xem sản phẩm, lọc theo danh mục
+- Xem chi tiết sản phẩm
+- Giỏ hàng lưu trong localStorage
+- Thanh toán và tạo đơn hàng
+- Xem lịch sử đơn hàng
+- Chuyển đổi ngôn ngữ Tiếng Việt / English
+- Chế độ sáng / tối (Dark mode)
+- Kiểm tra dữ liệu form
+
+---
+
+## Công nghệ
+
+| Thư viện              | Mục đích                     |
+|-----------------------|------------------------------|
+| Next.js 16            | Framework chính (App Router) |
+| TypeScript            | Kiểu dữ liệu                 |
+| Tailwind CSS          | Giao diện                    |
+| next-intl             | Đa ngôn ngữ                  |
+| next-themes           | Dark mode                    |
+| react-hook-form + zod | Kiểm tra dữ liệu form        |
+| react-hot-toast       | Hiện thông báo               |
+| react-icons           | Icon                         |
+
+---
+
+## Cài đặt
+
+> Cần chạy Backend trước (xem [Backend README](../backend/README.md)).
+
+**1. Cài thư viện**
+
+```bash
+npm install
+```
+
+**2. Chạy dự án**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở trình duyệt tại `http://localhost:3000` (tự chuyển sang `/vi`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Các trang
 
-## Learn More
+| Đường dẫn               | Trang               | Cần đăng nhập |
+|-------------------------|---------------------|---------------|
+| /[locale]               | Trang chủ           | Không         |
+| /[locale]/product/[id]  | Chi tiết sản phẩm   | Không         |
+| /[locale]/register      | Đăng ký             | Không         |
+| /[locale]/login         | Đăng nhập           | Không         |
+| /[locale]/cart          | Giỏ hàng            | Không         |
+| /[locale]/checkout      | Thanh toán          | Có            |
+| /[locale]/order         | Đơn hàng của tôi    | Có            |
 
-To learn more about Next.js, take a look at the following resources:
+`[locale]` là `vi` hoặc `en`. Ví dụ: `/vi/cart`, `/en/login`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Cấu trúc thư mục
 
-## Deploy on Vercel
+```
+customer/
+├── app/
+│   └── [locale]/
+│       ├── layout.tsx          # Layout chung, bọc Provider
+│       ├── page.tsx            # Trang chủ
+│       └── (pages)/
+│           ├── register/
+│           ├── login/
+│           ├── cart/
+│           ├── checkout/
+│           ├── order/
+│           └── product/[id]/
+├── components/
+│   └── Header.tsx              # Thanh menu, nút đổi ngôn ngữ, dark mode
+├── lib/
+│   └── api.ts                  # Các hàm gọi API backend
+├── messages/
+│   ├── vi.json                 # Bản dịch tiếng Việt
+│   └── en.json                 # Bản dịch tiếng Anh
+├── i18n.ts                     # Cấu hình next-intl
+├── middleware.ts               # Điều hướng theo ngôn ngữ
+└── next.config.ts
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Đa ngôn ngữ (i18n)
+
+### Cách hoạt động
+
+```
+1. Người dùng vào /en/login
+2. middleware.ts đọc "en" từ URL
+3. i18n.ts nạp file messages/en.json
+4. Trong component, gọi t('title') -> hiện "Login"
+```
+
+### Thêm một câu dịch mới
+
+**Bước 1**: thêm key vào cả 2 file
+
+```json
+// messages/vi.json
+{ "cart": { "title": "Giỏ hàng" } }
+
+// messages/en.json
+{ "cart": { "title": "Cart" } }
+```
+
+**Bước 2**: dùng trong component
+
+```tsx
+const t = useTranslations('cart');
+return <h1>{t('title')}</h1>;
+```
+
+---
+
+## Lỗi thường gặp
+
+| Lỗi                                  | Nguyên nhân                | Cách sửa                              |
+|--------------------------------------|----------------------------|---------------------------------------|
+| `Failed to fetch`                    | Backend chưa chạy          | Chạy `npm run dev` trong `backend/`   |
+| `ECONNREFUSED 3306` (ở backend)      | MySQL chưa bật             | Mở XAMPP, Start MySQL                 |
+| `Couldn't find next-intl config`     | Thiếu plugin               | Kiểm tra `createNextIntlPlugin` trong `next.config.ts` |
+| `Unable to make a module from invalid JSON` | File JSON sai cú pháp | Kiểm tra dấu phẩy, ngoặc trong `messages/*.json` |
