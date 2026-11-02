@@ -42,31 +42,32 @@ export default function RegisterPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
         <div>
-          <input {...register('name')} placeholder="Họ tên" className="w-full border p-2 rounded"/>
+          <input {...register('name')} aria-label="Họ tên" placeholder="Họ tên" className="w-full border p-2 rounded"/>
           {errors.name && <p className="text-red-500 pt-2 text-sm">{errors.name.message}</p>}
         </div>
 
         <div>
-          <input {...register('email')} placeholder="Email" className="w-full border p-2 rounded"/>
+          <input {...register('email')} aria-label="Email" placeholder="Email" className="w-full border p-2 rounded"/>
           {errors.email && <p className="text-red-500 pt-2 text-sm">{errors.email.message}</p>}
         </div>
 
         <div>
-          <input {...register('password')} type="password" placeholder="Mật khẩu" className="w-full border p-2 rounded"/>
+          <input {...register('password')} aria-label="Mật khẩu" type="password" placeholder="Mật khẩu" className="w-full border p-2 rounded"/>
           {errors.password && <p className="text-red-500 pt-2 text-sm">{errors.password.message}</p>}
         </div>
 
         <div>
-          <input {...register('phone')} placeholder="Số điện thoại" className="w-full border p-2 rounded"/>
+          <input {...register('phone')} aria-label="Số điện thoại" placeholder="Số điện thoại" className="w-full border p-2 rounded"/>
           {errors.phone && <p className="text-red-500 pt-2 text-sm">{errors.phone.message}</p>}
         </div>
 
         <div>
-          <input {...register('address')} placeholder="Địa chỉ" className="w-full border p-2 rounded"/>
+          <input {...register('address')} aria-label="Địa chỉ" placeholder="Địa chỉ" className="w-full border p-2 rounded"/>
           {errors.address && <p className="text-red-500 pt-2 text-sm">{errors.address.message}</p>}
         </div>
 
         <button
+          aria-label="Đăng ký tài khoản mới"
           type="submit"
           disabled={isSubmitting}
           className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50"

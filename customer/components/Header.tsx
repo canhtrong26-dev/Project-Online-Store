@@ -49,7 +49,7 @@ export default function Header() {
           {user ? (
             <>
               <span className="text-green-600 font-medium">Xin chào, {user.name}!</span>
-              <button onClick={handleLogout} className="text-red-500 hover:text-red-700">
+              <button aria-label="Đăng xuất khỏi tài khoản" onClick={handleLogout} className="text-red-500 hover:text-red-700">
                 Đăng xuất
               </button>
             </>

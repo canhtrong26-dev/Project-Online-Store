@@ -74,9 +74,9 @@ export default function CartPage() {
 
              
               <div className="flex items-center gap-2">
-                <button onClick={() => decrease(item.id)} className="w-8 h-8 border rounded hover:bg-gray-100">-</button>
+                <button aria-label={`Giảm số lượng ${item.name}`} onClick={() => decrease(item.id)} className="w-8 h-8 border rounded hover:bg-gray-100">-</button>
                 <span>{item.quantity}</span>
-                <button onClick={() => increase(item.id)} className="w-8 h-8 border rounded hover:bg-gray-100">+</button>
+                <button aria-label={`Tăng số lượng ${item.name}`} onClick={() => increase(item.id)} className="w-8 h-8 border rounded hover:bg-gray-100">+</button>
               </div>
 
              
@@ -85,7 +85,7 @@ export default function CartPage() {
               </p>
 
             
-              <button onClick={() => remove(item.id)} className="text-red-500 hover:text-red-700">✕</button>
+              <button aria-label={`Xóa sản phẩm ${item.name} khỏi giỏ hàng`} onClick={() => remove(item.id)} className="text-red-500 hover:text-red-700">✕</button>
             </div>
           ))}
 

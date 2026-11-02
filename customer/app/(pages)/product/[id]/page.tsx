@@ -32,14 +32,14 @@ function ProductDetailContent() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
-      <button onClick={() => router.back()} className="mb-4 text-green-600 hover:underline">← Quay lại</button>
+      <button aria-label="Quay lại trang trước" onClick={() => router.back()} className="mb-4 text-green-600 hover:underline">← Quay lại</button>
       <div className="flex pt-20 gap-8">
         <Image src={product.image_url} alt={product.name} width={400} height={400} className=" object-cover w-1/2" />
         <div className="flex-1 pt-15">
           <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
           <p className="text-green-600 text-xl mb-4">{Number(product.price).toLocaleString()}đ</p>
           <p className="text-gray-600 mb-6">{product.description}</p>
-          <button onClick={addToCart} className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600">
+          <button aria-label={`Thêm sản phẩm ${product.name} vào giỏ hàng`} onClick={addToCart} className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600">
             Thêm vào giỏ hàng
           </button>
         </div>

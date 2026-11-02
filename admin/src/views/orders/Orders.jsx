@@ -46,7 +46,7 @@ const Orders = () => {
               </td>
               <td>
                 {o.status === 'pending' && (
-                  <button className="btn btn-success btn-sm" onClick={() => handleComplete(o.id)}>
+                  <button aria-label={`Hoàn thành đơn hàng #${o.id}`} className="btn btn-success btn-sm" onClick={() => handleComplete(o.id)}>
                     Hoàn thành
                   </button>
                 )}

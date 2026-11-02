@@ -97,21 +97,22 @@ export default function CheckoutPage() {
         <h2 className="font-semibold">Thông tin giao hàng:</h2>
 
         <div>
-          <input {...register('name')} placeholder="Họ tên" className="w-full border p-2 rounded"/>
+          <input {...register('name')} aria-label="Họ tên" placeholder="Họ tên" className="w-full border p-2 rounded"/>
           {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
         </div>
 
         <div>
-          <input {...register('phone')} placeholder="Số điện thoại" className="w-full border p-2 rounded"/>
+          <input {...register('phone')} aria-label="Số điện thoại" placeholder="Số điện thoại" className="w-full border p-2 rounded"/>
           {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
         </div>
 
         <div>
-          <input {...register('address')} placeholder="Địa chỉ" className="w-full border p-2 rounded"/>
+          <input {...register('address')} aria-label="Địa chỉ" placeholder="Địa chỉ" className="w-full border p-2 rounded"/>
           {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
         </div>
 
         <button
+          aria-label="Xác nhận đặt hàng"
           type="submit"
           disabled={isSubmitting || isOrdered}
           className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50"

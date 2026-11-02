@@ -66,12 +66,13 @@ const Products = () => {
     <div>
       <div className="d-flex justify-content-between mb-3">
         <h2>Quản lý Sản phẩm</h2>
-        <button className="btn btn-primary" onClick={() => { setShowForm(true); setEditProduct(null); setForm({ name: '', price: '', image_url: '', description: '', category_id: '' }) }}>
+        <button aria-label="Thêm sản phẩm mới" className="btn btn-primary" onClick={() => { setShowForm(true); setEditProduct(null); setForm({ name: '', price: '', image_url: '', description: '', category_id: '' }) }}>
           + Thêm sản phẩm
         </button>
       </div>
 
       <input
+        aria-label="Tìm kiếm sản phẩm"
         className="form-control mb-3"
         placeholder="Tìm kiếm sản phẩm..."
         value={search}
@@ -82,27 +83,27 @@ const Products = () => {
         <form onSubmit={handleSubmit} className="border p-3 mb-4 rounded">
           <h5>{editProduct ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}</h5>
           <div className="mb-2">
-            <input className="form-control" placeholder="Tên sản phẩm" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+            <input aria-label="Tên sản phẩm" className="form-control" placeholder="Tên sản phẩm" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
           </div>
           <div className="mb-2">
-            <input className="form-control" placeholder="Giá" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
+            <input aria-label="Giá sản phẩm" className="form-control" placeholder="Giá" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
           </div>
           <div className="mb-2">
-            <input className="form-control" placeholder="URL ảnh" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
+            <input aria-label="URL ảnh sản phẩm" className="form-control" placeholder="URL ảnh" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
           </div>
           <div className="mb-2">
-            <input className="form-control" placeholder="Mô tả" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            <input aria-label="Mô tả sản phẩm" className="form-control" placeholder="Mô tả" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </div>
           <div className="mb-2">
-            <select className="form-control" value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} required>
+            <select aria-label="Chọn danh mục sản phẩm" className="form-control" value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} required>
               <option value="">Chọn danh mục</option>
                 {categories.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>
           </div>
-          <button type="submit" className="btn btn-success me-2">{editProduct ? 'Cập nhật' : 'Thêm'}</button>
-          <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Hủy</button>
+          <button aria-label={editProduct ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm'} type="submit" className="btn btn-success me-2">{editProduct ? 'Cập nhật' : 'Thêm'}</button>
+          <button aria-label="Hủy thêm/sửa sản phẩm" type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Hủy</button>
         </form>
       )}
 
@@ -127,8 +128,8 @@ const Products = () => {
               <td>{Number(p.price).toLocaleString()}đ</td>
               <td>{p.Category?.name}</td>
               <td>
-                <button className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(p)}>Sửa</button>
-                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(p.id)}>Xóa</button>
+                <button aria-label={`Sửa sản phẩm ${p.name}`} className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(p)}>Sửa</button>
+                <button aria-label={`Xóa sản phẩm ${p.name}`} className="btn btn-danger btn-sm" onClick={() => handleDelete(p.id)}>Xóa</button>
               </td>
             </tr>
           ))}

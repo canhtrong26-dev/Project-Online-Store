@@ -1,7 +1,18 @@
 import Header from '@/components/Header';  // TỰ TẠO
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
+import type { Metadata } from 'next'
 
+export const metadata: Metadata = {
+  title: 'Online Store - Mua sắm thời trang',
+  description: 'Cửa hàng thời trang online - Áo, quần, giày, túi xách với giá tốt nhất',
+  keywords: 'thời trang, mua sắm, áo, quần, giày, túi xách',
+  openGraph: {
+    title: 'Online Store',
+    description: 'Cửa hàng thời trang online',
+    type: 'website',
+  }
+}
 
 export default function RootLayout({ children }) {
   return (

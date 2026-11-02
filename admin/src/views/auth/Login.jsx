@@ -39,6 +39,7 @@ const Login = () => {
           <div className="mb-3">
             <label>Email</label>
             <input
+              aria-label="Email"
               type="email"
               className="form-control"
               value={email}
@@ -48,13 +49,14 @@ const Login = () => {
           <div className="mb-3">
             <label>Password</label>
             <input
+              aria-label="Password"
               type="password"
               className="form-control"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit" className="btn btn-primary w-100">
+          <button aria-label="Đăng nhập vào trang quản trị" type="submit" className="btn btn-primary w-100">
             Đăng nhập
           </button>
         </form>

@@ -50,6 +50,7 @@ export default function Home() {
     <main className="max-w-full  mx-auto px-20 py-8">
       <div className="flex gap-3 mb-8">
         <button
+          aria-label="Xem tất cả sản phẩm"
           onClick={() => setSelectedCategory(null)}
           className={`px-4 py-2 rounded-full ${selectedCategory === null ? 'bg-green-500 text-white' : 'bg-green-100 text-green-700'}`}
         >
@@ -58,6 +59,7 @@ export default function Home() {
         {categories.map((cat: any) => (
           <button
             key={cat.id}
+            aria-label={`Lọc theo danh mục ${cat.name}`}
             onClick={() => setSelectedCategory(cat.id)}
             className={`px-4 py-2 rounded-full ${selectedCategory === cat.id ? 'bg-green-500 text-white' : 'bg-green-100 text-green-700'}`}
           >
@@ -89,8 +91,9 @@ export default function Home() {
               {product.price.toLocaleString()}đ
             </p>
             <button
+              aria-label={`Thêm sản phẩm ${product.name} vào giỏ hàng`}
               onClick={() => addToCart(product)}
-              className="mt-5 w-full bg-green-500 text-white py-1 rounded hover:bg-green-600">  
+              className="mt-5 w-full bg-green-500 text-white py-1 rounded hover:bg-green-600">
               Thêm vào giỏ hàng
             </button>
           </div>

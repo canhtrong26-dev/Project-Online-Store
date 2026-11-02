@@ -44,16 +44,17 @@ export default function LoginPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
         <div>
-          <input {...register('email')} placeholder="Email" className="w-full border p-2 rounded"/>
+          <input {...register('email')} aria-label="Email" placeholder="Email" className="w-full border p-2 rounded"/>
           {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
         </div>
 
         <div>
-          <input {...register('password')} type="password" placeholder="Mật khẩu" className="w-full border p-2 rounded"/>
+          <input {...register('password')} aria-label="Mật khẩu" type="password" placeholder="Mật khẩu" className="w-full border p-2 rounded"/>
           {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
         </div>
 
         <button
+          aria-label="Đăng nhập vào tài khoản"
           type="submit"
           disabled={isSubmitting}
           className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50"
