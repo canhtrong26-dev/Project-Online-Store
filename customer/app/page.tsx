@@ -1,38 +1,32 @@
 'use client';
 
-import { useEffect, useState } from 'react';        
-import { getProducts, getCategories } from '@/lib/api'; 
-import Image from 'next/image';  
-import toast from 'react-hot-toast'; 
+import { useEffect, useState } from 'react';
+import { getProducts, getCategories } from '@/lib/api';
+import Image from 'next/image';
+import toast from 'react-hot-toast';
 import Link from 'next/link'
 
 export default function Home() {
-  const [products, setProducts] = useState([]);       
-  const [categories, setCategories] = useState([]);   
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   useEffect(() => {
-  getProducts().then(data => {
-    if (Array.isArray(data)) setProducts(data)
-  });
-  getCategories().then(data => {
-    if (Array.isArray(data)) setCategories(data)
-  });
-}, []);
+    getProducts().then(data => {
+      if (Array.isArray(data)) setProducts(data)
+    });
+    getCategories().then(data => {
+      if (Array.isArray(data)) setCategories(data)
+    });
+  }, []);
 
-
-
-    const addToCart = (product: any) => {       
-    const cart = JSON.parse(                    
-      localStorage.getItem('cart') || '[]'    
-    );
-
+  const addToCart = (product: any) => {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const existingItem = cart.find((item: any) => item.id === product.id);
-
     if (existingItem) {
-      existingItem.quantity += 1;               
+      existingItem.quantity += 1;
     } else {
-      cart.push({                               
+      cart.push({
         id: product.id,
         name: product.name,
         price: product.price,
@@ -40,19 +34,19 @@ export default function Home() {
         quantity: 1,
       });
     }
-
-    localStorage.setItem('cart', JSON.stringify(cart));  
-    toast.success(<p>Đã thêm <b>{product.name}</b> vào giỏ hàng!</p>,);    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    toast.success(<p>Đã thêm <b>{product.name}</b> vào giỏ hàng!</p>);
   };
 
-
   return (
-    <main className="max-w-full  mx-auto px-20 py-8">
+    <main className="max-w-full mx-auto px-20 py-8 dark:bg-gray-900 min-h-screen">
       <div className="flex gap-3 mb-8">
         <button
           aria-label="Xem tất cả sản phẩm"
           onClick={() => setSelectedCategory(null)}
-          className={`px-4 py-2 rounded-full ${selectedCategory === null ? 'bg-green-500 text-white' : 'bg-green-100 text-green-700'}`}
+          className={`px-4 py-2 rounded-full ${selectedCategory === null
+            ? 'bg-green-500 text-white'
+            : 'bg-green-100 text-green-700 dark:bg-gray-700 dark:text-green-400'}`}
         >
           Tất cả
         </button>
@@ -61,45 +55,44 @@ export default function Home() {
             key={cat.id}
             aria-label={`Lọc theo danh mục ${cat.name}`}
             onClick={() => setSelectedCategory(cat.id)}
-            className={`px-4 py-2 rounded-full ${selectedCategory === cat.id ? 'bg-green-500 text-white' : 'bg-green-100 text-green-700'}`}
+            className={`px-4 py-2 rounded-full ${selectedCategory === cat.id
+              ? 'bg-green-500 text-white'
+              : 'bg-green-100 text-green-700 dark:bg-gray-700 dark:text-green-400'}`}
           >
             {cat.name}
           </button>
         ))}
       </div>
-     
-      <h2 className="text-2xl font-bold mb-4">Sản phẩm</h2>
+
+      <h2 className="text-2xl font-bold mb-4 dark:text-white">Sản phẩm</h2>
+
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {products
-          .filter((product: any) =>
-
-                selectedCategory === null || product.category_id === selectedCategory
-
-          ).map((product: any) => (
-          <div key={product.id} className="border border-gray-300 rounded-lg p-4 hover:shadow-md transition-shadow transition-transform transform-[900ms] hover:-translate-y-1">
-            <Link href={`/product/${product.id}`}>
-              <Image
-                src={product.image_url}
-                alt={product.name}
-                width={300}
-                height={160}
-                className="w-full h-40 object-cover rounded mb-2"
-              />
-              <h3 className="font-semibold text-lg hover:text-green-600">{product.name}</h3>
-            </Link>
-            <p className="text-green-600 text-sm">
-              {product.price.toLocaleString()}đ
-            </p>
-            <button
-              aria-label={`Thêm sản phẩm ${product.name} vào giỏ hàng`}
-              onClick={() => addToCart(product)}
-              className="mt-5 w-full bg-green-500 text-white py-1 rounded hover:bg-green-600">
-              Thêm vào giỏ hàng
-            </button>
-          </div>
-        ))}
+          .filter((product: any) => selectedCategory === null || product.category_id === selectedCategory)
+          .map((product: any) => (
+            <div key={product.id} className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-lg p-4 hover:shadow-md transition-shadow transition-transform transform-[900ms] hover:-translate-y-1">
+              <Link href={`/product/${product.id}`}>
+                <Image
+                  src={product.image_url}
+                  alt={product.name}
+                  width={300}
+                  height={160}
+                  className="w-full h-40 object-cover rounded mb-2"
+                />
+                <h3 className="font-semibold text-lg hover:text-green-600 dark:text-white">{product.name}</h3>
+              </Link>
+              <p className="text-green-600 text-sm">
+                {product.price.toLocaleString()}đ
+              </p>
+              <button
+                aria-label={`Thêm sản phẩm ${product.name} vào giỏ hàng`}
+                onClick={() => addToCart(product)}
+                className="mt-5 w-full bg-green-500 text-white py-1 rounded hover:bg-green-600">
+                Thêm vào giỏ hàng
+              </button>
+            </div>
+          ))}
       </div>
-
     </main>
   );
 }

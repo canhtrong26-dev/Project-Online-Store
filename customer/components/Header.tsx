@@ -5,18 +5,19 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { useTheme } from 'next-themes'; 
+import { BsSun, BsMoon } from 'react-icons/bs'; 
 
 export default function Header() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [cartCount, setCartCount] = useState(0);
+  const { theme, setTheme } = useTheme(); 
 
   useEffect(() => {
-    // Lấy thông tin user từ localStorage
     const userData = localStorage.getItem('user');
     if (userData) setUser(JSON.parse(userData));
 
-    // Lấy số lượng sản phẩm trong giỏ
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const count = cart.reduce((sum: number, item: any) => sum + item.quantity, 0);
     setCartCount(count);
@@ -32,7 +33,8 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
+  
+    <header className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
 
         <Link href="/" className="text-3xl font-bold text-green-600">
@@ -40,32 +42,46 @@ export default function Header() {
         </Link>
 
         <nav className="flex gap-6 items-center">
-          <Link href="/" className="text-gray-600 hover:text-green-600">
+          <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-green-600">
             Trang chủ
           </Link>
-          <Link href="/order" className="text-gray-600 hover:text-green-600">
+          <Link href="/order" className="text-gray-600 dark:text-gray-300 hover:text-green-600">
             Đơn hàng
           </Link>
           {user ? (
             <>
               <span className="text-green-600 font-medium">Xin chào, {user.name}!</span>
-              <button aria-label="Đăng xuất khỏi tài khoản" onClick={handleLogout} className="text-red-500 hover:text-red-700">
+              <button
+                aria-label="Đăng xuất khỏi tài khoản"
+                onClick={handleLogout}
+                className="text-red-500 hover:text-red-700"
+              >
                 Đăng xuất
               </button>
             </>
           ) : (
             <>
-              <Link href="/login" className="text-gray-600 hover:text-green-600">
+              <Link href="/login" className="text-gray-600 dark:text-gray-300 hover:text-green-600">
                 Đăng nhập
               </Link>
-              <Link href="/register" className="text-gray-600 hover:text-green-600">
+              <Link href="/register" className="text-gray-600 dark:text-gray-300 hover:text-green-600">
                 Đăng ký
               </Link>
             </>
           )}
+
+   
+          <button
+            aria-label="Chuyển đổi giao diện sáng/tối"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="text-xl text-gray-600 dark:text-yellow-400 hover:text-green-600"
+          >
+            {theme === 'dark' ? <BsSun /> : <BsMoon />}
+          </button>
+
         </nav>
 
-        <Link href="/cart" className="text-gray-600 flex items-center hover:text-green-600">
+        <Link href="/cart" className="text-gray-600 dark:text-gray-300 flex items-center hover:text-green-600">
           <Image
             src="/images/shopping-cart.png"
             alt="Giỏ hàng"

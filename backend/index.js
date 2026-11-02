@@ -20,7 +20,6 @@ const cleanupExpiredSessions = async () => {
       expires_at: { [Op.lt]: new Date() } 
     }
   });
-  console.log(`Đã xóa ${deleted} session hết hạn!`);
 };
 
 //chạy mỗi 24 giờ
@@ -44,9 +43,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'Server đang chạy!' });
 });
 
-sequelize.sync({ force: false }).then(() => {  
-  console.log('Kết nối DB thành công!');
-  app.listen(PORT, () => {                       
-    console.log(`Server chạy tại http://localhost:${PORT}`);
+sequelize.sync({ force: false }).then(() => {
+  app.listen(PORT, () => {
   });
 });

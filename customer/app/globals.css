@@ -3,3 +3,5 @@
 html {
   scrollbar-gutter: stable;
 }
+
+@variant dark (&:where(.dark, .dark *));

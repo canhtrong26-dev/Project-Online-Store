@@ -25,34 +25,28 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     const res = await loginAPI(data);
     if (res.accessToken) {
-
-      // Lưu token vào localStorage
       localStorage.setItem('accessToken', res.accessToken);
       localStorage.setItem('refreshToken', res.refreshToken);
       localStorage.setItem('user', JSON.stringify(res.user));
       toast.success('Đăng nhập thành công!');
-      router.push('/');  // về trang chủ
+      router.push('/');
     } else {
       toast.error(res.message || 'Đăng nhập thất bại!');
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-6 text-center">Đăng nhập</h1>
-
+    <div className="max-w-md mx-auto mt-10 p-6 border dark:border-gray-700 dark:bg-gray-800 rounded-lg shadow">
+      <h1 className="text-2xl font-bold mb-6 text-center dark:text-white">Đăng nhập</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-
         <div>
-          <input {...register('email')} aria-label="Email" placeholder="Email" className="w-full border p-2 rounded"/>
+          <input {...register('email')} aria-label="Email" placeholder="Email" className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
           {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
         </div>
-
         <div>
-          <input {...register('password')} aria-label="Mật khẩu" type="password" placeholder="Mật khẩu" className="w-full border p-2 rounded"/>
+          <input {...register('password')} aria-label="Mật khẩu" type="password" placeholder="Mật khẩu" className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
           {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
         </div>
-
         <button
           aria-label="Đăng nhập vào tài khoản"
           type="submit"
@@ -61,10 +55,8 @@ export default function LoginPage() {
         >
           {isSubmitting ? 'Đang xử lý...' : 'Đăng nhập'}
         </button>
-
       </form>
-
-      <p className="text-center mt-4 text-sm">
+      <p className="text-center mt-4 text-sm dark:text-gray-300">
         Chưa có tài khoản? <Link href="/register" className="text-green-600 hover:underline">Đăng ký</Link>
       </p>
     </div>

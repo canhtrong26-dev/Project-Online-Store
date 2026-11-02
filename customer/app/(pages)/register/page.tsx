@@ -36,36 +36,29 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-6 text-center">Đăng ký</h1>
-
+    <div className="max-w-md mx-auto mt-10 p-6 border dark:border-gray-700 dark:bg-gray-800 rounded-lg shadow">
+      <h1 className="text-2xl font-bold mb-6 text-center dark:text-white">Đăng ký</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-
         <div>
-          <input {...register('name')} aria-label="Họ tên" placeholder="Họ tên" className="w-full border p-2 rounded"/>
+          <input {...register('name')} aria-label="Họ tên" placeholder="Họ tên" className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
           {errors.name && <p className="text-red-500 pt-2 text-sm">{errors.name.message}</p>}
         </div>
-
         <div>
-          <input {...register('email')} aria-label="Email" placeholder="Email" className="w-full border p-2 rounded"/>
+          <input {...register('email')} aria-label="Email" placeholder="Email" className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
           {errors.email && <p className="text-red-500 pt-2 text-sm">{errors.email.message}</p>}
         </div>
-
         <div>
-          <input {...register('password')} aria-label="Mật khẩu" type="password" placeholder="Mật khẩu" className="w-full border p-2 rounded"/>
+          <input {...register('password')} aria-label="Mật khẩu" type="password" placeholder="Mật khẩu" className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
           {errors.password && <p className="text-red-500 pt-2 text-sm">{errors.password.message}</p>}
         </div>
-
         <div>
-          <input {...register('phone')} aria-label="Số điện thoại" placeholder="Số điện thoại" className="w-full border p-2 rounded"/>
+          <input {...register('phone')} aria-label="Số điện thoại" placeholder="Số điện thoại" className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
           {errors.phone && <p className="text-red-500 pt-2 text-sm">{errors.phone.message}</p>}
         </div>
-
         <div>
-          <input {...register('address')} aria-label="Địa chỉ" placeholder="Địa chỉ" className="w-full border p-2 rounded"/>
+          <input {...register('address')} aria-label="Địa chỉ" placeholder="Địa chỉ" className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
           {errors.address && <p className="text-red-500 pt-2 text-sm">{errors.address.message}</p>}
         </div>
-
         <button
           aria-label="Đăng ký tài khoản mới"
           type="submit"
@@ -74,10 +67,8 @@ export default function RegisterPage() {
         >
           {isSubmitting ? 'Đang xử lý...' : 'Đăng ký'}
         </button>
-
       </form>
-
-      <p className="text-center mt-4 text-sm">
+      <p className="text-center mt-4 text-sm dark:text-gray-300">
         Đã có tài khoản? <Link href="/login" className="text-green-600 hover:underline">Đăng nhập</Link>
       </p>
     </div>
