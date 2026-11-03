@@ -187,7 +187,7 @@ Ký hiệu quyền truy cập:
 
 | Token         | Thời hạn | Lưu ở đâu                     |
 |---------------|----------|-------------------------------|
-| Access Token  | 6 ngày   | localStorage phía frontend    |
+| Access Token  | 15 phút   | localStorage phía frontend    |
 | Refresh Token | 7 ngày   | localStorage + database (bảng `sessions`) |
 
 Thời hạn này áp dụng nhất quán cho access token được cấp lúc đăng nhập (`POST /api/auth/login`) và lúc làm mới (`POST /api/auth/refresh`).
