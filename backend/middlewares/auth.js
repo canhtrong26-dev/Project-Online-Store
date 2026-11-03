@@ -12,7 +12,7 @@ const verifyToken = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: 'Token không hợp lệ!' });
     }
-    req.user = decoded;  
+    req.user = decoded;
     next();              
   });
 };

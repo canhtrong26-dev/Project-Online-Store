@@ -15,8 +15,12 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   useEffect(() => {
-    getProducts().then(data => { if (Array.isArray(data)) setProducts(data) });
-    getCategories().then(data => { if (Array.isArray(data)) setCategories(data) });
+    getProducts().then(data => {
+      if (Array.isArray(data)) setProducts(data);
+    }); 
+    getCategories().then(data => {
+      if (Array.isArray(data)) setCategories(data);
+    });
   }, []);
 
   const addToCart = (product: any) => {

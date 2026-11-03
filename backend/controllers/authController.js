@@ -65,7 +65,7 @@ const login = async (req, res) => {
 
     //rồi đến refreshToken 
       const refreshToken = jwt.sign(
-      { id: user.id },
+      { id: user.id,role: user.role },
       process.env.JWT_REFRESH_SECRET,
       { expiresIn: REFRESH_TOKEN_EXPIRES }
     );
@@ -84,6 +84,8 @@ const login = async (req, res) => {
   }
 };
 
+
+//Cấp accessToken mới dựa trên refreshToken do FE gửi lên
   const refreshAccessToken = async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -91,7 +93,7 @@ const login = async (req, res) => {
       return res.status(401).json({ message: 'Không có refresh token!' });
     }
 
-    // Tìm user có refresh token này
+    // Kiểm tra session có chứa refreshToken này không
    const session = await Session.findOne({ where: { refresh_token: refreshToken } });
     if (!session) {
       return res.status(401).json({ message: 'Refresh token không hợp lệ!' });
@@ -102,8 +104,10 @@ const login = async (req, res) => {
       if (err) {
         return res.status(401).json({ message: 'Refresh token không hợp lệ!' });
       }
+
+
       const accessToken = jwt.sign(
-        { id: decoded.id },
+        { id: decoded.id, role: decoded.role },
         process.env.JWT_SECRET,
         { expiresIn: ACCESS_TOKEN_EXPIRES }
       );
@@ -115,10 +119,11 @@ const login = async (req, res) => {
 };
 
 
+    //đăng xuất
      const logout = async (req, res) => {
       try {
         const { id } = req.user;  //lấy từ middleware
-        await Session.destroy({ where: { user_id: id } });
+        await Session.destroy({ where: { user_id: id } }); //nếu đăng xuất thì tự động xóa refreshToken khỏi DB
         res.json({ message: 'Đăng xuất thành công!' });
       } catch (error) {
         res.status(500).json({ message: error.message });

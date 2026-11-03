@@ -16,7 +16,7 @@ const Login = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     })
-      const data = await res.json()  
+    const data = await res.json()
 
     if (data.accessToken) {
       if (data.user.role !== 'admin') {
@@ -24,6 +24,7 @@ const Login = () => {
         return
       }
       localStorage.setItem('adminToken', data.accessToken)
+      localStorage.setItem('adminRefreshToken', data.refreshToken) // lưu thêm để tự xin token mới khi hết hạn
       navigate('/dashboard')
     } else {
       setError(data.message || 'Đăng nhập thất bại!')
@@ -34,7 +35,7 @@ const Login = () => {
     <div className="min-vh-100 d-flex align-items-center justify-content-center">
       <div className="card p-4" style={{ width: 400 }}>
         <h4 className="mb-4 text-center">Admin Login</h4>
-        {error && <div className="alert alert-danger">{error}</div>} 
+        {error && <div className="alert alert-danger">{error}</div>}
         <form onSubmit={handleLogin}>
           <div className="mb-3">
             <label>Email</label>

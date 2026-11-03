@@ -57,7 +57,7 @@ export default function CheckoutPage() {
       setIsOrdered(true);
       localStorage.removeItem('cart');
       toast.success('Đặt hàng thành công!');
-      setTimeout(() => router.push(`/${locale}`), 3000);
+      setTimeout(() => router.push(`/${locale}`), 2000);
     } else {
       toast.error(res.message || 'Đặt hàng thất bại!');
     }

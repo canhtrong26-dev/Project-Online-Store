@@ -3,14 +3,57 @@ const API_URL = 'http://localhost:5000/api'
 // Lấy token từ localStorage ở fe
 const getToken = () => localStorage.getItem('adminToken')
 
+const refreshAccessToken = async () => {
+  const refreshToken = localStorage.getItem('adminRefreshToken')
+
+  const res = await fetch(`${API_URL}/auth/refresh`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refreshToken }),
+  })
+
+  if (res.ok) {
+    const data = await res.json()
+    localStorage.setItem('adminToken', data.accessToken)
+    return data.accessToken
+  }
+
+  localStorage.removeItem('adminToken')
+  localStorage.removeItem('adminRefreshToken')
+  return null
+}
+
+
+
+const fetchWithAuth = async (url, options = {}) => {
+  let res = await fetch(url, {
+    ...options,
+    headers: { ...options.headers, Authorization: `Bearer ${getToken()}` },
+  })
+
+  if (res.status === 401) {
+    const newToken = await refreshAccessToken()
+
+    if (newToken) {
+      res = await fetch(url, {
+        ...options,
+        headers: { ...options.headers, Authorization: `Bearer ${newToken}` },
+      })
+    } else {
+      window.location.href = '/#/login'
+    }
+  }
+
+  return res
+}
+
 // Lấy tất cả sản phẩm
 export const getProducts = async () => {
-  const res = await fetch(`${API_URL}/products`, {
-    headers: { Authorization: `Bearer ${getToken()}` }
-  })
+  const res = await fetchWithAuth(`${API_URL}/products`)   
   return res.json()
 }
-  // Lấy danh mục
+
+// Lấy danh mục (KHÔNG SỬA, vẫn dùng fetch thường)
 export const getCategories = async () => {
   const res = await fetch(`${API_URL}/categories`)
   return res.json()
@@ -18,65 +61,50 @@ export const getCategories = async () => {
 
 // Thêm sản phẩm
 export const createProduct = async (data) => {
-  const res = await fetch(`${API_URL}/products`, {
+  const res = await fetchWithAuth(`${API_URL}/products`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getToken()}`
-    },
-    body: JSON.stringify(data)
+    headers: { 'Content-Type': 'application/json' },        
+    body: JSON.stringify(data),
   })
   return res.json()
 }
 
 // Sửa sản phẩm
 export const updateProduct = async (id, data) => {
-  const res = await fetch(`${API_URL}/products/${id}`, {
+  const res = await fetchWithAuth(`${API_URL}/products/${id}`, { 
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getToken()}`
-    },
-    body: JSON.stringify(data)
+    headers: { 'Content-Type': 'application/json' },              
+    body: JSON.stringify(data),
   })
   return res.json()
 }
 
 // Xóa sản phẩm
 export const deleteProduct = async (id) => {
-  const res = await fetch(`${API_URL}/products/${id}`, {
+  const res = await fetchWithAuth(`${API_URL}/products/${id}`, {   
     method: 'DELETE',
-    headers: { 'Authorization': `Bearer ${getToken()}` }
   })
   return res.json()
 }
 
-
 // Lấy tất cả đơn hàng
 export const getOrders = async () => {
-  const res = await fetch(`${API_URL}/orders`, {
-    headers: { 'Authorization': `Bearer ${getToken()}` }
-  })
+  const res = await fetchWithAuth(`${API_URL}/orders`)  
   return res.json()
 }
 
 // Cập nhật trạng thái đơn hàng
 export const updateOrder = async (id, status) => {
-  const res = await fetch(`${API_URL}/orders/${id}`, {
+  const res = await fetchWithAuth(`${API_URL}/orders/${id}`, {  
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getToken()}`
-    },
-    body: JSON.stringify({ status })
+    headers: { 'Content-Type': 'application/json' },           
+    body: JSON.stringify({ status }),
   })
   return res.json()
 }
 
 // Lấy tất cả khách hàng
 export const getUsers = async () => {
-  const res = await fetch(`${API_URL}/users`, {
-    headers: { 'Authorization': `Bearer ${getToken()}` }
-  })
+  const res = await fetchWithAuth(`${API_URL}/users`)   
   return res.json()
 }
