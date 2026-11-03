@@ -2,13 +2,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');         
 const { User, Session } = require('../models/index');
 
-const ACCESS_TOKEN_EXPIRES = '6d';
+const ACCESS_TOKEN_EXPIRES = '15m';
 const REFRESH_TOKEN_EXPIRES = '7d';
 
 // Đăng ký
 const register = async (req, res) => {      
   try {
-    const { name, email, password, phone, address } = req.body;
+    const { name, email, password, phone, address } = req.body; //nhận data từ fe
 
     // Kiểm tra email đã tồn tại chưa
     const existingUser = await User.findOne({ where: { email } }); 
