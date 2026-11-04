@@ -9,6 +9,7 @@ const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const authRoutes = require('./routes/authRoutes');
+const uploadRoutes = require('./routes/uploadRoutes'); 
 
 const { Op } = require('sequelize');       
 const { Session } = require('./models/index'); 
@@ -38,6 +39,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.get('/', (req, res) => {             
   res.json({ message: 'Server đang chạy!' });

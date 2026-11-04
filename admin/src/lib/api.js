@@ -108,3 +108,15 @@ export const getUsers = async () => {
   const res = await fetchWithAuth(`${API_URL}/users`)   
   return res.json()
 }
+
+// Tải ảnh lên Cloudinary qua backend, nhận về link ảnh
+export const uploadImage = async (file) => {
+  const formData = new FormData()
+  formData.append('image', file)
+
+  const res = await fetchWithAuth(`${API_URL}/upload`, {
+    method: 'POST',
+    body: formData,
+  })
+  return res.json()
+}
