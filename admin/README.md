@@ -18,10 +18,13 @@ Trang quản trị dành cho người bán, xây dựng dựa trên template [Co
 
 ## Tính năng
 
-- Đăng nhập bằng tài khoản admin
+- Đăng nhập bằng tài khoản admin, tự làm mới access token khi hết hạn
+- Đăng xuất (xóa session phía server và token phía trình duyệt)
 - Dashboard tổng quan
-- Quản lý sản phẩm: thêm, sửa, xóa
-- Quản lý đơn hàng: xem và cập nhật trạng thái
+- Quản lý sản phẩm: thêm, sửa, xóa; sản phẩm mới thêm/sửa hiện ở đầu danh sách
+- Tải ảnh sản phẩm lên Cloudinary ngay trong form: chọn file, xem ảnh trước khi lưu, tự điền link ảnh, có cột ảnh trong bảng danh sách
+- Bấm "Sửa" tự cuộn lên đầu form
+- Quản lý đơn hàng: xem (đơn mới nhất lên đầu) và cập nhật trạng thái
 - Xem danh sách khách hàng
 - Sidebar thu gọn / mở rộng
 
@@ -71,7 +74,7 @@ Mở trình duyệt tại `http://localhost:3001`
 
 Đường dẫn các trang quản lý được khai báo trong `src/routes.js`; đường dẫn `/login` được khai báo riêng trong `src/App.jsx` (nằm ngoài sidebar).
 
-Admin lưu token đăng nhập trong localStorage với key `adminToken` (khác với Customer, dùng key `accessToken`).
+Admin lưu token đăng nhập trong localStorage với 2 key: `adminToken` (access token) và `adminRefreshToken` (refresh token) — khác với Customer, dùng key `accessToken`/`refreshToken`.
 
 ---
 
@@ -155,7 +158,8 @@ Giao diện admin được xây dựng dựa trên template mã nguồn mở:
 ### Những phần đã tùy chỉnh so với template gốc
 
 - Đổi logo CoreUI thành tên "Online Store" ở sidebar
-- Xóa các icon thông báo, tin nhắn, avatar ở header
+- Bỏ các icon chuông, danh sách, phong bì và avatar dropdown mẫu ở header, thay bằng một nút Đăng xuất
 - Đổi nội dung footer
 - Viết lại menu sidebar: Dashboard, Sản phẩm, Đơn hàng, Khách hàng
 - Thêm các trang quản lý kết nối với Backend API
+- Thêm chức năng tải ảnh sản phẩm lên Cloudinary trong trang Sản phẩm

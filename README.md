@@ -68,6 +68,8 @@ cp .env.example .env
 npm run dev
 ```
 
+Mở file `backend/.env` và điền đủ các biến, bao gồm 3 biến Cloudinary (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`) dùng cho tính năng upload ảnh sản phẩm — xem chi tiết tại [Backend README](./backend/README.md#biến-môi-trường).
+
 Backend chạy tại `http://localhost:5000`
 
 ### Bước 4: Chạy Customer
@@ -102,24 +104,26 @@ Admin chạy tại `http://localhost:3001`
 
 ```
 Khách hàng (Customer :3000) ──┐
-                              ├──> Backend API (:5000) ──> MariaDB (:3306)
-Quản trị viên (Admin :3001) ──┘
+                              ├──> Backend API (:5000) ──┬──> MariaDB (:3306)
+Quản trị viên (Admin :3001) ──┘                          └──> Cloudinary (lưu ảnh sản phẩm)
 ```
 
 **Phía khách hàng:**
 
-1. Đăng ký / đăng nhập tài khoản
-2. Xem danh sách sản phẩm, lọc theo danh mục
+1. Đăng ký / đăng nhập tài khoản (access token tự làm mới khi hết hạn)
+2. Xem danh sách sản phẩm (sản phẩm mới thêm/sửa hiện ở đầu trang chủ), lọc theo danh mục
 3. Xem chi tiết sản phẩm, thêm vào giỏ hàng
 4. Thanh toán, tạo đơn hàng
-5. Xem lại lịch sử đơn hàng
+5. Xem lại lịch sử đơn hàng (đơn mới nhất lên đầu)
+6. Đăng xuất (xóa session phía server và token phía trình duyệt)
 
 **Phía quản trị viên:**
 
 1. Đăng nhập bằng tài khoản admin
-2. Quản lý sản phẩm (thêm, sửa, xóa)
-3. Xem đơn hàng, cập nhật trạng thái "Chờ xử lý" sang "Hoàn thành"
+2. Quản lý sản phẩm: thêm, sửa, xóa, tải ảnh lên Cloudinary ngay trong form (sản phẩm mới thêm/sửa hiện ở đầu danh sách)
+3. Xem đơn hàng (mới nhất lên đầu), cập nhật trạng thái "Chờ xử lý" sang "Hoàn thành"
 4. Xem danh sách khách hàng
+5. Đăng xuất
 
 ---
 
@@ -127,7 +131,7 @@ Quản trị viên (Admin :3001) ──┘
 
 | Phần     | Công nghệ                                                 |
 |----------|-----------------------------------------------------------|
-| Backend  | Node.js, Express, Sequelize, MariaDB, JWT, bcryptjs       |
+| Backend  | Node.js, Express, Sequelize, MariaDB, JWT, bcryptjs, multer, Cloudinary |
 | Customer | Next.js 16, TypeScript, Tailwind CSS, next-intl, next-themes |
 | Admin    | React, Vite, CoreUI, Redux, React Router                 |
 

@@ -11,15 +11,17 @@ Trang mua sắm dành cho khách hàng, xây dựng bằng Next.js 16 App Router
 3. [Cài đặt](#cài-đặt)
 4. [Các trang](#các-trang)
 5. [Cấu trúc thư mục](#cấu-trúc-thư-mục)
-6. [Đa ngôn ngữ (i18n)](#đa-ngôn-ngữ-i18n)
-7. [Lỗi thường gặp](#lỗi-thường-gặp)
+6. [Xác thực và làm mới token](#xác-thực-và-làm-mới-token)
+7. [Đa ngôn ngữ (i18n)](#đa-ngôn-ngữ-i18n)
+8. [Lỗi thường gặp](#lỗi-thường-gặp)
 
 ---
 
 ## Tính năng
 
-- Đăng ký, đăng nhập, đăng xuất
-- Xem sản phẩm, lọc theo danh mục
+- Đăng ký, đăng nhập, đăng xuất (đăng xuất xóa session phía server, không chỉ xóa token phía trình duyệt)
+- Tự làm mới access token khi hết hạn, không cần đăng nhập lại
+- Xem sản phẩm, lọc theo danh mục (sản phẩm mới thêm/sửa luôn hiện ở đầu trang chủ)
 - Xem chi tiết sản phẩm
 - Giỏ hàng lưu trong localStorage
 - Thanh toán và tạo đơn hàng
@@ -27,6 +29,7 @@ Trang mua sắm dành cho khách hàng, xây dựng bằng Next.js 16 App Router
 - Chuyển đổi ngôn ngữ Tiếng Việt / English
 - Chế độ sáng / tối (Dark mode)
 - Kiểm tra dữ liệu form
+- Menu dạng hamburger khi xem trên điện thoại
 
 ---
 
@@ -107,6 +110,16 @@ customer/
 ├── middleware.ts               # Điều hướng theo ngôn ngữ
 └── next.config.ts
 ```
+
+---
+
+## Xác thực và làm mới token
+
+`lib/api.ts` có hàm `fetchWithAuth` dùng để gọi các API cần đăng nhập (`createOrder`, `getMyOrders`, `logout`...). Hàm này tự gắn header `Authorization: Bearer <accessToken>` lấy từ `localStorage`.
+
+Nếu request bị lỗi 401 (access token hết hạn), `fetchWithAuth` tự gọi `POST /api/auth/refresh` (bằng `fetch` thường, không qua `fetchWithAuth`) để lấy access token mới, lưu lại vào `localStorage`, rồi gửi lại request vừa thất bại. Nếu làm mới cũng thất bại (refresh token hết hạn), toàn bộ token trong `localStorage` bị xóa và trang tự chuyển về `/[locale]/login`.
+
+Khi người dùng bấm Đăng xuất (`components/Header.tsx`): gọi `POST /api/auth/logout` để server xóa session trong database, sau đó xóa `accessToken`, `refreshToken`, `user` khỏi `localStorage` (dùng `try/finally` để đảm bảo luôn xóa dù API lỗi).
 
 ---
 
