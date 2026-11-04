@@ -47,6 +47,14 @@ const fetchWithAuth = async (url, options = {}) => {
   return res
 }
 
+// Đăng xuất
+export const logout = async () => {
+  const res = await fetchWithAuth(`${API_URL}/auth/logout`, {
+    method: 'POST',
+  })
+  return res.json()
+}
+
 // Lấy tất cả sản phẩm
 export const getProducts = async () => {
   const res = await fetchWithAuth(`${API_URL}/products`)   

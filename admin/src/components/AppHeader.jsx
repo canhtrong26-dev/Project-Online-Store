@@ -44,18 +44,10 @@ import {
   useColorModes,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import {
-  cilBell,
-  cilContrast,
-  cilEnvelopeOpen,
-  cilList,
-  cilMenu,
-  cilMoon,
-  cilSun,
-} from '@coreui/icons'
+import { cilContrast, cilMenu, cilMoon, cilSun, cilAccountLogout } from '@coreui/icons'
 
 import { AppBreadcrumb } from './index'
-import { AppHeaderDropdown } from './header/index'
+import { logout } from '../lib/api'
 
 /**
  * AppHeader functional component
@@ -75,6 +67,15 @@ const AppHeader = () => {
 
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+    } catch {}
+    localStorage.removeItem('adminToken')
+    localStorage.removeItem('adminRefreshToken')
+    window.location.href = '/#/login'
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -147,23 +148,6 @@ const AppHeader = () => {
             </CListGroup>
           </CModalBody>
         </CModal>
-        <CHeaderNav className="ms-auto">
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilList} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilEnvelopeOpen} size="lg" />
-            </CNavLink>
-          </CNavItem>
-        </CHeaderNav>
         <CHeaderNav>
           <li className="nav-item py-1">
             <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
@@ -211,7 +195,18 @@ const AppHeader = () => {
           <li className="nav-item py-1">
             <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
           </li>
-          <AppHeaderDropdown />
+          <CNavItem>
+            <CNavLink
+              href="#"
+              aria-label="Đăng xuất"
+              onClick={(e) => {
+                e.preventDefault()
+                handleLogout()
+              }}
+            >
+              <CIcon icon={cilAccountLogout} size="lg" />
+            </CNavLink>
+          </CNavItem>
         </CHeaderNav>
       </CContainer>
       <CContainer className="px-4" fluid>
