@@ -22,39 +22,43 @@ const Orders = () => {
 
   return (
     <div>
-      <h2>Quản lý Đơn hàng</h2>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Khách hàng</th>
-            <th>Tổng tiền</th>
-            <th>Trạng thái</th>
-            <th>Thao tác</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((o) => (
-            <tr key={o.id}>
-              <td>{o.id}</td>
-              <td>{o.User?.name}</td>
-              <td>{Number(o.total).toLocaleString()}đ</td>
-              <td>
-                <span className={`badge ${o.status === 'completed' ? 'bg-success' : 'bg-warning'}`}>
-                  {o.status === 'completed' ? 'Hoàn thành' : 'Chờ xử lý'}
-                </span>
-              </td>
-              <td>
-                {o.status === 'pending' && (
-                  <button aria-label={`Hoàn thành đơn hàng #${o.id}`} className="btn btn-success btn-sm" onClick={() => handleComplete(o.id)}>
-                    Hoàn thành
-                  </button>
-                )}
-              </td>
+      <h2 className="mb-3">Quản lý Đơn hàng</h2>
+      <div className="table-responsive">
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Khách hàng</th>
+              <th>Tổng tiền</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {orders.map((o) => (
+              <tr key={o.id}>
+                <td>{o.id}</td>
+                <td>{o.User?.name}</td>
+                <td>{Number(o.total).toLocaleString()}đ</td>
+                <td>
+                  <span
+                    className={`badge ${o.status === 'completed' ? 'bg-success' : 'bg-warning'}`}
+                  >
+                    {o.status === 'completed' ? 'Hoàn thành' : 'Chờ xử lý'}
+                  </span>
+                </td>
+                <td>
+                  {o.status === 'pending' && (
+                    <button aria-label={`Hoàn thành đơn hàng #${o.id}`} className="btn btn-success btn-sm" onClick={() => handleComplete(o.id)}>
+                      Hoàn thành
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

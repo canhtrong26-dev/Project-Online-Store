@@ -37,9 +37,9 @@ function ProductDetailContent() {
       <button onClick={() => router.back()} className="mb-4 text-green-600 hover:underline">
         ← {t('back')}
       </button>
-      <div className="flex pt-20 gap-8">
-        <Image src={product.image_url} alt={product.name} width={400} height={400} className="object-cover w-1/2" />
-        <div className="flex-1 pt-15">
+      <div className="flex flex-col md:flex-row md:pt-20 gap-6 md:gap-8">
+        <Image src={product.image_url} alt={product.name} width={400} height={400} className="object-cover w-full md:w-1/2" />
+        <div className="flex-1 md:pt-15">
           <h1 className="text-2xl font-bold mb-2 dark:text-white">{product.name}</h1>
           <p className="text-green-600 text-xl mb-4">{Number(product.price).toLocaleString()}đ</p>
           <p className="text-gray-600 dark:text-gray-300 mb-6">{product.description}</p>

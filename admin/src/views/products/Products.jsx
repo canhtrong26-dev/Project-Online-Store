@@ -64,8 +64,8 @@ const Products = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between mb-3">
-        <h2>Quản lý Sản phẩm</h2>
+      <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <h2 className="mb-0">Quản lý Sản phẩm</h2>
         <button aria-label="Thêm sản phẩm mới" className="btn btn-primary" onClick={() => { setShowForm(true); setEditProduct(null); setForm({ name: '', price: '', image_url: '', description: '', category_id: '' }) }}>
           + Thêm sản phẩm
         </button>
@@ -107,34 +107,36 @@ const Products = () => {
         </form>
       )}
 
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Tên</th>
-            <th>Giá</th>
-            <th>Danh mục</th>
-            <th>Thao tác</th>
-          </tr>
-        </thead>
-        <tbody>
-          
-          {products
-          .filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
-          .map((p) => (
-            <tr key={p.id}>
-              <td>{p.id}</td>
-              <td>{p.name}</td>
-              <td>{Number(p.price).toLocaleString()}đ</td>
-              <td>{p.Category?.name}</td>
-              <td>
-                <button aria-label={`Sửa sản phẩm ${p.name}`} className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(p)}>Sửa</button>
-                <button aria-label={`Xóa sản phẩm ${p.name}`} className="btn btn-danger btn-sm" onClick={() => handleDelete(p.id)}>Xóa</button>
-              </td>
+      <div className="table-responsive">
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tên</th>
+              <th>Giá</th>
+              <th>Danh mục</th>
+              <th>Thao tác</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+
+            {products
+            .filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
+            .map((p) => (
+              <tr key={p.id}>
+                <td>{p.id}</td>
+                <td>{p.name}</td>
+                <td>{Number(p.price).toLocaleString()}đ</td>
+                <td>{p.Category?.name}</td>
+                <td>
+                  <button aria-label={`Sửa sản phẩm ${p.name}`} className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(p)}>Sửa</button>
+                  <button aria-label={`Xóa sản phẩm ${p.name}`} className="btn btn-danger btn-sm" onClick={() => handleDelete(p.id)}>Xóa</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

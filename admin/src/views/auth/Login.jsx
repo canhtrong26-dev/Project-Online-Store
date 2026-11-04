@@ -32,8 +32,8 @@ const Login = () => {
   }
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center">
-      <div className="card p-4" style={{ width: 400 }}>
+    <div className="min-vh-100 d-flex align-items-center justify-content-center px-3">
+      <div className="card p-4 w-100" style={{ maxWidth: 400 }}>
         <h4 className="mb-4 text-center">Admin Login</h4>
         {error && <div className="alert alert-danger">{error}</div>}
         <form onSubmit={handleLogin}>

@@ -38,25 +38,25 @@ const Dashboard = () => {
       <h2 className="mb-4">Dashboard</h2>
 
       <div className="row mb-4">
-        <div className="col-md-3">
+        <div className="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
           <div className="card text-center p-3">
             <h5>Sản phẩm</h5>
             <h2>{stats.products}</h2>
           </div>
         </div>
-        <div className="col-md-3">
+        <div className="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
           <div className="card text-center p-3">
             <h5>Đơn hàng</h5>
             <h2>{stats.orders}</h2>
           </div>
         </div>
-        <div className="col-md-3">
+        <div className="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
           <div className="card text-center p-3">
             <h5>Khách hàng</h5>
             <h2>{stats.users}</h2>
           </div>
         </div>
-        <div className="col-md-3">
+        <div className="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
           <div className="card text-center p-3">
             <h5>Doanh thu</h5>
             <h2>{Number(stats.revenue).toLocaleString()}đ</h2>
@@ -67,30 +67,34 @@ const Dashboard = () => {
       <div className="card">
         <div className="card-header">Đơn hàng gần đây</div>
         <div className="card-body">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Khách hàng</th>
-                <th>Tổng tiền</th>
-                <th>Trạng thái</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentOrders.map((o) => (
-                <tr key={o.id}>
-                  <td>{o.id}</td>
-                  <td>{o.User?.name}</td>
-                  <td>{Number(o.total).toLocaleString()}đ</td>
-                  <td>
-                    <span className={`badge ${o.status === 'completed' ? 'bg-success' : 'bg-warning'}`}>
-                      {o.status === 'completed' ? 'Hoàn thành' : 'Chờ xử lý'}
-                    </span>
-                  </td>
+          <div className="table-responsive">
+            <table className="table table-bordered">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Khách hàng</th>
+                  <th>Tổng tiền</th>
+                  <th>Trạng thái</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {recentOrders.map((o) => (
+                  <tr key={o.id}>
+                    <td>{o.id}</td>
+                    <td>{o.User?.name}</td>
+                    <td>{Number(o.total).toLocaleString()}đ</td>
+                    <td>
+                      <span
+                        className={`badge ${o.status === 'completed' ? 'bg-success' : 'bg-warning'}`}
+                      >
+                        {o.status === 'completed' ? 'Hoàn thành' : 'Chờ xử lý'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
