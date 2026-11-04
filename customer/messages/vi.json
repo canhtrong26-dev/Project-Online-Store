@@ -24,42 +24,54 @@
     "hasAccount": "Đã có tài khoản?",
     "login": "Đăng nhập"
   },
-"login": {
-  "title": "Đăng nhập",
-  "email": "Email",
-  "password": "Mật khẩu",
-  "submit": "Đăng nhập",
-  "noAccount": "Chưa có tài khoản?",
-  "register": "Đăng ký"
-},
-"order": {
-  "title": "Đơn hàng của tôi",
-  "empty": "Bạn chưa có đơn hàng nào.",
-  "order": "Đơn",
-  "total": "Tổng",
-  "pending": "Đang xử lý",
-  "completed": "Hoàn thành"
-},
-"cart": {
-  "title": "Giỏ hàng",
-  "empty": "Giỏ hàng trống!",
-  "continueShopping": "Tiếp tục mua sắm",
-  "total": "Tổng",
-  "checkout": "Đặt hàng"
-},
-"checkout": {
-  "title": "Thanh toán",
-  "yourOrder": "Đơn hàng của bạn",
-  "total": "Tổng",
-  "shippingInfo": "Thông tin giao hàng",
-  "name": "Họ tên",
-  "phone": "Số điện thoại",
-  "address": "Địa chỉ",
-  "submit": "Đặt hàng"
-},
-"product": {
-  "loading": "Đang tải...",
-  "back": "Quay lại",
-  "addToCart": "Thêm vào giỏ hàng"
+  "login": {
+    "title": "Đăng nhập",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "submit": "Đăng nhập",
+    "noAccount": "Chưa có tài khoản?",
+    "register": "Đăng ký"
+  },
+  "order": {
+    "title": "Đơn hàng của tôi",
+    "empty": "Bạn chưa có đơn hàng nào.",
+    "order": "Đơn",
+    "total": "Tổng",
+    "pending": "Đang xử lý",
+    "completed": "Hoàn thành"
+  },
+  "cart": {
+    "title": "Giỏ hàng",
+    "empty": "Giỏ hàng trống!",
+    "continueShopping": "Tiếp tục mua sắm",
+    "total": "Tổng",
+    "checkout": "Đặt hàng"
+  },
+  "checkout": {
+    "title": "Thanh toán",
+    "yourOrder": "Đơn hàng của bạn",
+    "total": "Tổng",
+    "shippingInfo": "Thông tin giao hàng",
+    "name": "Họ tên",
+    "phone": "Số điện thoại",
+    "address": "Địa chỉ",
+    "submit": "Đặt hàng"
+  },
+  "product": {
+    "loading": "Đang tải...",
+    "back": "Quay lại",
+    "addToCart": "Thêm vào giỏ hàng"
+  },
+ "footer": {
+  "description": "Cửa hàng thời trang online với áo, quần, giày, túi xách và phụ kiện.",
+  "links": "Liên kết",
+  "home": "Trang chủ",
+  "cart": "Giỏ hàng",
+  "order": "Đơn hàng",
+  "contact": "Liên hệ",
+  "address": "Hà Nội, Việt Nam",
+  "map": "Bản đồ cửa hàng",
+  "rights": "Bảo lưu mọi quyền.",
+  "copyright": "Capstone Project — Võ Trọng Cảnh"
 }
 }

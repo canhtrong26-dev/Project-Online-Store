@@ -1,25 +1,27 @@
-import Header from '@/components/Header';
-import '../globals.css';
-import { Toaster } from 'react-hot-toast';
-import type { Metadata } from 'next'
-import { ThemeProvider } from 'next-themes'
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import Header from "@/components/Header";
+import "../globals.css";
+import { Toaster } from "react-hot-toast";
+import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 export const instant = false;
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: 'Online Store - Mua sắm thời trang',
-  description: 'Cửa hàng thời trang online - Áo, quần, giày, túi xách với giá tốt nhất',
-  keywords: 'thời trang, mua sắm, áo, quần, giày, túi xách',
+  title: "Online Store - Mua sắm thời trang",
+  description:
+    "Cửa hàng thời trang online - Áo, quần, giày, túi xách với giá tốt nhất",
+  keywords: "thời trang, mua sắm, áo, quần, giày, túi xách",
   openGraph: {
-    title: 'Online Store',
-    description: 'Cửa hàng thời trang online',
-    type: 'website',
-  }
-}
+    title: "Online Store",
+    description: "Cửa hàng thời trang online",
+    type: "website",
+  },
+};
 
 export function generateStaticParams() {
-  return [{ locale: 'vi' }, { locale: 'en' }];
+  return [{ locale: "vi" }, { locale: "en" }];
 }
 
 export default async function RootLayout({ children, params }) {
@@ -46,6 +48,7 @@ export default async function RootLayout({ children, params }) {
               <Toaster position="top-right" />
               <Header />
               {children}
+              <Footer />
             </div>
           </NextIntlClientProvider>
         </ThemeProvider>
