@@ -7,7 +7,8 @@ const getAll = async (req, res) => {
       include: [
         { model: User },                        // lấy kèm thông tin user
         { model: OrderItem, include: [Product] } // lấy kèm order items + product
-      ]
+      ],
+      order: [['createdAt', 'DESC']]
     });
     res.json(orders);
   } catch (error) {
