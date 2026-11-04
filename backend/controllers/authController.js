@@ -1,25 +1,25 @@
-const bcrypt = require('bcryptjs');          
-const jwt = require('jsonwebtoken');         
-const { User, Session } = require('../models/index');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { User, Session } = require("../models/index");
 
-const ACCESS_TOKEN_EXPIRES = '15m';
-const REFRESH_TOKEN_EXPIRES = '7d';
+const ACCESS_TOKEN_EXPIRES = "15m";
+const REFRESH_TOKEN_EXPIRES = "7d";
 
 // Đăng ký
-const register = async (req, res) => {      
+const register = async (req, res) => {
   try {
     const { name, email, password, phone, address } = req.body; //nhận data từ fe
 
     // Kiểm tra email đã tồn tại chưa
-    const existingUser = await User.findOne({ where: { email } }); 
+    const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ message: 'Email đã tồn tại!' });
+      return res.status(400).json({ message: "Email đã tồn tại!" });
     }
 
     // Thêm dòng này — kiểm tra phone đã tồn tại chưa
     const existingPhone = await User.findOne({ where: { phone } });
     if (existingPhone) {
-      return res.status(400).json({ message: 'Số điện thoại đã tồn tại!' });
+      return res.status(400).json({ message: "Số điện thoại đã tồn tại!" });
     }
 
     //băm password
@@ -27,89 +27,100 @@ const register = async (req, res) => {
 
     // Tạo user mới
     const user = await User.create({
-      name, email,
+      name,
+      email,
       password: hashedPassword,
-      phone, address,
-      role: 'customer'
+      phone,
+      address,
+      role: "customer",
     });
 
-    res.status(201).json({ message: 'Đăng ký thành công!', user });
+    res.status(201).json({ message: "Đăng ký thành công!" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 //Đăng nhập
-const login = async (req, res) => {          
+const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-   
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return res.status(404).json({ message: 'Email không tồn tại!' });
+      return res.status(404).json({ message: "Email không tồn tại!" });
     }
 
     // Kiểm tra password
-    const isMatch = await bcrypt.compare(password, user.password); 
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Sai mật khẩu!' });
+      return res.status(400).json({ message: "Sai mật khẩu!" });
     }
 
     // sau khi đáp ứng đủ cấc bước trên thì tạo accessToken
-    const accessToken  = jwt.sign(              
+    const accessToken = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: ACCESS_TOKEN_EXPIRES }
+      { expiresIn: ACCESS_TOKEN_EXPIRES },
     );
 
-    //rồi đến refreshToken 
-      const refreshToken = jwt.sign(
-      { id: user.id,role: user.role },
+    //rồi đến refreshToken
+    const refreshToken = jwt.sign(
+      { id: user.id, role: user.role },
       process.env.JWT_REFRESH_SECRET,
-      { expiresIn: REFRESH_TOKEN_EXPIRES }
+      { expiresIn: REFRESH_TOKEN_EXPIRES },
     );
 
-    
-      // Lưu refresh token vào DB
-      await Session.create({
+    // Lưu refresh token vào DB
+    await Session.create({
       user_id: user.id,
       refresh_token: refreshToken,
       expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
-    res.json({ message: 'Đăng nhập thành công!', accessToken, refreshToken, user });
+    res.json({
+      message: "Đăng nhập thành công!",
+      accessToken,
+      refreshToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        role: user.role,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-
 //Cấp accessToken mới dựa trên refreshToken do FE gửi lên
-  const refreshAccessToken = async (req, res) => {
+const refreshAccessToken = async (req, res) => {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) {
-      return res.status(401).json({ message: 'Không có refresh token!' });
+      return res.status(401).json({ message: "Không có refresh token!" });
     }
 
     // Kiểm tra session có chứa refreshToken này không
-   const session = await Session.findOne({ where: { refresh_token: refreshToken } });
+    const session = await Session.findOne({
+      where: { refresh_token: refreshToken },
+    });
     if (!session) {
-      return res.status(401).json({ message: 'Refresh token không hợp lệ!' });
+      return res.status(401).json({ message: "Refresh token không hợp lệ!" });
     }
-
 
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
       if (err) {
-        return res.status(401).json({ message: 'Refresh token không hợp lệ!' });
+        return res.status(401).json({ message: "Refresh token không hợp lệ!" });
       }
-
 
       const accessToken = jwt.sign(
         { id: decoded.id, role: decoded.role },
         process.env.JWT_SECRET,
-        { expiresIn: ACCESS_TOKEN_EXPIRES }
+        { expiresIn: ACCESS_TOKEN_EXPIRES },
       );
       res.json({ accessToken });
     });
@@ -118,17 +129,15 @@ const login = async (req, res) => {
   }
 };
 
-
-    //đăng xuất
-     const logout = async (req, res) => {
-      try {
-        const { id } = req.user;  //lấy từ middleware
-        await Session.destroy({ where: { user_id: id } }); //nếu đăng xuất thì tự động xóa refreshToken khỏi DB
-        res.json({ message: 'Đăng xuất thành công!' });
-      } catch (error) {
-        res.status(500).json({ message: error.message });
-      }
-    };
-
+//đăng xuất
+const logout = async (req, res) => {
+  try {
+    const { id } = req.user; //lấy từ middleware
+    await Session.destroy({ where: { user_id: id } }); //nếu đăng xuất thì tự động xóa refreshToken khỏi DB
+    res.json({ message: "Đăng xuất thành công!" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 module.exports = { register, login, refreshAccessToken, logout };
