@@ -115,3 +115,12 @@ const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   //trả kết quả cho hàm gọi (createOrder, getMyOrders)
   return res;
 };
+
+
+//xóa session (refreshToken) trong database
+export const logout = async () => {
+  const res = await fetchWithAuth(`${API_URL}/auth/logout`, {
+    method: 'POST',
+  });
+  return res.json();
+};

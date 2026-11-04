@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { useTheme } from 'next-themes';
 import { BsSun, BsMoon, BsList, BsX, BsCart3 } from 'react-icons/bs';
 import { useTranslations, useLocale } from 'next-intl';
+import { logout } from '@/lib/api';
 
 export default function Header() {
   const router = useRouter();
@@ -30,14 +31,18 @@ export default function Header() {
     setCartCount(count);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+  try {
+    await logout(); //xóa session (refreshToken) trong db
+  } finally {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     setUser(null);
     toast.success('Đăng xuất thành công!');
     router.push(`/${locale}`);
-  };
+  }
+};
 
   const switchLocale = (newLocale: string) => {
     const newPath = pathname.replace(`/${locale}`, `/${newLocale}`);
