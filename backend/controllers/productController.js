@@ -1,10 +1,11 @@
-const { Product, Category } = require('../models/index');
+const { Product, Category } = require("../models/index");
 
 // Lấy tất cả sản phẩm
 const getAll = async (req, res) => {
   try {
     const products = await Product.findAll({
-      include: Category,   
+      include: Category,
+      order: [["updatedAt", "DESC"]],
     });
     res.json(products);
   } catch (error) {
@@ -16,7 +17,13 @@ const getAll = async (req, res) => {
 const create = async (req, res) => {
   try {
     const { name, price, image_url, description, category_id } = req.body;
-    const product = await Product.create({ name, price, image_url, description, category_id });
+    const product = await Product.create({
+      name,
+      price,
+      image_url,
+      description,
+      category_id,
+    });
     res.status(201).json(product);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -28,8 +35,11 @@ const update = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, price, image_url, description, category_id } = req.body;
-    await Product.update({ name, price, image_url, description, category_id }, { where: { id } });
-    res.json({ message: 'Cập nhật thành công!' });
+    await Product.update(
+      { name, price, image_url, description, category_id },
+      { where: { id } },
+    );
+    res.json({ message: "Cập nhật thành công!" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -40,7 +50,7 @@ const remove = async (req, res) => {
   try {
     const { id } = req.params;
     await Product.destroy({ where: { id } });
-    res.json({ message: 'Xoá thành công!' });
+    res.json({ message: "Xoá thành công!" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -49,11 +59,10 @@ const remove = async (req, res) => {
 // Lấy sản phẩm theo id
 const getOne = async (req, res) => {
   const product = await Product.findByPk(req.params.id, {
-    include: [{ model: Category }]
-  })
-  if (!product) return res.status(404).json({ message: 'Không tìm thấy!' })
-  res.json(product)
-}
+    include: [{ model: Category }],
+  });
+  if (!product) return res.status(404).json({ message: "Không tìm thấy!" });
+  res.json(product);
+};
 
-module.exports = { getAll, getOne, create, update, remove }
-
+module.exports = { getAll, getOne, create, update, remove };
