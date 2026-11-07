@@ -10,12 +10,60 @@ Dự án full-stack thương mại điện tử, gồm 3 phần:
 
 ## Mục lục
 
-1. [Cấu trúc dự án](#cấu-trúc-dự-án)
-2. [Yêu cầu hệ thống](#yêu-cầu-hệ-thống)
-3. [Hướng dẫn cài đặt](#hướng-dẫn-cài-đặt)
-4. [Luồng hoạt động](#luồng-hoạt-động)
-5. [Công nghệ sử dụng](#công-nghệ-sử-dụng)
-6. [Tác giả](#tác-giả)
+1. [Bản đã triển khai](#bản-đã-triển-khai)
+2. [Cấu trúc dự án](#cấu-trúc-dự-án)
+3. [Yêu cầu hệ thống](#yêu-cầu-hệ-thống)
+4. [Hướng dẫn cài đặt](#hướng-dẫn-cài-đặt)
+5. [Luồng hoạt động](#luồng-hoạt-động)
+6. [Công nghệ sử dụng](#công-nghệ-sử-dụng)
+7. [Tác giả](#tác-giả)
+
+---
+
+## Bản đã triển khai
+
+| Thành phần | Địa chỉ | Nền tảng |
+| --- | --- | --- |
+| Customer | https://project-online-store-ten.vercel.app | Vercel |
+| Admin | https://project-online-store-7voj.vercel.app | Vercel |
+| API | https://online-store-api-612c.onrender.com/api | Render |
+| Database | online_store | TiDB Cloud (Singapore) |
+
+Gói miễn phí của Render cho service ngủ sau 15 phút không có truy cập. Lần gọi đầu tiên sau đó mất khoảng 50 giây để khởi động lại.
+
+### Biến môi trường trên Render
+
+| Biến | Giá trị |
+| --- | --- |
+| DB_HOST | gateway01.ap-southeast-1.prod.aws.tidbcloud.com |
+| DB_PORT | 4000 |
+| DB_NAME | online_store |
+| DB_USER | tiền tố cluster + .root |
+| DB_PASSWORD | mật khẩu TiDB |
+| DB_DIALECT | mariadb |
+| DB_SSL | true |
+| CORS_ORIGINS | các tên miền Vercel, ngăn cách bằng dấu phẩy |
+| JWT_SECRET | chuỗi ngẫu nhiên |
+| JWT_REFRESH_SECRET | chuỗi ngẫu nhiên |
+| CLOUDINARY_CLOUD_NAME | tên cloud |
+| CLOUDINARY_API_KEY | khoá Cloudinary |
+| CLOUDINARY_API_SECRET | khoá bí mật Cloudinary |
+
+Không khai báo biến PORT, Render tự cấp.
+
+### Biến môi trường trên Vercel
+
+| Project | Biến | Giá trị |
+| --- | --- | --- |
+| Customer | NEXT_PUBLIC_API_URL | https://online-store-api-612c.onrender.com/api |
+| Admin | VITE_API_URL | https://online-store-api-612c.onrender.com/api |
+
+### Ghi chú kỹ thuật
+
+- Thư viện mysql2 không bắt tay được với gateway của TiDB Cloud, báo lỗi HANDSHAKE_UNKNOWN_ERROR. Môi trường triển khai dùng DB_DIALECT=mariadb, driver này kết nối bình thường.
+- TiDB Cloud bắt buộc kết nối mã hoá, nên DB_SSL=true. Ở máy cá nhân dùng MariaDB không cần mã hoá, để DB_SSL=false.
+- Admin dùng Vite với outDir đặt là dist trong vite.config.mjs để khớp thư mục mặc định Vercel tìm.
+- Cả Customer và Admin đều đọc địa chỉ API từ biến môi trường, có giá trị dự phòng là http://localhost:5000/api nên chạy ở máy không cần tạo file .env.
 
 ---
 
