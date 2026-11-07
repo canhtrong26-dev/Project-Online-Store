@@ -10,8 +10,8 @@ import { useTranslations, useLocale } from 'next-intl';
 export default function Home() {
   const t = useTranslations('home');
   const locale = useLocale();
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Header from "@/components/Header";
 import "../globals.css";
 import { Toaster } from "react-hot-toast";
@@ -24,7 +25,13 @@ export function generateStaticParams() {
   return [{ locale: "vi" }, { locale: "en" }];
 }
 
-export default async function RootLayout({ children, params }) {
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
   const messages = await getMessages();
 
