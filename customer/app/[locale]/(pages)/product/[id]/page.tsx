@@ -13,7 +13,7 @@ function ProductDetailContent() {
   const [product, setProduct] = useState<any>(null)
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/products/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/products/${id}`)
       .then(res => res.json())
       .then(data => setProduct(data))
   }, [id])
