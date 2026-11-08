@@ -29,7 +29,6 @@ Dự án full-stack thương mại điện tử, gồm 3 phần:
 | API | https://online-store-api-612c.onrender.com/api | Render |
 | Database | online_store | TiDB Cloud (Singapore) |
 
-Gói miễn phí của Render cho service ngủ sau 15 phút không có truy cập. Lần gọi đầu tiên sau đó mất khoảng 50 giây để khởi động lại.
 
 ### Biến môi trường trên Render
 
