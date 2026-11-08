@@ -55,23 +55,30 @@
     "name": "Full name",
     "phone": "Phone number",
     "address": "Address",
-    "submit": "Place order"
+    "submit": "Place order",
+    "province": "Province/City",
+    "district": "District",
+    "ward": "Ward",
+    "detail": "House number, street",
+    "chooseProvince": "-- Select Province/City --",
+    "chooseDistrict": "-- Select District --",
+    "chooseWard": "-- Select Ward --"
   },
   "product": {
     "loading": "Loading...",
     "back": "Go back",
     "addToCart": "Add to cart"
   },
-"footer": {
-  "description": "Online fashion store with shirts, pants, shoes, bags and accessories.",
-  "links": "Links",
-  "home": "Home",
-  "cart": "Cart",
-  "order": "Orders",
-  "contact": "Contact",
-  "address": "Hanoi, Vietnam",
-  "map": "Map",
-  "rights": "All rights reserved.",
-  "copyright": "Capstone Project — Võ Trọng Cảnh"
-}
+  "footer": {
+    "description": "Online fashion store with shirts, pants, shoes, bags and accessories.",
+    "links": "Links",
+    "home": "Home",
+    "cart": "Cart",
+    "order": "Orders",
+    "contact": "Contact",
+    "address": "Hanoi, Vietnam",
+    "map": "Map",
+    "rights": "All rights reserved.",
+    "copyright": "Capstone Project — Võ Trọng Cảnh"
+  }
 }

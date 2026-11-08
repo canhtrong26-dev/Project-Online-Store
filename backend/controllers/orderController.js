@@ -38,12 +38,17 @@ const getMyOrders = async (req, res) => {
 // Thêm order mới
 const create = async (req, res) => {
   try {
-    const { items } = req.body;        //lấy product + quantity từ checkout/page.tsx rồi tự tính ra total
+    const { items, name, phone, address } = req.body;
     const user_id = req.user.id;  // lấy id của user từ accessToken (đã được verifyToken giải mã)
 
     // Kiểm tra cart không rỗng
     if (!items || items.length === 0) {
       return res.status(400).json({ message: 'Giỏ hàng trống!' });
+    }
+
+    // Kiểm tra thông tin giao hàng
+    if (!name || !phone || !address) {
+      return res.status(400).json({ message: 'Thiếu thông tin giao hàng!' });
     }
 
     // Kiểm tra quantity hợp lệ
@@ -63,8 +68,19 @@ const create = async (req, res) => {
       total = total + product.price * item.quantity;
     }
 
+    // Sđt đã có trong DB thì cập nhật khách đó, chưa có thì ghi vào tài khoản đang đăng nhập
+    const khachTheoSdt = await User.findOne({ where: { phone } });
+    let idKhach;
+    if (khachTheoSdt) {
+      await User.update({ name, address }, { where: { id: khachTheoSdt.id } });
+      idKhach = khachTheoSdt.id;
+    } else {
+      await User.update({ name, phone, address }, { where: { id: user_id } });
+      idKhach = user_id;
+    }
+
     // Tạo order chính
-    const order = await Order.create({ user_id, total });
+    const order = await Order.create({ user_id: idKhach, total });
 
     // Tạo order chi tiết từ order chính ở trên
     for (const item of items) {

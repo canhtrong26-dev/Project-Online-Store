@@ -55,23 +55,30 @@
     "name": "Họ tên",
     "phone": "Số điện thoại",
     "address": "Địa chỉ",
-    "submit": "Đặt hàng"
+    "submit": "Đặt hàng",
+    "province": "Tỉnh/Thành phố",
+    "district": "Quận/Huyện",
+    "ward": "Phường/Xã",
+    "detail": "Số nhà, tên đường",
+    "chooseProvince": "-- Chọn Tỉnh/Thành phố --",
+    "chooseDistrict": "-- Chọn Quận/Huyện --",
+    "chooseWard": "-- Chọn Phường/Xã --"
   },
   "product": {
     "loading": "Đang tải...",
     "back": "Quay lại",
     "addToCart": "Thêm vào giỏ hàng"
   },
- "footer": {
-  "description": "Cửa hàng thời trang online với áo, quần, giày, túi xách và phụ kiện.",
-  "links": "Liên kết",
-  "home": "Trang chủ",
-  "cart": "Giỏ hàng",
-  "order": "Đơn hàng",
-  "contact": "Liên hệ",
-  "address": "Hà Nội, Việt Nam",
-  "map": "Bản đồ cửa hàng",
-  "rights": "Bảo lưu mọi quyền.",
-  "copyright": "Capstone Project — Võ Trọng Cảnh"
-}
+  "footer": {
+    "description": "Cửa hàng thời trang online với áo, quần, giày, túi xách và phụ kiện.",
+    "links": "Liên kết",
+    "home": "Trang chủ",
+    "cart": "Giỏ hàng",
+    "order": "Đơn hàng",
+    "contact": "Liên hệ",
+    "address": "Hà Nội, Việt Nam",
+    "map": "Bản đồ cửa hàng",
+    "rights": "Bảo lưu mọi quyền.",
+    "copyright": "Capstone Project — Võ Trọng Cảnh"
+  }
 }

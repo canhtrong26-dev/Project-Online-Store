@@ -9,13 +9,21 @@ import { createOrder } from '@/lib/api';
 import toast from 'react-hot-toast';
 import { useTranslations, useLocale } from 'next-intl';
 
+//API hành chính Việt Nam, không cần đăng ký khoá
+const API_DIA_CHI = 'https://provinces.open-api.vn/api/v1';
+
 const schema = z.object({
   name: z.string().min(1, 'Nhập tên đi'),
   phone: z.string().min(10, 'Số điện thoại không hợp lệ'),
-  address: z.string().min(1, 'Nhập địa chỉ đi'),
+  province: z.string().min(1, 'Chọn tỉnh/thành phố'),
+  district: z.string().min(1, 'Chọn quận/huyện'),
+  ward: z.string().min(1, 'Chọn phường/xã'),
+  detail: z.string().min(1, 'Nhập số nhà, tên đường'),
 });
 
 type CheckoutForm = z.infer<typeof schema>;
+
+type DonViHanhChinh = { code: number; name: string };
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -23,10 +31,20 @@ export default function CheckoutPage() {
   const locale = useLocale();
   const [cart, setCart] = useState<any[]>([]);
   const [isOrdered, setIsOrdered] = useState(false);
+  const [dsTinh, setDsTinh] = useState<DonViHanhChinh[]>([]);
+  const [dsHuyen, setDsHuyen] = useState<DonViHanhChinh[]>([]);
+  const [dsXa, setDsXa] = useState<DonViHanhChinh[]>([]);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<CheckoutForm>({
-    resolver: zodResolver(schema)
-  });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<CheckoutForm>({ resolver: zodResolver(schema) });
+
+  const maTinh = watch('province');
+  const maHuyen = watch('district');
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -42,16 +60,70 @@ export default function CheckoutPage() {
       return;
     }
     setCart(cartData);
+
+    //điền sẵn thông tin của người đang đăng nhập
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    if (user) {
+      if (user.name) setValue('name', user.name);
+      if (user.phone) setValue('phone', user.phone);
+    }
   }, []);
+
+  //lấy danh sách tỉnh 1 lần khi mở trang
+  useEffect(() => {
+    fetch(`${API_DIA_CHI}/p/`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setDsTinh(data);
+      })
+      .catch(() => toast.error('Không tải được danh sách tỉnh/thành phố!'));
+  }, []);
+
+  //đổi tỉnh thì tải lại danh sách huyện
+  useEffect(() => {
+    setValue('district', '');
+    setValue('ward', '');
+    setDsHuyen([]);
+    setDsXa([]);
+    if (!maTinh) return;
+
+    fetch(`${API_DIA_CHI}/p/${maTinh}?depth=2`)
+      .then((res) => res.json())
+      .then((data) => setDsHuyen(data.districts || []))
+      .catch(() => toast.error('Không tải được danh sách quận/huyện!'));
+  }, [maTinh]);
+
+  //đổi huyện thì tải lại danh sách xã
+  useEffect(() => {
+    setValue('ward', '');
+    setDsXa([]);
+    if (!maHuyen) return;
+
+    fetch(`${API_DIA_CHI}/d/${maHuyen}?depth=2`)
+      .then((res) => res.json())
+      .then((data) => setDsXa(data.wards || []))
+      .catch(() => toast.error('Không tải được danh sách phường/xã!'));
+  }, [maHuyen]);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const onSubmit = async (data: CheckoutForm) => {
     const token = localStorage.getItem('accessToken')!;
+
+    //đổi mã số sang tên để ghép thành địa chỉ đầy đủ
+    const tenTinh = dsTinh.find((x) => String(x.code) === data.province)?.name || '';
+    const tenHuyen = dsHuyen.find((x) => String(x.code) === data.district)?.name || '';
+    const tenXa = dsXa.find((x) => String(x.code) === data.ward)?.name || '';
+    const address = `${data.detail}, ${tenXa}, ${tenHuyen}, ${tenTinh}`;
+
     const orderData = {
       total,
+      name: data.name,
+      phone: data.phone,
+      address,
       items: cart.map((item) => ({ product_id: item.id, quantity: item.quantity })),
     };
+
     const res = await createOrder(orderData, token);
     if (res.id) {
       setIsOrdered(true);
@@ -62,6 +134,8 @@ export default function CheckoutPage() {
       toast.error(res.message || 'Đặt hàng thất bại!');
     }
   };
+
+  const classO = 'w-full border dark:border-gray-600 dark:bg-gray-800 dark:text-white p-2 rounded';
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-8 min-h-screen dark:bg-gray-900">
@@ -83,18 +157,52 @@ export default function CheckoutPage() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <h2 className="font-semibold dark:text-white">{t('shippingInfo')}:</h2>
+
         <div>
-          <input {...register('name')} placeholder={t('name')} className="w-full border dark:border-gray-600 dark:bg-gray-800 dark:text-white p-2 rounded"/>
+          <input {...register('name')} placeholder={t('name')} className={classO} />
           {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
         </div>
+
         <div>
-          <input {...register('phone')} placeholder={t('phone')} className="w-full border dark:border-gray-600 dark:bg-gray-800 dark:text-white p-2 rounded"/>
+          <input {...register('phone')} placeholder={t('phone')} className={classO} />
           {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
         </div>
+
         <div>
-          <input {...register('address')} placeholder={t('address')} className="w-full border dark:border-gray-600 dark:bg-gray-800 dark:text-white p-2 rounded"/>
-          {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
+          <select {...register('province')} aria-label={t('province')} className={classO}>
+            <option value="">{t('chooseProvince')}</option>
+            {dsTinh.map((tinh) => (
+              <option key={tinh.code} value={tinh.code}>{tinh.name}</option>
+            ))}
+          </select>
+          {errors.province && <p className="text-red-500 text-sm">{errors.province.message}</p>}
         </div>
+
+        <div>
+          <select {...register('district')} aria-label={t('district')} className={classO} disabled={!maTinh}>
+            <option value="">{t('chooseDistrict')}</option>
+            {dsHuyen.map((huyen) => (
+              <option key={huyen.code} value={huyen.code}>{huyen.name}</option>
+            ))}
+          </select>
+          {errors.district && <p className="text-red-500 text-sm">{errors.district.message}</p>}
+        </div>
+
+        <div>
+          <select {...register('ward')} aria-label={t('ward')} className={classO} disabled={!maHuyen}>
+            <option value="">{t('chooseWard')}</option>
+            {dsXa.map((xa) => (
+              <option key={xa.code} value={xa.code}>{xa.name}</option>
+            ))}
+          </select>
+          {errors.ward && <p className="text-red-500 text-sm">{errors.ward.message}</p>}
+        </div>
+
+        <div>
+          <input {...register('detail')} placeholder={t('detail')} className={classO} />
+          {errors.detail && <p className="text-red-500 text-sm">{errors.detail.message}</p>}
+        </div>
+
         <button type="submit" disabled={isSubmitting || isOrdered}
           className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50">
           {isSubmitting ? '...' : t('submit')}
