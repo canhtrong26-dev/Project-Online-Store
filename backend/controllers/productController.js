@@ -1,13 +1,36 @@
+
+const { Op } = require("sequelize");
 const { Product, Category } = require("../models/index");
 
-// Lấy tất cả sản phẩm
+// Lấy danh sách sản phẩm: phân trang, lọc theo danh mục, tìm theo tên
 const getAll = async (req, res) => {
   try {
-    const products = await Product.findAll({
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 8;
+    const offset = (page - 1) * limit;
+
+    const where = {};
+    if (req.query.category_id) {
+      where.category_id = req.query.category_id;
+    }
+    if (req.query.search) {
+      where.name = { [Op.like]: `%${req.query.search}%` };
+    }
+
+    const { count, rows } = await Product.findAndCountAll({
+      where,
       include: Category,
       order: [["updatedAt", "DESC"]],
+      limit,
+      offset,
     });
-    res.json(products);
+
+    res.json({
+      data: rows,
+      total: count,
+      page,
+      totalPages: Math.ceil(count / limit),
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

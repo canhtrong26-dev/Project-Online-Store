@@ -22,22 +22,36 @@ const Products = () => {
   })
   const [search, setSearch] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
+  //gọi lại API khi đổi trang hoặc gõ ô tìm kiếm, chờ 400ms cho người dùng gõ xong
   useEffect(() => {
-    fetchProducts()
+    const timer = setTimeout(() => {
+      fetchProducts()
+    }, 400)
+    return () => clearTimeout(timer)
+  }, [page, search])
+
+  //danh mục chỉ lấy 1 lần
+  useEffect(() => {
     fetchCategories()
   }, [])
 
-  //lấy danh sách sản phẩm
+  //lấy danh sách sản phẩm theo trang, lọc theo tên
   const fetchProducts = async () => {
-    const data = await getProducts()
-    setProducts(data)
+    const res = await getProducts({ page, limit: 10, search })
+    if (res && Array.isArray(res.data)) {
+      setProducts(res.data)
+      setTotalPages(res.totalPages)
+    }
   }
 
   //lấy danh sách danh mục
   const fetchCategories = async () => {
     const data = await getCategories()
-    setCategories(data)
+    if (Array.isArray(data)) setCategories(data)
   }
 
   const handleDelete = async (id) => {
@@ -58,7 +72,7 @@ const Products = () => {
       category_id: product.category_id,
     })
     setShowForm(true)
-    window.scrollTo({ top: 0, behavior: 'smooth' }) 
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   //chọn ảnh rồi tải lên Cloudinary sau đó tự điền link vào form
@@ -67,15 +81,16 @@ const Products = () => {
     if (!file) return
 
     setUploading(true)
+    setUploadError('')
     try {
       const data = await uploadImage(file)
       if (data.url) {
         setForm((prev) => ({ ...prev, image_url: data.url }))
       } else {
-        alert(data.message || 'Tải ảnh thất bại!')
+        setUploadError(data.message || 'Tải ảnh thất bại!')
       }
     } catch {
-      alert('Tải ảnh thất bại!')
+      setUploadError('Tải ảnh thất bại!')
     } finally {
       setUploading(false)
     }
@@ -105,6 +120,7 @@ const Products = () => {
           onClick={() => {
             setShowForm(true)
             setEditProduct(null)
+            setUploadError('')
             setForm({ name: '', price: '', image_url: '', description: '', category_id: '' })
           }}
         >
@@ -117,7 +133,10 @@ const Products = () => {
         className="form-control mb-3"
         placeholder="Tìm kiếm sản phẩm..."
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => {
+          setSearch(e.target.value)
+          setPage(1)
+        }}
       />
 
       {showForm && (
@@ -156,6 +175,7 @@ const Products = () => {
               disabled={uploading}
             />
             {uploading && <div className="text-muted small mt-1">Đang tải ảnh lên...</div>}
+            {uploadError && <div className="text-danger small mt-1">{uploadError}</div>}
             {form.image_url && !uploading && (
               <img
                 src={form.image_url}
@@ -232,46 +252,68 @@ const Products = () => {
             </tr>
           </thead>
           <tbody>
-            {products
-              .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
-              .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-              .map((p) => (
-                <tr key={p.id}>
-                  <td>{p.id}</td>
-                  <td>
-                    {p.image_url && (
-                      <img
-                        src={p.image_url}
-                        alt={p.name}
-
-                        style={{ width: 60, height: 50, objectFit: 'cover' }}
-                      />
-                    )}
-                  </td>
-                  <td>{p.name}</td>
-                  <td>{Number(p.price).toLocaleString()}đ</td>
-                  <td>{p.Category?.name}</td>
-                  <td>
-                    <button
-                      aria-label={`Sửa sản phẩm ${p.name}`}
-                      className="btn btn-warning btn-sm me-2"
-                      onClick={() => handleEdit(p)}
-                    >
-                      Sửa
-                    </button>
-                    <button
-                      aria-label={`Xóa sản phẩm ${p.name}`}
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleDelete(p.id)}
-                    >
-                      Xóa
-                    </button>
-                  </td>
-                </tr>
-              ))}
+            {products.map((p) => (
+              <tr key={p.id}>
+                <td>{p.id}</td>
+                <td>
+                  {p.image_url && (
+                    <img
+                      src={p.image_url}
+                      alt={p.name}
+                      style={{ width: 60, height: 50, objectFit: 'cover' }}
+                    />
+                  )}
+                </td>
+                <td>{p.name}</td>
+                <td>{Number(p.price).toLocaleString()}đ</td>
+                <td>{p.Category?.name}</td>
+                <td>
+                  <button
+                    aria-label={`Sửa sản phẩm ${p.name}`}
+                    className="btn btn-warning btn-sm me-2"
+                    onClick={() => handleEdit(p)}
+                  >
+                    Sửa
+                  </button>
+                  <button
+                    aria-label={`Xóa sản phẩm ${p.name}`}
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(p.id)}
+                  >
+                    Xóa
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
+
+      {totalPages > 1 && (
+        <nav className="d-flex justify-content-center mt-3">
+          <ul className="pagination mb-0">
+            <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
+              <button className="page-link" onClick={() => setPage(page - 1)}>
+                &laquo;
+              </button>
+            </li>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((soTrang) => (
+              <li key={soTrang} className={`page-item ${page === soTrang ? 'active' : ''}`}>
+                <button className="page-link" onClick={() => setPage(soTrang)}>
+                  {soTrang}
+                </button>
+              </li>
+            ))}
+
+            <li className={`page-item ${page === totalPages ? 'disabled' : ''}`}>
+              <button className="page-link" onClick={() => setPage(page + 1)}>
+                &raquo;
+              </button>
+            </li>
+          </ul>
+        </nav>
+      )}
     </div>
   )
 }

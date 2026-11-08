@@ -23,8 +23,6 @@ const refreshAccessToken = async () => {
   return null
 }
 
-
-
 const fetchWithAuth = async (url, options = {}) => {
   let res = await fetch(url, {
     ...options,
@@ -55,9 +53,12 @@ export const logout = async () => {
   return res.json()
 }
 
-// Lấy tất cả sản phẩm
-export const getProducts = async () => {
-  const res = await fetchWithAuth(`${API_URL}/products`)   
+// Lấy sản phẩm theo trang, có thể tìm theo tên
+export const getProducts = async ({ page = 1, limit = 10, search = '' } = {}) => {
+  const query = new URLSearchParams({ page: String(page), limit: String(limit) })
+  if (search) query.set('search', search)
+
+  const res = await fetchWithAuth(`${API_URL}/products?${query.toString()}`)
   return res.json()
 }
 
@@ -71,7 +72,7 @@ export const getCategories = async () => {
 export const createProduct = async (data) => {
   const res = await fetchWithAuth(`${API_URL}/products`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },        
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   })
   return res.json()
@@ -79,9 +80,9 @@ export const createProduct = async (data) => {
 
 // Sửa sản phẩm
 export const updateProduct = async (id, data) => {
-  const res = await fetchWithAuth(`${API_URL}/products/${id}`, { 
+  const res = await fetchWithAuth(`${API_URL}/products/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },              
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   })
   return res.json()
@@ -89,7 +90,7 @@ export const updateProduct = async (id, data) => {
 
 // Xóa sản phẩm
 export const deleteProduct = async (id) => {
-  const res = await fetchWithAuth(`${API_URL}/products/${id}`, {   
+  const res = await fetchWithAuth(`${API_URL}/products/${id}`, {
     method: 'DELETE',
   })
   return res.json()
@@ -97,15 +98,15 @@ export const deleteProduct = async (id) => {
 
 // Lấy tất cả đơn hàng
 export const getOrders = async () => {
-  const res = await fetchWithAuth(`${API_URL}/orders`)  
+  const res = await fetchWithAuth(`${API_URL}/orders`)
   return res.json()
 }
 
 // Cập nhật trạng thái đơn hàng
 export const updateOrder = async (id, status) => {
-  const res = await fetchWithAuth(`${API_URL}/orders/${id}`, {  
+  const res = await fetchWithAuth(`${API_URL}/orders/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },           
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ status }),
   })
   return res.json()
@@ -113,7 +114,7 @@ export const updateOrder = async (id, status) => {
 
 // Lấy tất cả khách hàng
 export const getUsers = async () => {
-  const res = await fetchWithAuth(`${API_URL}/users`)   
+  const res = await fetchWithAuth(`${API_URL}/users`)
   return res.json()
 }
 

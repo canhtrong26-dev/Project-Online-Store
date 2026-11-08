@@ -1,10 +1,24 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-//xem tất cả sản phẩm
-export const getProducts = async () => {
-  const res = await fetch(`${API_URL}/products`);
+//lấy sản phẩm theo trang, có thể lọc theo danh mục và tìm theo tên
+export const getProducts = async (params: {
+  page?: number;
+  limit?: number;
+  category_id?: number | null;
+  search?: string;
+} = {}) => {
+  const query = new URLSearchParams();
+  query.set('page', String(params.page ?? 1));
+  query.set('limit', String(params.limit ?? 8));
+  if (params.category_id) query.set('category_id', String(params.category_id));
+  if (params.search) query.set('search', params.search);
+
+  const res = await fetch(`${API_URL}/products?${query.toString()}`);
   return res.json();
 };
+
+
+
 
 //xem tất cả danh mục
 export const getCategories = async () => {
