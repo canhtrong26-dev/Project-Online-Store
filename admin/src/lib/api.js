@@ -88,12 +88,13 @@ export const updateProduct = async (id, data) => {
   return res.json()
 }
 
-// Xóa sản phẩm
+// Xóa sản phẩm, trả thêm ok để biết thành công hay bị chặn
 export const deleteProduct = async (id) => {
   const res = await fetchWithAuth(`${API_URL}/products/${id}`, {
     method: 'DELETE',
   })
-  return res.json()
+  const data = await res.json()
+  return { ok: res.ok, ...data }
 }
 
 // Lấy tất cả đơn hàng

@@ -1,5 +1,4 @@
-const { Category } = require('../models/index');  
-
+const { Category, Product } = require('../models/index');
 //get tất cả danh mục
 const getAll = async (req, res) => {              
   try {
@@ -33,11 +32,24 @@ const update = async (req, res) => {
   }
 };
 
-//xoá 1 danh mục
-const remove = async (req, res) => {              
+//xoá 1 danh mục, chặn nếu còn sản phẩm thuộc danh mục này
+const remove = async (req, res) => {
   try {
     const { id } = req.params;
-    await Category.destroy({ where: { id } });   
+
+    const category = await Category.findByPk(id);
+    if (!category) {
+      return res.status(404).json({ message: 'Không tìm thấy danh mục!' });
+    }
+
+    const soSanPham = await Product.count({ where: { category_id: id } });
+    if (soSanPham > 0) {
+      return res.status(400).json({
+        message: `Không xoá được! Danh mục này đang có ${soSanPham} sản phẩm.`,
+      });
+    }
+
+    await Category.destroy({ where: { id } });
     res.json({ message: 'Xoá thành công!' });
   } catch (error) {
     res.status(500).json({ message: error.message });

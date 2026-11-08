@@ -23,6 +23,7 @@ const Products = () => {
   const [search, setSearch] = useState('')
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
+  const [deleteError, setDeleteError] = useState('')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
@@ -55,10 +56,15 @@ const Products = () => {
   }
 
   const handleDelete = async (id) => {
-    if (window.confirm('Xóa sản phẩm này?')) {
-      await deleteProduct(id)
-      fetchProducts()
+    if (!window.confirm('Xóa sản phẩm này?')) return
+
+    const res = await deleteProduct(id)
+    if (!res.ok) {
+      setDeleteError(res.message || 'Xoá thất bại!')
+      return
     }
+    setDeleteError('')
+    fetchProducts()
   }
 
   //chỉnh sửa sản phẩm
@@ -237,6 +243,12 @@ const Products = () => {
             Hủy
           </button>
         </form>
+      )}
+
+      {deleteError && (
+        <div className="alert alert-danger" role="alert">
+          {deleteError}
+        </div>
       )}
 
       <div className="table-responsive">

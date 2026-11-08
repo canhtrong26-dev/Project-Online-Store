@@ -1,9 +1,11 @@
-const { User } = require('../models/index');
+const { User, Order } = require('../models/index');
 
 // Lấy tất cả user
 const getAll = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      attributes: { exclude: ['password'] },
+    });
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -33,10 +35,23 @@ const update = async (req, res) => {
   }
 };
 
-// Xoá user
+// Xoá user, chặn nếu khách đã có đơn hàng
 const remove = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ message: 'Không tìm thấy khách hàng!' });
+    }
+
+    const soDonHang = await Order.count({ where: { user_id: id } });
+    if (soDonHang > 0) {
+      return res.status(400).json({
+        message: `Không xoá được! Khách hàng này đang có ${soDonHang} đơn hàng.`,
+      });
+    }
+
     await User.destroy({ where: { id } });
     res.json({ message: 'Xoá thành công!' });
   } catch (error) {
