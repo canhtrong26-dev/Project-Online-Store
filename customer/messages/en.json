@@ -80,5 +80,31 @@
     "map": "Map",
     "rights": "All rights reserved.",
     "copyright": "Capstone Project — Võ Trọng Cảnh"
+  },
+  "msg": {
+    "addedToCart": "Added {name} to your cart!",
+    "removedItem": "Item removed!",
+    "pleaseLogin": "Please log in first!",
+    "emptyCart": "Your cart is empty!",
+    "orderSuccess": "Order placed successfully!",
+    "orderFailed": "Could not place the order!",
+    "loginSuccess": "Logged in successfully!",
+    "loginFailed": "Login failed!",
+    "registerSuccess": "Registered successfully!",
+    "registerFailed": "Registration failed!",
+    "logoutSuccess": "Logged out successfully!",
+    "somethingWrong": "Something went wrong!",
+    "loadProvinceFailed": "Could not load the province list!",
+    "loadDistrictFailed": "Could not load the district list!",
+    "loadWardFailed": "Could not load the ward list!",
+    "errName": "Please enter your full name",
+    "errEmail": "Invalid email",
+    "errPassword": "Password must be at least 6 characters",
+    "errPhone": "Invalid phone number",
+    "errAddress": "Please enter your address",
+    "errProvince": "Please select a province/city",
+    "errDistrict": "Please select a district",
+    "errWard": "Please select a ward",
+    "errDetail": "Please enter house number and street"
   }
 }

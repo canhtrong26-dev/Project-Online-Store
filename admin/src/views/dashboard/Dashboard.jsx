@@ -24,7 +24,7 @@ const Dashboard = () => {
     const revenue = orders.reduce((sum, o) => sum + Number(o.total), 0)
 
     setStats({
-      products: products.length,
+      products: products.total,
       orders: orders.length,
       users: users.length,
       revenue

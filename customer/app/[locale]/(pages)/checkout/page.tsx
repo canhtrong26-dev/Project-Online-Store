@@ -12,23 +12,32 @@ import { useTranslations, useLocale } from 'next-intl';
 //API hành chính Việt Nam, không cần đăng ký khoá
 const API_DIA_CHI = 'https://provinces.open-api.vn/api/v1';
 
-const schema = z.object({
-  name: z.string().min(1, 'Nhập tên đi'),
-  phone: z.string().min(10, 'Số điện thoại không hợp lệ'),
-  province: z.string().min(1, 'Chọn tỉnh/thành phố'),
-  district: z.string().min(1, 'Chọn quận/huyện'),
-  ward: z.string().min(1, 'Chọn phường/xã'),
-  detail: z.string().min(1, 'Nhập số nhà, tên đường'),
-});
-
-type CheckoutForm = z.infer<typeof schema>;
+type CheckoutForm = {
+  name: string;
+  phone: string;
+  province: string;
+  district: string;
+  ward: string;
+  detail: string;
+};
 
 type DonViHanhChinh = { code: number; name: string };
 
 export default function CheckoutPage() {
   const router = useRouter();
   const t = useTranslations('checkout');
+  const tMsg = useTranslations('msg');
   const locale = useLocale();
+
+  //đặt schema trong component để dùng được chuỗi đã dịch
+  const schema = z.object({
+    name: z.string().min(1, tMsg('errName')),
+    phone: z.string().min(10, tMsg('errPhone')),
+    province: z.string().min(1, tMsg('errProvince')),
+    district: z.string().min(1, tMsg('errDistrict')),
+    ward: z.string().min(1, tMsg('errWard')),
+    detail: z.string().min(1, tMsg('errDetail')),
+  });
   const [cart, setCart] = useState<any[]>([]);
   const [isOrdered, setIsOrdered] = useState(false);
   const [dsTinh, setDsTinh] = useState<DonViHanhChinh[]>([]);
@@ -49,13 +58,13 @@ export default function CheckoutPage() {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      toast.error('Vui lòng đăng nhập trước!');
+      toast.error(tMsg('pleaseLogin'));
       router.push(`/${locale}/login`);
       return;
     }
     const cartData = JSON.parse(localStorage.getItem('cart') || '[]');
     if (cartData.length === 0) {
-      toast.error('Giỏ hàng trống!');
+      toast.error(tMsg('emptyCart'));
       router.push(`/${locale}`);
       return;
     }
@@ -76,7 +85,7 @@ export default function CheckoutPage() {
       .then((data) => {
         if (Array.isArray(data)) setDsTinh(data);
       })
-      .catch(() => toast.error('Không tải được danh sách tỉnh/thành phố!'));
+      .catch(() => toast.error(tMsg('loadProvinceFailed')));
   }, []);
 
   //đổi tỉnh thì tải lại danh sách huyện
@@ -90,7 +99,7 @@ export default function CheckoutPage() {
     fetch(`${API_DIA_CHI}/p/${maTinh}?depth=2`)
       .then((res) => res.json())
       .then((data) => setDsHuyen(data.districts || []))
-      .catch(() => toast.error('Không tải được danh sách quận/huyện!'));
+      .catch(() => toast.error(tMsg('loadDistrictFailed')));
   }, [maTinh]);
 
   //đổi huyện thì tải lại danh sách xã
@@ -102,7 +111,7 @@ export default function CheckoutPage() {
     fetch(`${API_DIA_CHI}/d/${maHuyen}?depth=2`)
       .then((res) => res.json())
       .then((data) => setDsXa(data.wards || []))
-      .catch(() => toast.error('Không tải được danh sách phường/xã!'));
+      .catch(() => toast.error(tMsg('loadWardFailed')));
   }, [maHuyen]);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -128,10 +137,10 @@ export default function CheckoutPage() {
     if (res.id) {
       setIsOrdered(true);
       localStorage.removeItem('cart');
-      toast.success('Đặt hàng thành công!');
+      toast.success(tMsg('orderSuccess'));
       setTimeout(() => router.push(`/${locale}`), 2000);
     } else {
-      toast.error(res.message || 'Đặt hàng thất bại!');
+      toast.error(tMsg('orderFailed'));
     }
   };
 

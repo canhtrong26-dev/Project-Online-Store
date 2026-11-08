@@ -9,20 +9,28 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 
-const schema = z.object({
-  name: z.string().min(1, 'Nhập tên đi'),
-  email: z.string().email('Email không hợp lệ'),
-  password: z.string().min(6, 'Mật khẩu ít nhất 6 ký tự'),
-  phone: z.string().min(10, 'Số điện thoại không hợp lệ'),
-  address: z.string().min(1, 'Nhập địa chỉ đi'),
-});
-
-type RegisterForm = z.infer<typeof schema>;
+type RegisterForm = {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  address: string;
+};
 
 export default function RegisterPage() {
   const router = useRouter();
   const t = useTranslations('register');
+  const tMsg = useTranslations('msg');
   const locale = useLocale();
+
+  //đặt schema trong component để dùng được chuỗi đã dịch
+  const schema = z.object({
+    name: z.string().min(1, tMsg('errName')),
+    email: z.string().email(tMsg('errEmail')),
+    password: z.string().min(6, tMsg('errPassword')),
+    phone: z.string().min(10, tMsg('errPhone')),
+    address: z.string().min(1, tMsg('errAddress')),
+  });
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterForm>({
     resolver: zodResolver(schema)
@@ -31,10 +39,10 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterForm) => {
     const res = await registerAPI(data);
     if (res.message === 'Đăng ký thành công!') {
-      toast.success('Đăng ký thành công!');
+      toast.success(tMsg('registerSuccess'));
       router.push(`/${locale}/login`);
     } else {
-      toast.error(res.message || 'Đăng ký thất bại!');
+      toast.error(tMsg('registerFailed'));
     }
   };
 

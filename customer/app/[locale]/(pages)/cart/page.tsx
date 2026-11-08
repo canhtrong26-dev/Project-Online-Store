@@ -8,6 +8,7 @@ import { useTranslations, useLocale } from 'next-intl';
 
 export default function CartPage() {
   const t = useTranslations('cart');
+  const tMsg = useTranslations('msg');
   const locale = useLocale();
   const [cart, setCart] = useState<any[]>([]);
 
@@ -36,7 +37,7 @@ export default function CartPage() {
     const newCart = cart.filter((item) => item.id !== id);
     setCart(newCart);
     localStorage.setItem('cart', JSON.stringify(newCart));
-    toast.success('Đã xóa sản phẩm!');
+    toast.success(tMsg('removedItem'));
   };
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);

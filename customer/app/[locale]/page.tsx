@@ -9,6 +9,7 @@ import { useTranslations, useLocale } from 'next-intl';
 
 export default function Home() {
   const t = useTranslations('home');
+  const tMsg = useTranslations('msg');
   const locale = useLocale();
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -42,7 +43,7 @@ export default function Home() {
       cart.push({ id: product.id, name: product.name, price: product.price, image_url: product.image_url, quantity: 1 });
     }
     localStorage.setItem('cart', JSON.stringify(cart));
-    toast.success(<p>Đã thêm <b>{product.name}</b> vào giỏ hàng!</p>);
+    toast.success(tMsg('addedToCart', { name: product.name }));
   };
 
   return (

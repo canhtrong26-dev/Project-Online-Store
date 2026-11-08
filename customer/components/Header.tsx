@@ -15,6 +15,7 @@ export default function Header() {
   const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations('header');
+  const tMsg = useTranslations('msg');
 
   const [user, setUser] = useState<any>(null);
   const [cartCount, setCartCount] = useState(0);
@@ -39,7 +40,7 @@ export default function Header() {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     setUser(null);
-    toast.success('Đăng xuất thành công!');
+    toast.success(tMsg('logoutSuccess'));
     router.push(`/${locale}`);
   }
 };

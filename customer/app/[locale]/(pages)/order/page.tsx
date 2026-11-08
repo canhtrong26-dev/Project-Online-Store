@@ -9,13 +9,14 @@ import { useTranslations, useLocale } from 'next-intl';
 export default function OrderPage() {
   const router = useRouter();
   const t = useTranslations('order');
+  const tMsg = useTranslations('msg');
   const locale = useLocale();
   const [orders, setOrders] = useState<any[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      toast.error('Vui lòng đăng nhập trước!');
+      toast.error(tMsg('pleaseLogin'));
       router.push(`/${locale}/login`);
       return;
     }
@@ -24,7 +25,7 @@ export default function OrderPage() {
       if (Array.isArray(data)) {
         setOrders(data);
       } else {
-        toast.error(data.message || 'Có lỗi xảy ra!');
+        toast.error(tMsg('somethingWrong'));
       }
     };
     fetchOrders();

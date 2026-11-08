@@ -10,6 +10,7 @@ function ProductDetailContent() {
   const { id } = useParams()
   const router = useRouter()
   const t = useTranslations('product')
+  const tMsg = useTranslations('msg')
   const [product, setProduct] = useState<any>(null)
 
   useEffect(() => {
@@ -27,7 +28,7 @@ function ProductDetailContent() {
       cart.push({ id: product.id, name: product.name, price: product.price, image_url: product.image_url, quantity: 1 })
     }
     localStorage.setItem('cart', JSON.stringify(cart))
-    toast.success(`Đã thêm ${product.name} vào giỏ hàng!`)
+    toast.success(tMsg('addedToCart', { name: product.name }))
   }
 
   if (!product) return <p className="p-8 dark:text-white">{t('loading')}</p>

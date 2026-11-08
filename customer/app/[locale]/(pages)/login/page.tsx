@@ -9,17 +9,19 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 
-const schema = z.object({
-  email: z.string().email('Email không hợp lệ'),
-  password: z.string().min(6, 'Mật khẩu ít nhất 6 ký tự'),
-});
-
-type LoginForm = z.infer<typeof schema>;
+type LoginForm = { email: string; password: string };
 
 export default function LoginPage() {
   const router = useRouter();
   const t = useTranslations('login');
+  const tMsg = useTranslations('msg');
   const locale = useLocale();
+
+  //đặt schema trong component để dùng được chuỗi đã dịch
+  const schema = z.object({
+    email: z.string().email(tMsg('errEmail')),
+    password: z.string().min(6, tMsg('errPassword')),
+  });
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(schema)
@@ -31,10 +33,10 @@ export default function LoginPage() {
       localStorage.setItem('accessToken', res.accessToken);
       localStorage.setItem('refreshToken', res.refreshToken);
       localStorage.setItem('user', JSON.stringify(res.user));
-      toast.success('Đăng nhập thành công!');
+      toast.success(tMsg('loginSuccess'));
       router.push(`/${locale}`);
     } else {
-      toast.error(res.message || 'Đăng nhập thất bại!');
+      toast.error(tMsg('loginFailed'));
     }
   };
 

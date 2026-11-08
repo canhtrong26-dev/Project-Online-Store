@@ -80,5 +80,31 @@
     "map": "Bản đồ cửa hàng",
     "rights": "Bảo lưu mọi quyền.",
     "copyright": "Capstone Project — Võ Trọng Cảnh"
+  },
+  "msg": {
+    "addedToCart": "Đã thêm {name} vào giỏ hàng!",
+    "removedItem": "Đã xóa sản phẩm!",
+    "pleaseLogin": "Vui lòng đăng nhập trước!",
+    "emptyCart": "Giỏ hàng trống!",
+    "orderSuccess": "Đặt hàng thành công!",
+    "orderFailed": "Đặt hàng thất bại!",
+    "loginSuccess": "Đăng nhập thành công!",
+    "loginFailed": "Đăng nhập thất bại!",
+    "registerSuccess": "Đăng ký thành công!",
+    "registerFailed": "Đăng ký thất bại!",
+    "logoutSuccess": "Đăng xuất thành công!",
+    "somethingWrong": "Có lỗi xảy ra!",
+    "loadProvinceFailed": "Không tải được danh sách tỉnh/thành phố!",
+    "loadDistrictFailed": "Không tải được danh sách quận/huyện!",
+    "loadWardFailed": "Không tải được danh sách phường/xã!",
+    "errName": "Vui lòng nhập họ tên",
+    "errEmail": "Email không hợp lệ",
+    "errPassword": "Mật khẩu ít nhất 6 ký tự",
+    "errPhone": "Số điện thoại không hợp lệ",
+    "errAddress": "Vui lòng nhập địa chỉ",
+    "errProvince": "Vui lòng chọn tỉnh/thành phố",
+    "errDistrict": "Vui lòng chọn quận/huyện",
+    "errWard": "Vui lòng chọn phường/xã",
+    "errDetail": "Vui lòng nhập số nhà, tên đường"
   }
 }
