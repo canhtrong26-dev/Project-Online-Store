@@ -1,51 +1,21 @@
-const express = require('express'); 
-const cors = require('cors'); 
-require('dotenv').config();
-const sequelize = require('./config/database');
-require('./models/index');
-
-const categoryRoutes = require('./routes/categoryRoutes');
-const productRoutes = require('./routes/productRoutes');
-const userRoutes = require('./routes/userRoutes');
-const orderRoutes = require('./routes/orderRoutes');
-const authRoutes = require('./routes/authRoutes');
-const uploadRoutes = require('./routes/uploadRoutes'); 
-
 const { Op } = require('sequelize');
-const { Session } = require('./models/index'); 
+const app = require('./app');
+const sequelize = require('./config/database');
+const { Session } = require('./models/index');
 
+const PORT = process.env.PORT || 5000;
 
+//xoá các phiên đăng nhập đã hết hạn
 const cleanupExpiredSessions = async () => {
-  const deleted = await Session.destroy({
+  await Session.destroy({
     where: {
-      expires_at: { [Op.lt]: new Date() } 
-    }
+      expires_at: { [Op.lt]: new Date() },
+    },
   });
 };
 
 //chạy mỗi 24 giờ
 setInterval(cleanupExpiredSessions, 24 * 60 * 60 * 1000);
-
-const app = express();                     
-const PORT = process.env.PORT || 5000;
-
-const allowedOrigins = process.env.CORS_ORIGINS
-  ? process.env.CORS_ORIGINS.split(',')
-  : ['http://localhost:3000', 'http://localhost:3001'];
-
-app.use(cors({ origin: allowedOrigins }))
-app.use(express.json());                   
-
-app.use('/api/categories', categoryRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/upload', uploadRoutes);
-
-app.get('/', (req, res) => {             
-  res.json({ message: 'Server đang chạy!' });
-});
 
 sequelize
   .sync({ force: false })
