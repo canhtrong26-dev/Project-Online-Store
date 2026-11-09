@@ -9,12 +9,13 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  const handleLogin = async (e) => {
+   const handleLogin = async (e) => {
     e.preventDefault()
-    const res = await fetch(`${API_URL}/auth/login`, {
+    const res = await fetch(`${API_URL}/auth/login?client=admin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      credentials: 'include', //để trình duyệt NHẬN và lưu cookie adminRefreshToken
+      body: JSON.stringify({ email, password }),
     })
     const data = await res.json()
 
@@ -24,7 +25,6 @@ const Login = () => {
         return
       }
       localStorage.setItem('adminToken', data.accessToken)
-      localStorage.setItem('adminRefreshToken', data.refreshToken) // lưu thêm để tự xin token mới khi hết hạn
       navigate('/dashboard')
     } else {
       setError(data.message || 'Đăng nhập thất bại!')
@@ -57,7 +57,11 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button aria-label="Đăng nhập vào trang quản trị" type="submit" className="btn btn-primary w-100">
+          <button
+            aria-label="Đăng nhập vào trang quản trị"
+            type="submit"
+            className="btn btn-primary w-100"
+          >
             Đăng nhập
           </button>
         </form>

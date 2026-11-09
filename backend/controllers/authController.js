@@ -5,6 +5,22 @@ const { User, Session } = require("../models/index");
 const ACCESS_TOKEN_EXPIRES = "15m";
 const REFRESH_TOKEN_EXPIRES = "7d";
 
+//cấu hình cookie chứa refreshToken
+const isProd = process.env.NODE_ENV === "production";
+const cookieOptions = {
+  httpOnly: true, //JavaScript không đọc được cookie này
+  secure: isProd, //chỉ gửi qua HTTPS khi chạy thật
+  sameSite: isProd ? "none" : "lax", //cho phép gửi xuyên tên miền khi chạy thật
+  maxAge: 7 * 24 * 60 * 60 * 1000, //sống 7 ngày, tính bằng mili giây
+  path: "/api/auth", //chỉ gửi kèm khi gọi các route auth
+};
+
+//hai trang dùng chung backend nên phải đặt tên cookie khác nhau, tránh ghi đè
+const getCookieName = (req) =>
+  req.query.client === "admin" || req.body?.client === "admin"
+    ? "adminRefreshToken"
+    : "refreshToken";
+
 // Đăng ký
 const register = async (req, res) => {
   try {
@@ -78,10 +94,13 @@ const login = async (req, res) => {
       expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
+    //đặt refreshToken vào cookie httpOnly, KHÔNG trả về trong JSON nữa
+    res.cookie(getCookieName(req), refreshToken, cookieOptions);
+
     res.json({
       message: "Đăng nhập thành công!",
       accessToken,
-      refreshToken,
+
       user: {
         id: user.id,
         name: user.name,
@@ -96,15 +115,14 @@ const login = async (req, res) => {
   }
 };
 
-//Cấp accessToken mới dựa trên refreshToken do FE gửi lên
+//Cấp accessToken mới, refreshToken lấy từ cookie
 const refreshAccessToken = async (req, res) => {
   try {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies[getCookieName(req)];
     if (!refreshToken) {
       return res.status(401).json({ message: "Không có refresh token!" });
     }
 
-    // Kiểm tra session có chứa refreshToken này không
     const session = await Session.findOne({
       where: { refresh_token: refreshToken },
     });
@@ -134,6 +152,15 @@ const logout = async (req, res) => {
   try {
     const { id } = req.user; //lấy từ middleware
     await Session.destroy({ where: { user_id: id } }); //nếu đăng xuất thì tự động xóa refreshToken khỏi DB
+
+    //xoá cookie, phải trùng path và sameSite với lúc đặt
+    res.clearCookie(getCookieName(req), {
+      httpOnly: true, //JavaScript không đọc được cookie này
+      secure: isProd, //chỉ gửi qua HTTPS khi chạy thật
+      sameSite: isProd ? "none" : "lax", //cho gửi xuyên tên miền
+      path: "/api/auth",
+    });
+
     res.json({ message: "Đăng xuất thành công!" });
   } catch (error) {
     res.status(500).json({ message: error.message });

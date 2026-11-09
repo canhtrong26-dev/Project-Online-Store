@@ -4,12 +4,9 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 const getToken = () => localStorage.getItem('adminToken')
 
 const refreshAccessToken = async () => {
-  const refreshToken = localStorage.getItem('adminRefreshToken')
-
-  const res = await fetch(`${API_URL}/auth/refresh`, {
+  const res = await fetch(`${API_URL}/auth/refresh?client=admin`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refreshToken }),
+    credentials: 'include', //để trình duyệt GỬI cookie lên, backend đọc từ req.cookies
   })
 
   if (res.ok) {
@@ -19,13 +16,14 @@ const refreshAccessToken = async () => {
   }
 
   localStorage.removeItem('adminToken')
-  localStorage.removeItem('adminRefreshToken')
   return null
 }
 
+// Gọi API kèm access token; nếu bị 401 (token hết hạn) thì tự xin token mới rồi gọi lại, xin không được thì về trang login
 const fetchWithAuth = async (url, options = {}) => {
   let res = await fetch(url, {
     ...options,
+    credentials: 'include', //cần cho logout: xoá cookie cũng phải gửi cookie kèm
     headers: { ...options.headers, Authorization: `Bearer ${getToken()}` },
   })
 
@@ -35,6 +33,7 @@ const fetchWithAuth = async (url, options = {}) => {
     if (newToken) {
       res = await fetch(url, {
         ...options,
+        credentials: 'include', //cần cho logout: xoá cookie cũng phải gửi cookie kèm
         headers: { ...options.headers, Authorization: `Bearer ${newToken}` },
       })
     } else {
@@ -47,7 +46,7 @@ const fetchWithAuth = async (url, options = {}) => {
 
 // Đăng xuất
 export const logout = async () => {
-  const res = await fetchWithAuth(`${API_URL}/auth/logout`, {
+  const res = await fetchWithAuth(`${API_URL}/auth/logout?client=admin`, {
     method: 'POST',
   })
   return res.json()

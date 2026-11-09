@@ -31,7 +31,6 @@ export default function LoginPage() {
     const res = await loginAPI(data);
     if (res.accessToken) {
       localStorage.setItem('accessToken', res.accessToken);
-      localStorage.setItem('refreshToken', res.refreshToken);
       localStorage.setItem('user', JSON.stringify(res.user));
       toast.success(tMsg('loginSuccess'));
       router.push(`/${locale}`);
