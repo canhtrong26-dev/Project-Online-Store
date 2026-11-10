@@ -19,6 +19,7 @@ const Products = () => {
     image_url: '',
     description: '',
     category_id: '',
+    stock: '',
   })
   const [search, setSearch] = useState('')
   const [uploading, setUploading] = useState(false)
@@ -76,6 +77,7 @@ const Products = () => {
       image_url: product.image_url,
       description: product.description,
       category_id: product.category_id,
+      stock: product.stock,
     })
     setShowForm(true)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -112,7 +114,7 @@ const Products = () => {
     }
     setShowForm(false)
     setEditProduct(null)
-    setForm({ name: '', price: '', image_url: '', description: '', category_id: '' })
+    setForm({ name: '', price: '', image_url: '', description: '', category_id: '', stock: '' })
     fetchProducts()
   }
 
@@ -127,7 +129,7 @@ const Products = () => {
             setShowForm(true)
             setEditProduct(null)
             setUploadError('')
-            setForm({ name: '', price: '', image_url: '', description: '', category_id: '' })
+            setForm({ name: '', price: '', image_url: '', description: '', category_id: '', stock: '' })
           }}
         >
           + Thêm sản phẩm
@@ -210,6 +212,7 @@ const Products = () => {
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </div>
+
           <div className="mb-2">
             <select
               aria-label="Chọn danh mục sản phẩm"
@@ -226,6 +229,20 @@ const Products = () => {
               ))}
             </select>
           </div>
+
+          <div className="mb-2">
+            <input
+              aria-label="Số lượng tồn kho"
+              type="number"
+              min="0"
+              className="form-control"
+              placeholder="Số lượng tồn kho"
+              value={form.stock}
+              onChange={(e) => setForm({ ...form, stock: e.target.value })}
+              required
+            />
+          </div>
+
           <button
             aria-label={editProduct ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm'}
             type="submit"
@@ -259,6 +276,7 @@ const Products = () => {
               <th>Ảnh</th>
               <th>Tên</th>
               <th>Giá</th>
+              <th>Tồn kho</th>
               <th>Danh mục</th>
               <th>Thao tác</th>
             </tr>
@@ -278,6 +296,7 @@ const Products = () => {
                 </td>
                 <td>{p.name}</td>
                 <td>{Number(p.price).toLocaleString()}đ</td>
+                <td>{p.stock}</td>
                 <td>{p.Category?.name}</td>
                 <td>
                   <button

@@ -3,19 +3,24 @@ import { getOrders, updateOrder } from '../../lib/api'
 
 const Orders = () => {
   const [orders, setOrders] = useState([])
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
   useEffect(() => {
     fetchOrders()
-  }, [])
+  }, [page])   // đổi trang thì gọi lại
 
-  const fetchOrders = async () => { //lấy tất cả đơn hàng rồi set cho orders
-    const data = await getOrders()
-    setOrders(data)
+  const fetchOrders = async () => {
+    const res = await getOrders({ page, limit: 10 })
+    if (res && Array.isArray(res.data)) {
+      setOrders(res.data)
+      setTotalPages(res.totalPages)
+    }
   }
 
   const handleComplete = async (id) => {
     if (window.confirm('Xác nhận hoàn thành đơn hàng này?')) {
-      await updateOrder(id, 'completed') //xác nhận và cập nhật lại đơn hàng
+      await updateOrder(id, 'completed')
       fetchOrders()
     }
   }
@@ -29,6 +34,9 @@ const Orders = () => {
             <tr>
               <th>ID</th>
               <th>Khách hàng</th>
+              <th>Người nhận</th>
+              <th>SĐT</th>
+              <th>Địa chỉ giao hàng</th>
               <th>Tổng tiền</th>
               <th>Trạng thái</th>
               <th>Thao tác</th>
@@ -39,6 +47,9 @@ const Orders = () => {
               <tr key={o.id}>
                 <td>{o.id}</td>
                 <td>{o.User?.name}</td>
+                <td>{o.shipping_name || '—'}</td>
+                <td>{o.shipping_phone || '—'}</td>
+                <td>{o.shipping_address || '—'}</td>
                 <td>{Number(o.total).toLocaleString()}đ</td>
                 <td>
                   <span
@@ -59,6 +70,25 @@ const Orders = () => {
           </tbody>
         </table>
       </div>
+
+      {/* thanh phân trang */}
+      {totalPages > 1 && (
+        <nav className="d-flex justify-content-center mt-3">
+          <ul className="pagination">
+            <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
+              <button className="page-link" onClick={() => setPage(page - 1)}>«</button>
+            </li>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((soTrang) => (
+              <li key={soTrang} className={`page-item ${page === soTrang ? 'active' : ''}`}>
+                <button className="page-link" onClick={() => setPage(soTrang)}>{soTrang}</button>
+              </li>
+            ))}
+            <li className={`page-item ${page === totalPages ? 'disabled' : ''}`}>
+              <button className="page-link" onClick={() => setPage(page + 1)}>»</button>
+            </li>
+          </ul>
+        </nav>
+      )}
     </div>
   )
 }

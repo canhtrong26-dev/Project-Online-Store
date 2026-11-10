@@ -96,9 +96,10 @@ export const deleteProduct = async (id) => {
   return { ok: res.ok, ...data }
 }
 
-// Lấy tất cả đơn hàng
-export const getOrders = async () => {
-  const res = await fetchWithAuth(`${API_URL}/orders`)
+
+export const getOrders = async ({ page = 1, limit = 10 } = {}) => {
+  const query = new URLSearchParams({ page: String(page), limit: String(limit) })
+  const res = await fetchWithAuth(`${API_URL}/orders?${query.toString()}`)
   return res.json()
 }
 

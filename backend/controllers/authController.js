@@ -7,6 +7,7 @@ const REFRESH_TOKEN_EXPIRES = "7d";
 
 //cấu hình cookie chứa refreshToken
 const isProd = process.env.NODE_ENV === "production";
+
 const cookieOptions = {
   httpOnly: true, //JavaScript không đọc được cookie này
   secure: isProd, //chỉ gửi qua HTTPS khi chạy thật

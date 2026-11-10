@@ -21,8 +21,13 @@ const Product = sequelize.define('Product', {
   description: {
     type: DataTypes.TEXT,
   },
-  category_id: {
+    category_id: {
     type: DataTypes.INTEGER,
+  },
+  stock: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
   },
 }, {
   tableName: 'products',

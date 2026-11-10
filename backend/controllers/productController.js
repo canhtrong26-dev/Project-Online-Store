@@ -14,7 +14,7 @@ const getAll = async (req, res) => {
       where.category_id = req.query.category_id;
     }
     if (req.query.search) {
-      where.name = { [Op.like]: `%${req.query.search}%` };
+      where.name = { [Op.like]: `%${req.query.search}%` }; // tìm tên chứa từ khoá (LIKE); an toàn vì Sequelize tự escape giá trị, chống SQL injection
     }
 
     const { count, rows } = await Product.findAndCountAll({
@@ -36,16 +36,16 @@ const getAll = async (req, res) => {
   }
 };
 
-// Thêm sản phẩm mới
 const create = async (req, res) => {
   try {
-    const { name, price, image_url, description, category_id } = req.body;
+    const { name, price, image_url, description, category_id, stock } = req.body; 
     const product = await Product.create({
       name,
       price,
       image_url,
       description,
       category_id,
+      stock,  // số hàng tồn kho
     });
     res.status(201).json(product);
   } catch (error) {
@@ -53,13 +53,12 @@ const create = async (req, res) => {
   }
 };
 
-// Sửa sản phẩm
 const update = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, image_url, description, category_id } = req.body;
+    const { name, price, image_url, description, category_id, stock } = req.body;  
     await Product.update(
-      { name, price, image_url, description, category_id },
+      { name, price, image_url, description, category_id, stock },  
       { where: { id } },
     );
     res.json({ message: "Cập nhật thành công!" });
