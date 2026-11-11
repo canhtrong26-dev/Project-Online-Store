@@ -41,7 +41,8 @@ Dự án full-stack thương mại điện tử, gồm 3 phần:
 | DB_PASSWORD | mật khẩu TiDB |
 | DB_DIALECT | mariadb |
 | DB_SSL | true |
-| CORS_ORIGINS | các tên miền Vercel, ngăn cách bằng dấu phẩy |
+| CORS_ORIGINS | các tên miền Vercel, ngăn cách bằng dấu phẩy, không có khoảng trắng, không có `/` ở cuối |
+| NODE_ENV | production (bắt buộc: bật `secure` + `sameSite=none` cho cookie refresh token, để cookie gửi được từ Vercel sang Render) |
 | JWT_SECRET | chuỗi ngẫu nhiên |
 | JWT_REFRESH_SECRET | chuỗi ngẫu nhiên |
 | CLOUDINARY_CLOUD_NAME | tên cloud |
@@ -87,7 +88,7 @@ Mỗi thư mục có file README riêng, hướng dẫn chi tiết:
 
 | Phần mềm | Phiên bản       |
 |----------|-----------------|
-| Node.js  | 18 trở lên      |
+| Node.js  | 20.19 trở lên (khuyên dùng 22 LTS) |
 | npm      | 9 trở lên       |
 | MariaDB  | (đi kèm XAMPP)  |
 
@@ -112,10 +113,13 @@ Mở XAMPP, bấm **Start** ở dòng MySQL (chạy MariaDB). Tạo database tê
 cd backend
 npm install
 cp .env.example .env
-npm run dev
 ```
 
-Mở file `backend/.env` và điền đủ các biến, bao gồm 3 biến Cloudinary (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`) dùng cho tính năng upload ảnh sản phẩm — xem chi tiết tại [Backend README](./backend/README.md#biến-môi-trường).
+Mở file `backend/.env` và điền đủ các biến, bao gồm 3 biến Cloudinary (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`) dùng cho tính năng upload ảnh sản phẩm — xem chi tiết tại [Backend README](./backend/README.md#biến-môi-trường). Sau đó chạy:
+
+```bash
+npm run dev
+```
 
 Backend chạy tại `http://localhost:5000`
 
@@ -145,6 +149,21 @@ Admin chạy tại `http://localhost:3001`
 
 > **Lưu ý**: Phải chạy Backend và MariaDB trước, nếu không Customer và Admin sẽ báo lỗi `Failed to fetch`.
 
+### Bước 6: Tạo tài khoản admin và danh mục
+
+Đăng ký qua trang Customer luôn tạo tài khoản role `customer`, và API thêm user chỉ admin mới gọi được, nên tài khoản admin đầu tiên phải tạo bằng tay:
+
+1. Đăng ký một tài khoản ở trang Customer (`http://localhost:3000/vi/register`).
+2. Mở phpMyAdmin, chọn database `online_store`, chạy:
+   ```sql
+   UPDATE users SET role='admin' WHERE email='<email vừa đăng ký>';
+   ```
+3. Thêm danh mục sản phẩm (trang Admin chưa có màn hình quản lý danh mục):
+   ```sql
+   INSERT INTO categories (name) VALUES ('Danh mục 1'), ('Danh mục 2');
+   ```
+4. Đăng nhập trang Admin (`http://localhost:3001/#/login`) bằng tài khoản vừa nâng quyền.
+
 ---
 
 ## Luồng hoạt động
@@ -158,17 +177,17 @@ Quản trị viên (Admin :3001) ──┘                          └──> C
 **Phía khách hàng:**
 
 1. Đăng ký / đăng nhập tài khoản (access token tự làm mới khi hết hạn)
-2. Xem danh sách sản phẩm (sản phẩm mới thêm/sửa hiện ở đầu trang chủ), lọc theo danh mục
+2. Xem danh sách sản phẩm có phân trang (8 sản phẩm/trang, sản phẩm mới thêm/sửa hiện ở đầu trang chủ), lọc theo danh mục
 3. Xem chi tiết sản phẩm, thêm vào giỏ hàng
-4. Thanh toán, tạo đơn hàng
+4. Thanh toán (chọn địa chỉ 3 cấp Tỉnh → Huyện → Xã), tạo đơn hàng; backend kiểm tra tồn kho và tự tính tổng tiền
 5. Xem lại lịch sử đơn hàng (đơn mới nhất lên đầu)
 6. Đăng xuất (xóa session phía server và token phía trình duyệt)
 
 **Phía quản trị viên:**
 
 1. Đăng nhập bằng tài khoản admin
-2. Quản lý sản phẩm: thêm, sửa, xóa, tải ảnh lên Cloudinary ngay trong form (sản phẩm mới thêm/sửa hiện ở đầu danh sách)
-3. Xem đơn hàng (mới nhất lên đầu), cập nhật trạng thái "Chờ xử lý" sang "Hoàn thành"
+2. Quản lý sản phẩm: thêm, sửa, xóa, nhập tồn kho, tìm theo tên, phân trang, tải ảnh lên Cloudinary ngay trong form (sản phẩm mới thêm/sửa hiện ở đầu danh sách)
+3. Xem đơn hàng có phân trang (mới nhất lên đầu, kèm thông tin giao hàng lúc đặt), cập nhật trạng thái "Chờ xử lý" sang "Hoàn thành"
 4. Xem danh sách khách hàng
 5. Đăng xuất
 
@@ -178,7 +197,7 @@ Quản trị viên (Admin :3001) ──┘                          └──> C
 
 | Phần     | Công nghệ                                                 |
 |----------|-----------------------------------------------------------|
-| Backend  | Node.js, Express, Sequelize, MariaDB, JWT, bcryptjs, multer, Cloudinary |
+| Backend  | Node.js, Express 5, Sequelize 6, MariaDB, JWT, bcryptjs, cookie-parser, multer, Cloudinary, Mocha + Chai + Supertest |
 | Customer | Next.js 16, TypeScript, Tailwind CSS, next-intl, next-themes |
 | Admin    | React, Vite, CoreUI, Redux, React Router                 |
 

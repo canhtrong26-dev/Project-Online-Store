@@ -20,12 +20,17 @@ Trang quản trị dành cho người bán, xây dựng dựa trên template [Co
 
 - Đăng nhập bằng tài khoản admin, tự làm mới access token khi hết hạn
 - Đăng xuất (xóa session phía server và token phía trình duyệt)
-- Dashboard tổng quan
+- Dashboard tổng quan: số sản phẩm, số đơn hàng, số tài khoản, doanh thu (cộng từ tối đa 1000 đơn mới nhất) và 10 đơn gần nhất
 - Quản lý sản phẩm: thêm, sửa, xóa; sản phẩm mới thêm/sửa hiện ở đầu danh sách
+- Nhập số lượng tồn kho khi thêm/sửa sản phẩm, có cột tồn kho trong bảng danh sách
+- Tìm sản phẩm theo tên
+- Phân trang danh sách sản phẩm (10 sản phẩm/trang)
+- Hiện thông báo khi xoá bị chặn (sản phẩm đã nằm trong đơn hàng)
 - Tải ảnh sản phẩm lên Cloudinary ngay trong form: chọn file, xem ảnh trước khi lưu, tự điền link ảnh, có cột ảnh trong bảng danh sách
 - Bấm "Sửa" tự cuộn lên đầu form
-- Quản lý đơn hàng: xem (đơn mới nhất lên đầu) và cập nhật trạng thái
-- Xem danh sách khách hàng
+- Quản lý đơn hàng: xem (đơn mới nhất lên đầu, 10 đơn/trang) và cập nhật trạng thái
+- Cột thông tin giao hàng của đơn: người nhận, SĐT, địa chỉ lưu tại thời điểm đặt
+- Xem danh sách tài khoản (gồm cả admin)
 - Sidebar thu gọn / mở rộng
 
 ---
@@ -68,13 +73,13 @@ Mở trình duyệt tại `http://localhost:3001`
 |---------------|-------------|------------------------------------------------|
 | /#/login      | Đăng nhập   | Đăng nhập bằng tài khoản có role admin       |
 | /#/dashboard  | Dashboard   | Thống kê tổng quan                           |
-| /#/products   | Sản phẩm    | Thêm, sửa, xóa sản phẩm                      |
-| /#/orders     | Đơn hàng    | Chuyển trạng thái "Chờ xử lý" → "Hoàn thành" |
-| /#/users      | Khách hàng  | Xem danh sách khách hàng                     |
+| /#/products   | Sản phẩm    | Thêm, sửa, xóa, tìm kiếm, phân trang sản phẩm |
+| /#/orders     | Đơn hàng    | Xem đơn (phân trang), chuyển trạng thái "Chờ xử lý" → "Hoàn thành" |
+| /#/users      | Khách hàng  | Xem danh sách tài khoản                      |
 
 Đường dẫn các trang quản lý được khai báo trong `src/routes.js`; đường dẫn `/login` được khai báo riêng trong `src/App.jsx` (nằm ngoài sidebar).
 
-Admin lưu token đăng nhập trong localStorage với 2 key: `adminToken` (access token) và `adminRefreshToken` (refresh token) — khác với Customer, dùng key `accessToken`/`refreshToken`.
+Admin chỉ lưu access token trong localStorage với key `adminToken` (Customer dùng key `accessToken`). Refresh token nằm trong cookie httpOnly tên `adminRefreshToken` do backend đặt, JavaScript không đọc được. Các request `login`, `refresh`, `logout` của Admin gọi kèm `?client=admin` và `credentials: 'include'` để backend dùng đúng cookie `adminRefreshToken`, không ghi đè cookie `refreshToken` của Customer.
 
 ---
 
@@ -107,7 +112,7 @@ admin/
 └── index.html
 ```
 
-Ghi chú: các thư mục `src/views/components/`, `src/views/forms/`, `src/views/icons/`, `src/views/widgets/`, `src/views/authentication/` là các trang mẫu còn sót lại từ CoreUI Free React Admin Template, không được dùng trong dự án thật (bao gồm cả `src/views/authentication/login/Login.jsx`, là bản demo, khác với trang đăng nhập thật nằm ở `src/views/auth/Login.jsx`).
+Ghi chú: các trang mẫu của CoreUI Free React Admin Template đã được xoá, chỉ giữ lại `src/views/error-pages/` (trang 404/500).
 
 ---
 

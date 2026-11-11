@@ -17,20 +17,22 @@ const Dashboard = () => {
   const fetchStats = async () => {
     const [products, orders, users] = await Promise.all([
       getProducts(),
-      getOrders(),
+      getOrders({ page: 1, limit: 1000 }), //API đơn hàng đã phân trang, lấy 1 trang lớn để đủ đơn tính doanh thu
       getUsers()
     ])
 
-    const revenue = orders.reduce((sum, o) => sum + Number(o.total), 0)
+    const danhSachDon = orders?.data || [] //getOrders trả object { data, total, ... }, lỗi hoặc chưa có data thì dùng mảng rỗng cho khỏi vỡ trang
+
+    const revenue = danhSachDon.reduce((sum, o) => sum + Number(o.total), 0)
 
     setStats({
-      products: products.total,
-      orders: orders.length,
-      users: users.length,
+      products: products?.total || 0, //getProducts trả object { data, total, ... }
+      orders: orders?.total || 0, //tổng số đơn lấy từ total của API phân trang
+      users: Array.isArray(users) ? users.length : 0, //getUsers trả mảng, lỗi thì trả object nên phải kiểm tra
       revenue
     })
 
-    setRecentOrders(orders.slice(0, 10)) //set 10 đơn gần nhất
+    setRecentOrders(danhSachDon.slice(0, 10)) //set 10 đơn gần nhất
   } 
 
   return (

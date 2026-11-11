@@ -22,9 +22,10 @@ Trang mua sắm dành cho khách hàng, xây dựng bằng Next.js 16 App Router
 - Đăng ký, đăng nhập, đăng xuất (đăng xuất xóa session phía server, không chỉ xóa token phía trình duyệt)
 - Tự làm mới access token khi hết hạn, không cần đăng nhập lại
 - Xem sản phẩm, lọc theo danh mục (sản phẩm mới thêm/sửa luôn hiện ở đầu trang chủ)
+- Phân trang danh sách sản phẩm ở trang chủ (8 sản phẩm/trang)
 - Xem chi tiết sản phẩm
 - Giỏ hàng lưu trong localStorage
-- Thanh toán và tạo đơn hàng
+- Thanh toán và tạo đơn hàng; chọn địa chỉ giao hàng 3 cấp Tỉnh → Huyện → Xã, dữ liệu lấy từ [provinces.open-api.vn](https://provinces.open-api.vn)
 - Xem lịch sử đơn hàng
 - Chuyển đổi ngôn ngữ Tiếng Việt / English
 - Chế độ sáng / tối (Dark mode)
@@ -89,6 +90,7 @@ Mở trình duyệt tại `http://localhost:3000` (tự chuyển sang `/vi`).
 ```
 customer/
 ├── app/
+│   ├── globals.css             # Style chung (Tailwind)
 │   └── [locale]/
 │       ├── layout.tsx          # Layout chung, bọc Provider
 │       ├── page.tsx            # Trang chủ
@@ -100,7 +102,8 @@ customer/
 │           ├── order/
 │           └── product/[id]/
 ├── components/
-│   └── Header.tsx              # Thanh menu, nút đổi ngôn ngữ, dark mode
+│   ├── Header.tsx              # Thanh menu, nút đổi ngôn ngữ, dark mode
+│   └── Footer.tsx              # Chân trang
 ├── lib/
 │   └── api.ts                  # Các hàm gọi API backend
 ├── messages/
@@ -115,11 +118,13 @@ customer/
 
 ## Xác thực và làm mới token
 
+Khi đăng nhập, backend trả `accessToken` và `user` trong JSON; trang chỉ lưu 2 giá trị này vào `localStorage`. Refresh token **không** nằm trong `localStorage` mà nằm trong cookie httpOnly tên `refreshToken` do backend đặt (JavaScript không đọc được). Vì vậy các request `login`, `refresh`, `logout` đều gửi `credentials: 'include'` để trình duyệt nhận và gửi cookie.
+
 `lib/api.ts` có hàm `fetchWithAuth` dùng để gọi các API cần đăng nhập (`createOrder`, `getMyOrders`, `logout`...). Hàm này tự gắn header `Authorization: Bearer <accessToken>` lấy từ `localStorage`.
 
-Nếu request bị lỗi 401 (access token hết hạn), `fetchWithAuth` tự gọi `POST /api/auth/refresh` (bằng `fetch` thường, không qua `fetchWithAuth`) để lấy access token mới, lưu lại vào `localStorage`, rồi gửi lại request vừa thất bại. Nếu làm mới cũng thất bại (refresh token hết hạn), toàn bộ token trong `localStorage` bị xóa và trang tự chuyển về `/[locale]/login`.
+Nếu request bị lỗi 401 (access token hết hạn), `fetchWithAuth` tự gọi `POST /api/auth/refresh` (bằng `fetch` thường kèm `credentials: 'include'`, không qua `fetchWithAuth`); trình duyệt tự gửi cookie refresh token, backend trả access token mới, trang lưu lại vào `localStorage` rồi gửi lại request vừa thất bại. Nếu làm mới cũng thất bại (refresh token hết hạn), `accessToken` và `user` trong `localStorage` bị xóa và trang tự chuyển về `/[locale]/login`.
 
-Khi người dùng bấm Đăng xuất (`components/Header.tsx`): gọi `POST /api/auth/logout` để server xóa session trong database, sau đó xóa `accessToken`, `refreshToken`, `user` khỏi `localStorage` (dùng `try/finally` để đảm bảo luôn xóa dù API lỗi).
+Khi người dùng bấm Đăng xuất (`components/Header.tsx`): gọi `POST /api/auth/logout` để server xóa session trong database và xóa cookie, sau đó xóa `accessToken`, `user` khỏi `localStorage` (dùng `try/finally` để đảm bảo luôn xóa dù API lỗi).
 
 ---
 

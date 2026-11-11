@@ -65,13 +65,13 @@ const login = async (req, res) => {
 
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return res.status(404).json({ message: "Email không tồn tại!" });
+      return res.status(400).json({ message: "Email hoặc mật khẩu không đúng!" }); //dùng chung thông báo với sai mật khẩu để không lộ email nào đã đăng ký
     }
 
     // Kiểm tra password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Sai mật khẩu!" });
+      return res.status(400).json({ message: "Email hoặc mật khẩu không đúng!" }); //trùng thông báo với email không tồn tại
     }
 
     // sau khi đáp ứng đủ cấc bước trên thì tạo accessToken

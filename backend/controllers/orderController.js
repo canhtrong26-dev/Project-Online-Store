@@ -162,6 +162,10 @@ const update = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
+    // chỉ nhận đúng 2 trạng thái giao diện admin đang dùng, chặn ghi giá trị tuỳ ý vào DB
+    if (!["pending", "completed"].includes(status)) {
+      return res.status(400).json({ message: "Trạng thái không hợp lệ!" });
+    }
     await Order.update({ status }, { where: { id } });
     res.json({ message: "Cập nhật thành công!" });
   } catch (error) {

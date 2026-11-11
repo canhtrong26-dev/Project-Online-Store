@@ -6,7 +6,7 @@ const User = sequelize.define('User', {
   id: {
     type: DataTypes.STRING(8),
     primaryKey: true,
-    defaultValue: () => uuidv4().substring(0, 8), //tự tạo random 8 kí tự in hoa, thường, số,.
+    defaultValue: () => uuidv4().substring(0, 8), //8 ký tự hex ngẫu nhiên (0-9, a-f)
   },
   name: {
     type: DataTypes.STRING,
