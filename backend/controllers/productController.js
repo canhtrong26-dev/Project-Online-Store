@@ -77,10 +77,10 @@ const remove = async (req, res) => {
       return res.status(404).json({ message: "Không tìm thấy sản phẩm!" });
     }
 
-    const soDonHang = await OrderItem.count({ where: { product_id: id } });
+    const soDonHang = await OrderItem.count({ where: { product_id: id } }); //nếu ai đã đặt thì không thể xóa vì xóa sẽ mất thông tin đã mua của user
     if (soDonHang > 0) {
       return res.status(400).json({
-        message: `Không xoá được! Sản phẩm này đang nằm trong ${soDonHang} đơn hàng.`,
+        message: `Không xoá được! Sản phẩm này đang nằm trong ${soDonHang} đơn hàng.`, 
       });
     }
 

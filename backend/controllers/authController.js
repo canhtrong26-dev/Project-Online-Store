@@ -9,7 +9,7 @@ const REFRESH_TOKEN_EXPIRES = "7d";
 const isProd = process.env.NODE_ENV === "production";
 
 const cookieOptions = {
-  httpOnly: true, //JavaScript không đọc được cookie này
+  httpOnly: true, //Js trên trình duyệt không đọc được cookie này
   secure: isProd, //chỉ gửi qua HTTPS khi chạy thật
   sameSite: isProd ? "none" : "lax", //cho phép gửi xuyên tên miền khi chạy thật
   maxAge: 7 * 24 * 60 * 60 * 1000, //sống 7 ngày, tính bằng mili giây

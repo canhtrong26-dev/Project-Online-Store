@@ -56,7 +56,7 @@ export default function LoginPage() {
           disabled={isSubmitting}
           className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50"
         >
-          {isSubmitting ? '...' : t('submit')}
+          {isSubmitting ? 'Đang đăng nhập...' : t('submit')}
         </button>
       </form>
       <p className="text-center mt-4 text-sm dark:text-gray-300">
