@@ -142,6 +142,8 @@ export default function CheckoutPage() {
     if (res.id) {
       setIsOrdered(true);
       localStorage.removeItem("cart");
+      window.dispatchEvent(new Event("cart-updated")); //ra tín hiệu để cập nhật số lượng giỏ hàng trên Header
+
       toast.success(tMsg("orderSuccess"));
       setTimeout(() => router.push(`/${locale}`), 2000);
     } else {

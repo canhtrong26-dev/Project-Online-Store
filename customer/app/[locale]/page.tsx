@@ -43,6 +43,7 @@ export default function Home() {
       cart.push({ id: product.id, name: product.name, price: product.price, image_url: product.image_url, quantity: 1 });
     }
     localStorage.setItem('cart', JSON.stringify(cart));
+    window.dispatchEvent(new Event('cart-updated'));
     toast.success(tMsg('addedToCart', { name: product.name }));
   };
 
