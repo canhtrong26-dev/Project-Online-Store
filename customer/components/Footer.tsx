@@ -11,7 +11,7 @@ export default function Footer() {
   const headingClass = 'text-sm font-medium text-hero-fg mb-4';
   const linkClass = 'text-hero-fg-2 hover:text-hero-fg transition-colors';
   const socialClass =
-    'w-9 h-9 rounded-lg border border-white/10 flex items-center justify-center text-hero-fg-2 hover:text-on-accent hover:bg-accent hover:border-transparent transition-colors';
+    'w-9 h-9 border border-white/10 flex items-center justify-center text-hero-fg-2 hover:text-on-accent hover:bg-accent hover:border-transparent transition-colors';
 
   return (
     <footer className="bg-espresso text-hero-fg mt-24">
@@ -71,7 +71,7 @@ export default function Footer() {
           <iframe
             src="https://www.google.com/maps?q=21.0277644,105.8341598&z=12&output=embed"
             title={t('map')}
-            className="w-full h-44 rounded-xl border border-white/10"
+            className="w-full h-44 border border-white/10"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             allowFullScreen

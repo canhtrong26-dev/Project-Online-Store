@@ -69,7 +69,7 @@ export default function Header() {
 
   const linkClass = "text-sm text-fg-2 hover:text-fg transition-colors";
   const iconBtnClass =
-    "flex h-9 w-9 items-center justify-center rounded-lg text-fg-3 hover:bg-raised hover:text-fg transition-colors";
+    "flex h-9 w-9 items-center justify-center text-fg-3 hover:bg-raised hover:text-fg transition-colors";
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-bg/90 backdrop-blur">

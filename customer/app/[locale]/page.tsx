@@ -48,7 +48,7 @@ export default function Home() {
   };
 
   const tabClass = (active: boolean) =>
-    `shrink-0 whitespace-nowrap h-9 px-4 rounded-lg text-sm inline-flex items-center gap-2 transition-colors ${active
+    `shrink-0 whitespace-nowrap h-9 px-4 text-sm inline-flex items-center gap-2 transition-colors ${active
       ? 'bg-accent text-on-accent'
       : 'text-fg-2 hover:bg-raised hover:text-fg'}`;
 
@@ -86,7 +86,7 @@ export default function Home() {
         {products.map((product: any) => (
           <div key={product.id} className="group flex flex-col">
             <Link href={`/${locale}/product/${product.id}`}>
-              <div className="aspect-[4/5] overflow-hidden rounded-xl mb-3" style={{ backgroundColor: swatch(product.id) }}>
+              <div className="aspect-[4/5] overflow-hidden mb-3" style={{ backgroundColor: swatch(product.id) }}>
                 <Image src={product.image_url} alt={product.name} width={400} height={500} className="h-full w-full object-cover" />
               </div>
               <h3 className="text-sm text-fg line-clamp-2 group-hover:underline underline-offset-4 decoration-fg-3">{product.name}</h3>
@@ -107,7 +107,7 @@ export default function Home() {
             onClick={() => setPage(page - 1)}
             disabled={page === 1}
             aria-label="Trang trước"
-            className="h-9 w-9 rounded-lg text-fg-2 hover:bg-raised disabled:opacity-40 disabled:hover:bg-transparent"
+            className="h-9 w-9 text-fg-2 hover:bg-raised disabled:opacity-40 disabled:hover:bg-transparent"
           >
             &laquo;
           </button>
@@ -116,7 +116,7 @@ export default function Home() {
             <button
               key={soTrang}
               onClick={() => setPage(soTrang)}
-              className={`h-9 w-9 rounded-lg font-mono text-sm tabular-nums transition-colors ${page === soTrang
+              className={`h-9 w-9 font-mono text-sm tabular-nums transition-colors ${page === soTrang
                 ? 'bg-accent text-on-accent'
                 : 'text-fg-2 hover:bg-raised'}`}
             >
@@ -128,7 +128,7 @@ export default function Home() {
             onClick={() => setPage(page + 1)}
             disabled={page === totalPages}
             aria-label="Trang sau"
-            className="h-9 w-9 rounded-lg text-fg-2 hover:bg-raised disabled:opacity-40 disabled:hover:bg-transparent"
+            className="h-9 w-9 text-fg-2 hover:bg-raised disabled:opacity-40 disabled:hover:bg-transparent"
           >
             &raquo;
           </button>

@@ -112,7 +112,6 @@ html {
   justify-content: center;
   height: 44px;
   padding-inline: 20px;
-  border-radius: 8px;
   background-color: var(--accent);
   color: var(--on-accent);
   font-weight: 500;
@@ -135,7 +134,6 @@ html {
   justify-content: center;
   height: 36px;
   padding-inline: 16px;
-  border-radius: 8px;
   border: 1px solid var(--line);
   background-color: var(--raised);
   color: var(--fg);

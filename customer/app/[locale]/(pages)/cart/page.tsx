@@ -50,7 +50,7 @@ export default function CartPage() {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const qtyBtnClass =
-    "w-8 h-8 flex items-center justify-center rounded-md text-fg-2 hover:bg-raised hover:text-fg transition-colors";
+    "w-8 h-8 flex items-center justify-center text-fg-2 hover:bg-raised hover:text-fg transition-colors";
 
   return (
     <main className="max-w-3xl mx-auto px-4 md:px-6 py-10">
@@ -74,7 +74,7 @@ export default function CartPage() {
                   alt={item.name}
                   width={80}
                   height={100}
-                  className="w-20 h-25 shrink-0 rounded-lg object-cover"
+                  className="w-20 h-25 shrink-0 object-cover"
                   style={{ backgroundColor: `var(--swatch-${(item.id % 5) + 1})` }}
                 />
                 <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -88,13 +88,13 @@ export default function CartPage() {
                     <button
                       aria-label="Xóa sản phẩm"
                       onClick={() => remove(item.id)}
-                      className="shrink-0 w-8 h-8 flex items-center justify-center rounded-md text-fg-3 hover:bg-raised hover:text-negative transition-colors"
+                      className="shrink-0 w-8 h-8 flex items-center justify-center text-fg-3 hover:bg-raised hover:text-negative transition-colors"
                     >
                       <BsX size={20} />
                     </button>
                   </div>
                   <div className="flex items-center justify-between mt-3">
-                    <div className="flex items-center rounded-lg border border-line">
+                    <div className="flex items-center border border-line">
                       <button
                         aria-label="Giảm số lượng"
                         onClick={() => decrease(item.id)}
