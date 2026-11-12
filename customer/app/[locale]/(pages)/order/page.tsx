@@ -32,41 +32,45 @@ export default function OrderPage() {
   }, []);
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-8 min-h-screen dark:bg-gray-900">
-      <h1 className="text-2xl font-bold mb-6 dark:text-white">{t('title')}</h1>
+    <main className="max-w-3xl mx-auto px-4 md:px-6 py-10">
+      <h1 className="font-serif text-4xl font-normal tracking-tight mb-8">{t('title')}</h1>
 
       {orders.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">{t('empty')}</p>
+        <p className="rounded-2xl border border-line bg-surface text-center text-fg-2 py-16 px-4">{t('empty')}</p>
       ) : (
-        orders.map((order) => (
-          <div key={order.id} className="border dark:border-gray-700 dark:bg-gray-800 rounded-lg p-4 mb-4">
-            <div className="flex justify-between mb-2">
-              <span className="font-semibold dark:text-white">{t('order')} #{order.id}</span>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                {new Date(order.createdAt).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US')}
-              </span>
-            </div>
-            {order.OrderItems.map((item: any) => (
-              <div key={item.id} className="flex justify-between py-1 text-sm border-b dark:border-gray-700">
-                <span className="dark:text-gray-300">{item.Product.name} x{item.quantity}</span>
-                <span className="dark:text-gray-300">{(item.price * item.quantity).toLocaleString()}đ</span>
+        <div className="flex flex-col gap-4">
+          {orders.map((order) => (
+            <div key={order.id} className="rounded-2xl border border-line bg-surface p-5">
+              <div className="flex justify-between items-center mb-3">
+                <span className="font-medium">
+                  {t('order')} <span className="font-mono text-fg-2">#{order.id}</span>
+                </span>
+                <span className="font-mono text-xs text-fg-3 tabular-nums">
+                  {new Date(order.createdAt).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US')}
+                </span>
               </div>
-            ))}
-            <div className="flex justify-between font-bold mt-3 dark:text-white">
-              <span>{t('total')}:</span>
-              <span>{Number(order.total).toLocaleString()}đ</span>
+              {order.OrderItems.map((item: any) => (
+                <div key={item.id} className="flex justify-between gap-4 py-2 text-sm border-b border-line">
+                  <span className="text-fg">
+                    {item.Product.name}{' '}
+                    <span className="font-mono text-fg-3">×{item.quantity}</span>
+                  </span>
+                  <span className="font-mono text-fg-2 tabular-nums">{(item.price * item.quantity).toLocaleString()}đ</span>
+                </div>
+              ))}
+              <div className="flex justify-between items-center mt-4">
+                <span className="flex items-center gap-2 text-sm text-fg-2">
+                  <span className={`h-2 w-2 rounded-full ${order.status === 'pending' ? 'bg-accent' : 'bg-positive'}`} />
+                  {order.status === 'pending' ? t('pending') : t('completed')}
+                </span>
+                <span className="flex items-baseline gap-3">
+                  <span className="text-sm text-fg-2">{t('total')}</span>
+                  <span className="font-mono font-medium tabular-nums">{Number(order.total).toLocaleString()}đ</span>
+                </span>
+              </div>
             </div>
-            <div className="mt-2">
-              <span className={`text-sm px-2 py-1 rounded ${
-                order.status === 'pending'
-                  ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
-                  : 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
-              }`}>
-                {order.status === 'pending' ? t('pending') : t('completed')}
-              </span>
-            </div>
-          </div>
-        ))
+          ))}
+        </div>
       )}
     </main>
   );

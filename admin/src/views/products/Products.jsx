@@ -61,7 +61,7 @@ const Products = () => {
 
     const res = await deleteProduct(id)
     if (!res.ok) {
-      setDeleteError(res.message || 'Xoá thất bại!')
+      setDeleteError(res.message || 'Xoá thất bại')
       return
     }
     setDeleteError('')
@@ -95,10 +95,10 @@ const Products = () => {
       if (data.url) {
         setForm((prev) => ({ ...prev, image_url: data.url }))
       } else {
-        setUploadError(data.message || 'Tải ảnh thất bại!')
+        setUploadError(data.message || 'Tải ảnh thất bại')
       }
     } catch {
-      setUploadError('Tải ảnh thất bại!')
+      setUploadError('Tải ảnh thất bại')
     } finally {
       setUploading(false)
     }

@@ -8,6 +8,24 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 export const instant = false;
 import Footer from "@/components/Footer";
+import { Be_Vietnam_Pro, Newsreader, IBM_Plex_Mono } from "next/font/google";
+
+//cả 3 font đều có bộ dấu tiếng Việt
+const beVietnam = Be_Vietnam_Pro({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500", "600"],
+  variable: "--font-be-vietnam",
+});
+const newsreader = Newsreader({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500"],
+  variable: "--font-newsreader",
+});
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500"],
+  variable: "--font-plex-mono",
+});
 
 export const metadata: Metadata = {
   title: "Online Store - Mua sắm thời trang",
@@ -36,25 +54,29 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body className=" suppressHydrationWarning  min-h-screen w-full bg-white dark:bg-gray-900 relative text-gray-800 dark:text-gray-100">
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      className={`${beVietnam.variable} ${newsreader.variable} ${plexMono.variable}`}
+    >
+      <body className="min-h-screen w-full bg-bg text-fg font-sans antialiased">
         <ThemeProvider attribute="class" defaultTheme="light">
           <NextIntlClientProvider messages={messages}>
-            <div
-              className="absolute inset-0 z-0 dark:hidden pointer-events-none"
-              style={{
-                backgroundImage: `
-                  repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(75, 85, 99, 0.08) 20px, rgba(75, 85, 99, 0.08) 21px),
-                  repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(107, 114, 128, 0.06) 30px, rgba(107, 114, 128, 0.06) 31px),
-                  repeating-linear-gradient(60deg, transparent, transparent 40px, rgba(55, 65, 81, 0.05) 40px, rgba(55, 65, 81, 0.05) 41px),
-                  repeating-linear-gradient(150deg, transparent, transparent 35px, rgba(31, 41, 55, 0.04) 35px, rgba(31, 41, 55, 0.04) 36px)
-                `,
-              }}
-            />
-            <div className="relative z-10">
-              <Toaster position="top-right" />
+            <div className="flex min-h-screen flex-col">
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  style: {
+                    background: "var(--surface)",
+                    color: "var(--fg)",
+                    border: "1px solid var(--line)",
+                    borderRadius: "10px",
+                    fontSize: "14px",
+                  },
+                }}
+              />
               <Header />
-              {children}
+              <div className="flex-1">{children}</div>
               <Footer />
             </div>
           </NextIntlClientProvider>

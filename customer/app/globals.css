@@ -5,3 +5,119 @@ html {
 }
 
 @variant dark (&:where(.dark, .dark *));
+
+/* bảng màu theo hướng "tiệm may": nền trung tính ngả ấm, 1 màu nhấn đất nung */
+:root {
+  --bg: #f7f4ee;
+  --surface: #fdfbf7;
+  --raised: #efe9df;
+  --line: rgb(31 27 22 / 0.08);
+  --fg: #1f1b16;
+  --fg-2: #5e554a;
+  --fg-3: #7b7266;
+  --accent: #a8441f;
+  --negative: #dc2626;
+  --positive: #16a34a;
+}
+
+.dark {
+  --bg: #161513;
+  --surface: #1c1a18;
+  --raised: #262421;
+  --line: rgb(239 233 222 / 0.08);
+  --fg: #efe9de;
+  --fg-2: #aaa398;
+  --fg-3: #8a847a;
+  --accent: #e08a62;
+  --negative: #e5484d;
+  --positive: #4cc38a;
+}
+
+/* đăng ký token cho Tailwind -> dùng được bg-surface, text-fg-2, border-line... */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-accent: var(--accent);
+  --color-negative: var(--negative);
+  --color-positive: var(--positive);
+  --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ô nhập dùng chung cho mọi form */
+@utility field {
+  width: 100%;
+  height: 44px;
+  padding-inline: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background-color: var(--surface);
+  color: var(--fg);
+  transition: border-color 150ms var(--ease-out);
+  &::placeholder {
+    color: var(--fg-3);
+  }
+  &:focus {
+    outline: none;
+    border-color: var(--fg-3);
+  }
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+/* nút chính: nền màu chữ, chữ màu nền (đen trên sáng, kem trên tối) */
+@utility btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding-inline: 20px;
+  border-radius: 8px;
+  background-color: var(--fg);
+  color: var(--bg);
+  font-weight: 500;
+  transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
+  &:hover {
+    opacity: 0.88;
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+/* nút phụ: nền nổi nhẹ + viền mảnh */
+@utility btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding-inline: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background-color: var(--raised);
+  color: var(--fg);
+  font-weight: 500;
+  transition: border-color 150ms var(--ease-out), transform 150ms var(--ease-out);
+  &:hover {
+    border-color: var(--fg-3);
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

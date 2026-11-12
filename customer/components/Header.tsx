@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
 import { useTheme } from "next-themes";
-import { BsSun, BsMoon, BsList, BsX, BsCart3 } from "react-icons/bs";
+import { BsSun, BsMoon, BsList, BsX, BsBag } from "react-icons/bs";
 import { useTranslations, useLocale } from "next-intl";
 import { logout } from "@/lib/api";
 
@@ -65,101 +64,92 @@ export default function Header() {
     router.push(newPath);
   };
 
+
   const closeMenu = () => setMenuOpen(false);
 
+  const linkClass = "text-sm text-fg-2 hover:text-fg transition-colors";
+  const iconBtnClass =
+    "flex h-9 w-9 items-center justify-center rounded-lg text-fg-3 hover:bg-raised hover:text-fg transition-colors";
+
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <header className="sticky top-0 z-50 border-b border-line bg-bg/90 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-4 md:px-6">
         <Link
           href={`/${locale}`}
-          className="text-2xl md:text-3xl font-bold text-green-600"
+          className="text-lg font-semibold"
         >
           Online Store
         </Link>
-        <nav className="hidden md:flex gap-6 items-center">
-          <Link
-            href={`/${locale}`}
-            className="text-gray-600 dark:text-gray-300 hover:text-green-600"
-          >
+        <nav className="hidden flex-1 items-center gap-6 md:flex">
+          <Link href={`/${locale}`} className={linkClass}>
             {t("home")}
           </Link>
-          <Link
-            href={`/${locale}/order`}
-            className="text-gray-600 dark:text-gray-300 hover:text-green-600"
-          >
+          <Link href={`/${locale}/order`} className={linkClass}>
             {t("order")}
           </Link>
+        </nav>
+        <div className="hidden items-center gap-4 md:flex">
           {user ? (
             <>
-              <span className="text-green-600 font-medium">
-                {t("hello")}, {user.name}!
+              <span className="text-sm text-fg-3">
+                {t("hello")}, <span className="text-fg">{user.name}</span>
               </span>
               <button
                 aria-label="Đăng xuất"
                 onClick={handleLogout}
-                className="text-red-500 hover:text-red-700"
+                className={linkClass}
               >
                 {t("logout")}
               </button>
             </>
           ) : (
             <>
-              <Link
-                href={`/${locale}/login`}
-                className="text-gray-600 dark:text-gray-300 hover:text-green-600"
-              >
+              <Link href={`/${locale}/login`} className={linkClass}>
                 {t("login")}
               </Link>
-              <Link
-                href={`/${locale}/register`}
-                className="text-gray-600 dark:text-gray-300 hover:text-green-600"
-              >
+              <Link href={`/${locale}/register`} className={linkClass}>
                 {t("register")}
               </Link>
             </>
           )}
-          <button
-            aria-label="Chuyển ngôn ngữ"
-            onClick={() => switchLocale(locale === "vi" ? "en" : "vi")}
-            className="text-sm font-medium border border-gray-300 dark:border-gray-600 dark:text-gray-300 px-2 py-1 rounded hover:text-green-600"
+          <div className="flex items-center gap-1">
+            <button
+              aria-label="Chuyển ngôn ngữ"
+              onClick={() => switchLocale(locale === "vi" ? "en" : "vi")}
+              className={`${iconBtnClass} font-mono text-xs`}
+            >
+              {locale === "vi" ? "EN" : "VI"}
+            </button>
+            <button
+              aria-label="Chuyển đổi giao diện sáng/tối"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className={iconBtnClass}
+            >
+              {mounted ? theme === "dark" ? <BsSun size={16} /> : <BsMoon size={16} /> : <BsMoon size={16} />}
+            </button>
+          </div>
+          <Link
+            href={`/${locale}/cart`}
+            className="btn-secondary gap-2 text-sm"
           >
-            {locale === "vi" ? "EN" : "VI"}
-          </button>
-          <button
-            aria-label="Chuyển đổi giao diện sáng/tối"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="text-xl text-gray-600 dark:text-yellow-400 hover:text-green-600"
-          >
-            {mounted ? theme === "dark" ? <BsSun /> : <BsMoon /> : <BsMoon />}
-          </button>
-        </nav>
-        <Link
-          href={`/${locale}/cart`}
-          className="hidden md:flex text-gray-600 dark:text-gray-300 items-center hover:text-green-600"
-        >
-          <Image
-            src="/images/shopping-cart.png"
-            alt="Giỏ hàng"
-            width={20}
-            height={20}
-            className="mr-2"
-          />
-          {t("cart")}{" "}
-          {cartCount > 0 && (
-            <span className="ml-1 bg-red-500 text-white text-xs rounded-full px-1">
-              {cartCount}
-            </span>
-          )}
-        </Link>
-        <div className="flex md:hidden items-center gap-4">
+            <BsBag size={16} className="text-fg-3" />
+            {t("cart")}
+            {cartCount > 0 && (
+              <span className="font-mono text-xs text-accent tabular-nums">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+        </div>
+        <div className="flex items-center gap-1 md:hidden">
           <Link
             href={`/${locale}/cart`}
             aria-label="Giỏ hàng"
-            className="relative text-gray-600 dark:text-gray-300 hover:text-green-600"
+            className={`${iconBtnClass} relative w-auto gap-1 px-2`}
           >
-            <BsCart3 size={24} />
+            <BsBag size={18} />
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
+              <span className="font-mono text-xs text-accent tabular-nums">
                 {cartCount}
               </span>
             )}
@@ -167,32 +157,32 @@ export default function Header() {
           <button
             aria-label="Mở menu"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="text-gray-600 dark:text-gray-300 hover:text-green-600"
+            className={iconBtnClass}
           >
-            {menuOpen ? <BsX size={28} /> : <BsList size={28} />}
+            {menuOpen ? <BsX size={22} /> : <BsList size={22} />}
           </button>
         </div>
       </div>
       {menuOpen && (
-        <nav className="md:hidden border-t border-gray-200 dark:border-gray-700 px-4 py-3 flex flex-col gap-4">
+        <nav className="flex flex-col gap-1 border-t border-line px-4 py-3 md:hidden">
           <Link
             href={`/${locale}`}
             onClick={closeMenu}
-            className="text-gray-600 dark:text-gray-300 hover:text-green-600"
+            className="flex h-10 items-center text-fg-2 hover:text-fg"
           >
             {t("home")}
           </Link>
           <Link
             href={`/${locale}/order`}
             onClick={closeMenu}
-            className="text-gray-600 dark:text-gray-300 hover:text-green-600"
+            className="flex h-10 items-center text-fg-2 hover:text-fg"
           >
             {t("order")}
           </Link>
           {user ? (
             <>
-              <span className="text-green-600 font-medium">
-                {t("hello")}, {user.name}!
+              <span className="flex h-10 items-center text-fg-3">
+                {t("hello")},&nbsp;<span className="text-fg">{user.name}</span>
               </span>
               <button
                 aria-label="Đăng xuất"
@@ -200,7 +190,7 @@ export default function Header() {
                   handleLogout();
                   closeMenu();
                 }}
-                className="text-left text-red-500 hover:text-red-700"
+                className="flex h-10 items-center text-left text-fg-2 hover:text-fg"
               >
                 {t("logout")}
               </button>
@@ -210,36 +200,36 @@ export default function Header() {
               <Link
                 href={`/${locale}/login`}
                 onClick={closeMenu}
-                className="text-gray-600 dark:text-gray-300 hover:text-green-600"
+                className="flex h-10 items-center text-fg-2 hover:text-fg"
               >
                 {t("login")}
               </Link>
               <Link
                 href={`/${locale}/register`}
                 onClick={closeMenu}
-                className="text-gray-600 dark:text-gray-300 hover:text-green-600"
+                className="flex h-10 items-center text-fg-2 hover:text-fg"
               >
                 {t("register")}
               </Link>
             </>
           )}
-          <div className="flex items-center gap-4">
+          <div className="mt-2 flex items-center gap-1 border-t border-line pt-3">
             <button
               aria-label="Chuyển ngôn ngữ"
               onClick={() => {
                 switchLocale(locale === "vi" ? "en" : "vi");
                 closeMenu();
               }}
-              className="text-sm font-medium border border-gray-300 dark:border-gray-600 dark:text-gray-300 px-2 py-1 rounded hover:text-green-600"
+              className={`${iconBtnClass} font-mono text-xs`}
             >
               {locale === "vi" ? "EN" : "VI"}
             </button>
             <button
               aria-label="Chuyển đổi giao diện sáng/tối"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="text-xl text-gray-600 dark:text-yellow-400 hover:text-green-600"
+              className={iconBtnClass}
             >
-              {mounted ? theme === "dark" ? <BsSun /> : <BsMoon /> : <BsMoon />}
+              {mounted ? theme === "dark" ? <BsSun size={16} /> : <BsMoon size={16} /> : <BsMoon size={16} />}
             </button>
           </div>
         </nav>

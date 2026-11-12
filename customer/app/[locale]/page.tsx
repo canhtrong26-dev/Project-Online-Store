@@ -47,14 +47,19 @@ export default function Home() {
     toast.success(tMsg('addedToCart', { name: product.name }));
   };
 
+  const tabClass = (active: boolean) =>
+    `shrink-0 whitespace-nowrap h-9 px-4 rounded-lg text-sm transition-colors ${active
+      ? 'bg-fg text-bg'
+      : 'text-fg-2 hover:bg-raised hover:text-fg'}`;
+
   return (
-    <main className="max-w-full mx-auto px-4 md:px-20 py-8 dark:bg-gray-900 min-h-screen">
-      <div className="flex gap-3 mb-8 overflow-x-auto pb-1">
+    <main className="max-w-6xl mx-auto px-4 md:px-6 py-10">
+      <h1 className="font-serif text-4xl font-normal tracking-tight mb-6">{t('products')}</h1>
+
+      <div className="flex gap-1 mb-10 overflow-x-auto pb-1 border-b border-line">
         <button
           onClick={() => { setSelectedCategory(null); setPage(1); }}
-          className={`shrink-0 whitespace-nowrap px-4 py-2 rounded-full ${selectedCategory === null
-            ? 'bg-green-500 text-white'
-            : 'bg-green-100 text-green-700 dark:bg-gray-700 dark:text-green-400'}`}
+          className={`${tabClass(selectedCategory === null)} mb-3`}
         >
           {t('all')}
         </button>
@@ -62,28 +67,26 @@ export default function Home() {
           <button
             key={cat.id}
             onClick={() => { setSelectedCategory(cat.id); setPage(1); }}
-            className={`shrink-0 whitespace-nowrap px-4 py-2 rounded-full ${selectedCategory === cat.id
-              ? 'bg-green-500 text-white'
-              : 'bg-green-100 text-green-700 dark:bg-gray-700 dark:text-green-400'}`}
+            className={`${tabClass(selectedCategory === cat.id)} mb-3`}
           >
             {cat.name}
           </button>
         ))}
       </div>
 
-      <h2 className="text-2xl font-bold mb-4 dark:text-white">{t('products')}</h2>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10">
         {products.map((product: any) => (
-          <div key={product.id} className="flex flex-col border border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-lg p-4 hover:shadow-md transition-shadow transition-transform transform-[900ms] hover:-translate-y-1">
+          <div key={product.id} className="group flex flex-col">
             <Link href={`/${locale}/product/${product.id}`}>
-              <Image src={product.image_url} alt={product.name} width={300} height={160} className="w-full h-26 sm:h-40 object-cover rounded-sm mb-2" />
-              <h3 className="font-semibold text-sm sm:text-lg hover:text-green-600 dark:text-white line-clamp-2">{product.name}</h3>
+              <div className="aspect-[4/5] overflow-hidden rounded-xl bg-raised mb-3">
+                <Image src={product.image_url} alt={product.name} width={400} height={500} className="h-full w-full object-cover" />
+              </div>
+              <h3 className="text-sm text-fg line-clamp-2 group-hover:underline underline-offset-4 decoration-fg-3">{product.name}</h3>
             </Link>
-            <p className="text-green-600 pb-3 text-sm mt-1">{product.price.toLocaleString()}đ</p>
+            <p className="font-mono text-sm text-fg-2 tabular-nums mt-1 mb-3">{product.price.toLocaleString()}đ</p>
             <button
               onClick={() => addToCart(product)}
-              className="mt-auto pt-2 w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 text-xs sm:text-sm">
+              className="btn-secondary mt-auto w-full text-xs sm:text-sm">
               {t('addToCart')}
             </button>
           </div>
@@ -91,12 +94,12 @@ export default function Home() {
       </div>
 
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-8">
+        <div className="flex justify-center items-center gap-1 mt-16">
           <button
             onClick={() => setPage(page - 1)}
             disabled={page === 1}
             aria-label="Trang trước"
-            className="px-3 py-2 rounded border border-gray-300 dark:border-gray-600 dark:text-white disabled:opacity-40"
+            className="h-9 w-9 rounded-lg text-fg-2 hover:bg-raised disabled:opacity-40 disabled:hover:bg-transparent"
           >
             &laquo;
           </button>
@@ -105,9 +108,9 @@ export default function Home() {
             <button
               key={soTrang}
               onClick={() => setPage(soTrang)}
-              className={`px-4 py-2 rounded ${page === soTrang
-                ? 'bg-green-500 text-white'
-                : 'bg-green-100 text-green-700 dark:bg-gray-700 dark:text-green-400'}`}
+              className={`h-9 w-9 rounded-lg font-mono text-sm tabular-nums transition-colors ${page === soTrang
+                ? 'bg-fg text-bg'
+                : 'text-fg-2 hover:bg-raised'}`}
             >
               {soTrang}
             </button>
@@ -117,7 +120,7 @@ export default function Home() {
             onClick={() => setPage(page + 1)}
             disabled={page === totalPages}
             aria-label="Trang sau"
-            className="px-3 py-2 rounded border border-gray-300 dark:border-gray-600 dark:text-white disabled:opacity-40"
+            className="h-9 w-9 rounded-lg text-fg-2 hover:bg-raised disabled:opacity-40 disabled:hover:bg-transparent"
           >
             &raquo;
           </button>

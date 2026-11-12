@@ -1,5 +1,10 @@
-@use "@coreui/coreui/scss/coreui" as * with ( 
+@use "@coreui/coreui/scss/coreui" as * with (
   $enable-deprecation-messages: false,
+  // thay màu tím mặc định của CoreUI bằng màu nhấn đất nung dùng chung với trang customer
+  $primary: #a8441f,
+  $primary-text-emphasis: #6e2c14,
+  $primary-bg-subtle: #f3e1d8,
+  $primary-border-subtle: #dfb4a0,
 );
 @use "@coreui/chartjs/scss/coreui-chartjs";
 @use "vendors/simplebar";
@@ -54,6 +59,12 @@ body {
 
 .footer {
   min-height: calc(3rem + 1px); // stylelint-disable-line function-disallowed-list
+}
+
+// số liệu dạng bảng: các chữ số rộng bằng nhau để cột số thẳng hàng
+.stat-figure,
+.table td {
+  font-variant-numeric: tabular-nums;
 }
 
 @include color-mode(dark) {

@@ -21,13 +21,13 @@ const Login = () => {
 
     if (data.accessToken) {
       if (data.user.role !== 'admin') {
-        setError('Bạn không có quyền admin!')
+        setError('Bạn không có quyền admin')
         return
       }
       localStorage.setItem('adminToken', data.accessToken)
       navigate('/dashboard')
     } else {
-      setError(data.message || 'Đăng nhập thất bại!')
+      setError(data.message || 'Đăng nhập thất bại')
     }
   }
 

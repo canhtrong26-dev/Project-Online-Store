@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
 import { useTranslations } from 'next-intl'
+import { BsArrowLeft } from 'react-icons/bs'
 
 function ProductDetailContent() {
   const { id } = useParams()
@@ -32,20 +33,22 @@ function ProductDetailContent() {
     toast.success(tMsg('addedToCart', { name: product.name }))
   }
 
-  if (!product) return <p className="p-8 dark:text-white">{t('loading')}</p>
+  if (!product) return <p className="max-w-6xl mx-auto px-4 md:px-6 py-10 text-fg-3">{t('loading')}</p>
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-8 min-h-screen dark:bg-gray-900">
-      <button onClick={() => router.back()} className="mb-4 text-green-600 hover:underline">
-        ← {t('back')}
+    <main className="max-w-6xl mx-auto px-4 md:px-6 py-10">
+      <button onClick={() => router.back()} className="mb-8 inline-flex items-center gap-2 text-sm text-fg-2 hover:text-fg transition-colors">
+        <BsArrowLeft size={16} /> {t('back')}
       </button>
-      <div className="flex flex-col md:flex-row md:pt-20 gap-6 md:gap-8">
-        <Image src={product.image_url} alt={product.name} width={400} height={400} className="object-cover w-full md:w-1/2" />
-        <div className="flex-1 md:pt-15">
-          <h1 className="text-2xl font-bold mb-2 dark:text-white">{product.name}</h1>
-          <p className="text-green-600 text-xl mb-4">{Number(product.price).toLocaleString()}đ</p>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">{product.description}</p>
-          <button onClick={addToCart} className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 md:items-center">
+        <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-raised">
+          <Image src={product.image_url} alt={product.name} width={800} height={1000} className="h-full w-full object-cover" />
+        </div>
+        <div>
+          <h1 className="font-serif text-4xl font-normal tracking-tight leading-tight mb-4">{product.name}</h1>
+          <p className="font-mono text-lg text-fg tabular-nums mb-6">{Number(product.price).toLocaleString()}đ</p>
+          <p className="text-fg-2 leading-relaxed mb-8 max-w-prose">{product.description}</p>
+          <button onClick={addToCart} className="btn-primary w-full md:w-auto md:px-10">
             {t('addToCart')}
           </button>
         </div>
@@ -56,7 +59,7 @@ function ProductDetailContent() {
 
 export default function ProductDetail() {
   return (
-    <Suspense fallback={<p className="p-8 dark:text-white">...</p>}>
+    <Suspense fallback={<p className="max-w-6xl mx-auto px-4 md:px-6 py-10 text-fg-3">...</p>}>
       <ProductDetailContent />
     </Suspense>
   )

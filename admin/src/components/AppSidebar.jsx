@@ -32,8 +32,8 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <span className="sidebar-brand-full fs-5 fw-bold text-white">Online Store</span>
-          <span className="sidebar-brand-narrow fw-bold text-white">OS</span>
+          <span className="sidebar-brand-full fs-5 fw-semibold text-white">Online Store</span>
+          <span className="sidebar-brand-narrow fw-semibold text-white">OS</span>
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"

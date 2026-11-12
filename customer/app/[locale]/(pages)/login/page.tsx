@@ -57,13 +57,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border dark:border-gray-700 dark:bg-gray-800 rounded-lg shadow">
+    <div className="max-w-md mx-4 sm:mx-auto mt-16 rounded-2xl border border-line bg-surface p-8">
       <Script // tải thư viện vẽ ô xác minh của Cloudflare
         src="https://challenges.cloudflare.com/turnstile/v0/api.js"
         async
         defer
       />
-      <h1 className="text-2xl font-bold mb-6 text-center dark:text-white">
+      <h1 className="font-serif text-3xl font-normal tracking-tight mb-8">
         {t("title")}
       </h1>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -71,10 +71,10 @@ export default function LoginPage() {
           <input
             {...register("email")}
             placeholder={t("email")}
-            className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"
+            className="field"
           />
           {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email.message}</p>
+            <p className="text-negative text-sm mt-1">{errors.email.message}</p>
           )}
         </div>
         <div>
@@ -82,16 +82,16 @@ export default function LoginPage() {
             {...register("password")}
             type="password"
             placeholder={t("password")}
-            className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"
+            className="field"
           />
           {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password.message}</p>
+            <p className="text-negative text-sm mt-1">{errors.password.message}</p>
           )}
         </div>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50"
+          className="btn-primary mt-2"
         >
           {isSubmitting ? "Đang đăng nhập..." : t("submit")}
         </button>
@@ -101,11 +101,11 @@ export default function LoginPage() {
           data-size="flexible"
         />
       </form>
-      <p className="text-center mt-4 text-sm dark:text-gray-300">
+      <p className="text-center mt-6 text-sm text-fg-2">
         {t("noAccount")}{" "}
         <Link
           href={`/${locale}/register`}
-          className="text-green-600 hover:underline"
+          className="text-accent underline-offset-4 hover:underline"
         >
           {t("register")}
         </Link>

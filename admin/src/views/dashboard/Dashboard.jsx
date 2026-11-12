@@ -37,31 +37,31 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h2 className="mb-4">Dashboard</h2>
+      <h2 className="mb-4 fw-normal">Dashboard</h2>
 
       <div className="row mb-4">
         <div className="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
-          <div className="card text-center p-3">
-            <h5>Sản phẩm</h5>
-            <h2>{stats.products}</h2>
+          <div className="card p-3 h-100">
+            <div className="small text-body-secondary mb-2">Sản phẩm</div>
+            <div className="stat-figure fs-3 fw-medium">{stats.products}</div>
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
-          <div className="card text-center p-3">
-            <h5>Đơn hàng</h5>
-            <h2>{stats.orders}</h2>
+          <div className="card p-3 h-100">
+            <div className="small text-body-secondary mb-2">Đơn hàng</div>
+            <div className="stat-figure fs-3 fw-medium">{stats.orders}</div>
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
-          <div className="card text-center p-3">
-            <h5>Khách hàng</h5>
-            <h2>{stats.users}</h2>
+          <div className="card p-3 h-100">
+            <div className="small text-body-secondary mb-2">Khách hàng</div>
+            <div className="stat-figure fs-3 fw-medium">{stats.users}</div>
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
-          <div className="card text-center p-3">
-            <h5>Doanh thu</h5>
-            <h2>{Number(stats.revenue).toLocaleString()}đ</h2>
+          <div className="card p-3 h-100">
+            <div className="small text-body-secondary mb-2">Doanh thu</div>
+            <div className="stat-figure fs-3 fw-medium">{Number(stats.revenue).toLocaleString()}đ</div>
           </div>
         </div>
       </div>

@@ -47,39 +47,39 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border dark:border-gray-700 dark:bg-gray-800 rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-6 text-center dark:text-white">{t('title')}</h1>
+    <div className="max-w-md mx-4 sm:mx-auto mt-16 rounded-2xl border border-line bg-surface p-8">
+      <h1 className="font-serif text-3xl font-normal tracking-tight mb-8">{t('title')}</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div>
-          <input {...register('name')} placeholder={t('name')} className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
-          {errors.name && <p className="text-red-500 pt-2 text-sm">{errors.name.message}</p>}
+          <input {...register('name')} placeholder={t('name')} className="field"/>
+          {errors.name && <p className="text-negative text-sm mt-1">{errors.name.message}</p>}
         </div>
         <div>
-          <input {...register('email')} placeholder={t('email')} className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
-          {errors.email && <p className="text-red-500 pt-2 text-sm">{errors.email.message}</p>}
+          <input {...register('email')} placeholder={t('email')} className="field"/>
+          {errors.email && <p className="text-negative text-sm mt-1">{errors.email.message}</p>}
         </div>
         <div>
-          <input {...register('password')} type="password" placeholder={t('password')} className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
-          {errors.password && <p className="text-red-500 pt-2 text-sm">{errors.password.message}</p>}
+          <input {...register('password')} type="password" placeholder={t('password')} className="field"/>
+          {errors.password && <p className="text-negative text-sm mt-1">{errors.password.message}</p>}
         </div>
         <div>
-          <input {...register('phone')} placeholder={t('phone')} className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
-          {errors.phone && <p className="text-red-500 pt-2 text-sm">{errors.phone.message}</p>}
+          <input {...register('phone')} placeholder={t('phone')} className="field"/>
+          {errors.phone && <p className="text-negative text-sm mt-1">{errors.phone.message}</p>}
         </div>
         <div>
-          <input {...register('address')} placeholder={t('address')} className="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded"/>
-          {errors.address && <p className="text-red-500 pt-2 text-sm">{errors.address.message}</p>}
+          <input {...register('address')} placeholder={t('address')} className="field"/>
+          {errors.address && <p className="text-negative text-sm mt-1">{errors.address.message}</p>}
         </div>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50"
+          className="btn-primary mt-2"
         >
           {isSubmitting ? '...' : t('submit')}
         </button>
       </form>
-      <p className="text-center mt-4 text-sm dark:text-gray-300">
-        {t('hasAccount')} <Link href={`/${locale}/login`} className="text-green-600 hover:underline">{t('login')}</Link>
+      <p className="text-center mt-6 text-sm text-fg-2">
+        {t('hasAccount')} <Link href={`/${locale}/login`} className="text-accent underline-offset-4 hover:underline">{t('login')}</Link>
       </p>
     </div>
   );

@@ -151,38 +151,38 @@ export default function CheckoutPage() {
     }
   };
 
-  const classO =
-    "w-full border dark:border-gray-600 dark:bg-gray-800 dark:text-white p-2 rounded";
+  const classO = "field";
 
   return (
-    <main className="max-w-2xl mx-auto px-4 py-8 min-h-screen dark:bg-gray-900">
-      <h1 className="text-2xl font-bold mb-6 dark:text-white">{t("title")}</h1>
+    <main className="max-w-2xl mx-auto px-4 md:px-6 py-10">
+      <h1 className="font-serif text-4xl font-normal tracking-tight mb-8">{t("title")}</h1>
 
-      <div className="border dark:border-gray-700 dark:bg-gray-800 rounded-lg p-4 mb-6">
-        <h2 className="font-semibold mb-3 dark:text-white">
-          {t("yourOrder")}:
-        </h2>
+      <div className="rounded-2xl border border-line bg-surface p-5 mb-10">
+        <h2 className="text-sm font-medium text-fg-2 mb-3">{t("yourOrder")}</h2>
         {cart.map((item) => (
           <div
             key={item.id}
-            className="flex justify-between py-2 border-b dark:border-gray-700"
+            className="flex justify-between gap-4 py-2 text-sm border-b border-line"
           >
-            <span className="dark:text-gray-300">
-              {item.name} x{item.quantity}
+            <span className="text-fg">
+              {item.name}{" "}
+              <span className="font-mono text-fg-3">×{item.quantity}</span>
             </span>
-            <span className="dark:text-gray-300">
+            <span className="font-mono text-fg-2 tabular-nums">
               {(item.price * item.quantity).toLocaleString()}đ
             </span>
           </div>
         ))}
-        <div className="flex justify-between font-bold mt-3 dark:text-white">
-          <span>{t("total")}:</span>
-          <span>{total.toLocaleString()}đ</span>
+        <div className="flex justify-between items-baseline mt-4">
+          <span className="text-fg-2">{t("total")}</span>
+          <span className="font-mono text-xl font-medium tabular-nums">
+            {total.toLocaleString()}đ
+          </span>
         </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <h2 className="font-semibold dark:text-white">{t("shippingInfo")}:</h2>
+        <h2 className="text-sm font-medium text-fg-2">{t("shippingInfo")}</h2>
 
         <div>
           <input
@@ -191,7 +191,7 @@ export default function CheckoutPage() {
             className={classO}
           />
           {errors.name && (
-            <p className="text-red-500 text-sm">{errors.name.message}</p>
+            <p className="text-negative text-sm mt-1">{errors.name.message}</p>
           )}
         </div>
 
@@ -202,7 +202,7 @@ export default function CheckoutPage() {
             className={classO}
           />
           {errors.phone && (
-            <p className="text-red-500 text-sm">{errors.phone.message}</p>
+            <p className="text-negative text-sm mt-1">{errors.phone.message}</p>
           )}
         </div>
 
@@ -220,7 +220,7 @@ export default function CheckoutPage() {
             ))}
           </select>
           {errors.province && (
-            <p className="text-red-500 text-sm">{errors.province.message}</p>
+            <p className="text-negative text-sm mt-1">{errors.province.message}</p>
           )}
         </div>
 
@@ -239,7 +239,7 @@ export default function CheckoutPage() {
             ))}
           </select>
           {errors.district && (
-            <p className="text-red-500 text-sm">{errors.district.message}</p>
+            <p className="text-negative text-sm mt-1">{errors.district.message}</p>
           )}
         </div>
 
@@ -258,7 +258,7 @@ export default function CheckoutPage() {
             ))}
           </select>
           {errors.ward && (
-            <p className="text-red-500 text-sm">{errors.ward.message}</p>
+            <p className="text-negative text-sm mt-1">{errors.ward.message}</p>
           )}
         </div>
 
@@ -269,14 +269,14 @@ export default function CheckoutPage() {
             className={classO}
           />
           {errors.detail && (
-            <p className="text-red-500 text-sm">{errors.detail.message}</p>
+            <p className="text-negative text-sm mt-1">{errors.detail.message}</p>
           )}
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting || isOrdered}
-          className="bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:opacity-50"
+          className="btn-primary mt-2"
         >
           {isSubmitting ? "..." : t("submit")}
         </button>
