@@ -16,7 +16,6 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [heroProducts, setHeroProducts] = useState<any[]>([]); //3 sản phẩm đầu tiên để ghép ảnh ở banner, chỉ lấy 1 lần
 
   //gọi lại API mỗi khi đổi trang hoặc đổi danh mục
   useEffect(() => {
@@ -24,7 +23,6 @@ export default function Home() {
       if (res && Array.isArray(res.data)) {
         setProducts(res.data);
         setTotalPages(res.totalPages);
-        setHeroProducts(prev => prev.length ? prev : res.data.slice(0, 3));
       }
     });
   }, [page, selectedCategory]);
@@ -60,31 +58,7 @@ export default function Home() {
 
   return (
     <main className="max-w-6xl mx-auto px-4 md:px-6 py-10">
-      <section className="grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-3xl bg-hero text-hero-fg mb-16">
-        <div className="flex flex-col justify-center gap-6 p-8 md:p-12">
-          <h1 className="font-serif text-4xl md:text-5xl font-normal leading-[1.08] tracking-tight">{t('heroTitle')}</h1>
-          <p className="text-hero-fg-2 text-lg leading-relaxed max-w-md">{t('heroText')}</p>
-          <a href="#products" className="inline-flex h-11 w-fit items-center rounded-lg bg-hero-fg px-5 font-medium text-hero transition-opacity hover:opacity-90">
-            {t('heroCta')}
-          </a>
-        </div>
-        {heroProducts.length > 0 && (
-          <div className="grid grid-cols-2 grid-rows-2 gap-2 p-2 h-80 md:h-auto md:min-h-96">
-            {heroProducts.map((product: any, i: number) => (
-              <Link
-                key={product.id}
-                href={`/${locale}/product/${product.id}`}
-                className={`overflow-hidden rounded-2xl ${i === 0 ? 'row-span-2' : ''}`}
-                style={{ backgroundColor: swatch(product.id) }}
-              >
-                <Image src={product.image_url} alt={product.name} width={500} height={600} className="h-full w-full object-cover" />
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <h2 id="products" className="font-serif text-4xl font-normal tracking-tight mb-6 scroll-mt-24">{t('products')}</h2>
+      <h2 className="font-serif text-4xl font-normal tracking-tight mb-6">{t('products')}</h2>
 
       <div className="flex gap-1 mb-10 overflow-x-auto pb-1 border-b border-line">
         <button

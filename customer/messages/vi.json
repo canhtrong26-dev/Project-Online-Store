@@ -11,10 +11,7 @@
   "home": {
     "all": "Tất cả",
     "products": "Sản phẩm",
-    "addToCart": "Thêm vào giỏ hàng",
-    "heroTitle": "Áo, quần, giày và túi xách cho mỗi ngày",
-    "heroText": "Chọn theo danh mục, thêm vào giỏ và đặt hàng giao tận nơi",
-    "heroCta": "Xem sản phẩm"
+    "addToCart": "Thêm vào giỏ hàng"
   },
   "register": {
     "title": "Đăng ký",

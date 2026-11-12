@@ -11,10 +11,7 @@
   "home": {
     "all": "All",
     "products": "Products",
-    "addToCart": "Add to cart",
-    "heroTitle": "Clothes, shoes and bags for every day",
-    "heroText": "Browse by category, add to your cart and get it delivered",
-    "heroCta": "Shop products"
+    "addToCart": "Add to cart"
   },
   "register": {
     "title": "Register",

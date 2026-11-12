@@ -30,8 +30,7 @@ html {
   --dot-3: #3f5f86;
   --dot-4: #a68a5b;
   --dot-5: #c08a1e;
-  /* banner và footer luôn tối, ở cả 2 chế độ */
-  --hero: #6e2c14;
+  /* màu chữ và nền footer, luôn tối ở cả 2 chế độ */
   --hero-fg: #f7ebe2;
   --hero-fg-2: #e2c3b2;
   --espresso: #241b16;
@@ -59,7 +58,6 @@ html {
   --dot-3: #8aa8cf;
   --dot-4: #c9ad7c;
   --dot-5: #e0b04d;
-  --hero: #4a1f10;
   --espresso: #100c0a;
 }
 
@@ -74,7 +72,6 @@ html {
   --color-fg-3: var(--fg-3);
   --color-accent: var(--accent);
   --color-on-accent: var(--on-accent);
-  --color-hero: var(--hero);
   --color-hero-fg: var(--hero-fg);
   --color-hero-fg-2: var(--hero-fg-2);
   --color-espresso: var(--espresso);
