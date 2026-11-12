@@ -41,7 +41,7 @@ function ProductDetailContent() {
         <BsArrowLeft size={16} /> {t('back')}
       </button>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 md:items-center">
-        <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-raised">
+        <div className="aspect-[4/5] overflow-hidden rounded-2xl" style={{ backgroundColor: `var(--swatch-${(product.id % 5) + 1})` }}>
           <Image src={product.image_url} alt={product.name} width={800} height={1000} className="h-full w-full object-cover" />
         </div>
         <div>

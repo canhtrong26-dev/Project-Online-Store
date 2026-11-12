@@ -16,8 +16,25 @@ html {
   --fg-2: #5e554a;
   --fg-3: #7b7266;
   --accent: #a8441f;
+  --on-accent: #ffffff;
   --negative: #dc2626;
   --positive: #16a34a;
+  /* màu "vải" cho nền ảnh sản phẩm và chấm danh mục: đất nung, rêu, denim, cát, mù tạt */
+  --swatch-1: #ead3c6;
+  --swatch-2: #d6dccb;
+  --swatch-3: #cfd8e3;
+  --swatch-4: #e9dfcb;
+  --swatch-5: #eedcb0;
+  --dot-1: #a8441f;
+  --dot-2: #6b7d4f;
+  --dot-3: #3f5f86;
+  --dot-4: #a68a5b;
+  --dot-5: #c08a1e;
+  /* banner và footer luôn tối, ở cả 2 chế độ */
+  --hero: #6e2c14;
+  --hero-fg: #f7ebe2;
+  --hero-fg-2: #e2c3b2;
+  --espresso: #241b16;
 }
 
 .dark {
@@ -29,8 +46,21 @@ html {
   --fg-2: #aaa398;
   --fg-3: #8a847a;
   --accent: #e08a62;
+  --on-accent: #1f1209;
   --negative: #e5484d;
   --positive: #4cc38a;
+  --swatch-1: #3a2a22;
+  --swatch-2: #2c3126;
+  --swatch-3: #262d37;
+  --swatch-4: #332d23;
+  --swatch-5: #3a321f;
+  --dot-1: #e08a62;
+  --dot-2: #9fb37f;
+  --dot-3: #8aa8cf;
+  --dot-4: #c9ad7c;
+  --dot-5: #e0b04d;
+  --hero: #4a1f10;
+  --espresso: #100c0a;
 }
 
 /* đăng ký token cho Tailwind -> dùng được bg-surface, text-fg-2, border-line... */
@@ -43,6 +73,11 @@ html {
   --color-fg-2: var(--fg-2);
   --color-fg-3: var(--fg-3);
   --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-hero: var(--hero);
+  --color-hero-fg: var(--hero-fg);
+  --color-hero-fg-2: var(--hero-fg-2);
+  --color-espresso: var(--espresso);
   --color-negative: var(--negative);
   --color-positive: var(--positive);
   --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
@@ -73,7 +108,7 @@ html {
   }
 }
 
-/* nút chính: nền màu chữ, chữ màu nền (đen trên sáng, kem trên tối) */
+/* nút chính: nền màu nhấn đất nung */
 @utility btn-primary {
   display: inline-flex;
   align-items: center;
@@ -81,8 +116,8 @@ html {
   height: 44px;
   padding-inline: 20px;
   border-radius: 8px;
-  background-color: var(--fg);
-  color: var(--bg);
+  background-color: var(--accent);
+  color: var(--on-accent);
   font-weight: 500;
   transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
   &:hover {

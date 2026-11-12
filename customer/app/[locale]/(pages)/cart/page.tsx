@@ -74,7 +74,8 @@ export default function CartPage() {
                   alt={item.name}
                   width={80}
                   height={100}
-                  className="w-20 h-25 shrink-0 rounded-lg object-cover bg-raised"
+                  className="w-20 h-25 shrink-0 rounded-lg object-cover"
+                  style={{ backgroundColor: `var(--swatch-${(item.id % 5) + 1})` }}
                 />
                 <div className="flex-1 min-w-0 flex flex-col justify-between">
                   <div className="flex items-start justify-between gap-2">
