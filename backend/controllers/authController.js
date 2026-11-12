@@ -22,6 +22,35 @@ const getCookieName = (req) =>
     ? "adminRefreshToken"
     : "refreshToken";
 
+//hàm TỰ TẠO: nhờ Cloudflare chấm xem người đang đăng nhập là người hay robot
+const kiemTraTurnstile = async (token) => {
+  //CÔNG TẮC TẮT: chưa khai khoá bí mật thì bỏ qua, đăng nhập như bình thường
+  if (!process.env.TURNSTILE_SECRET_KEY) return true;
+
+  //chưa tích ô xác minh thì chặn luôn, khỏi mất công gọi Cloudflare
+  if (!token) return false;
+
+  try {
+    //gửi khoá bí mật + token lên Cloudflare nhờ chấm hộ
+    const phanHoi = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          secret: process.env.TURNSTILE_SECRET_KEY,
+          response: token,
+        }),
+      },
+    );
+
+    const ketQua = await phanHoi.json(); //Cloudflare trả về { success: true/false, ... }
+    return ketQua.success === true;
+  } catch (error) {
+    return false; //mạng lỗi, gọi không tới Cloudflare thì coi như không qua
+  }
+};
+
 // Đăng ký
 const register = async (req, res) => {
   try {
@@ -61,17 +90,31 @@ const register = async (req, res) => {
 //Đăng nhập
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, turnstileToken } = req.body;
+
+    //chặn robot TRƯỚC khi đụng tới database
+    const laNguoiThat = await kiemTraTurnstile(turnstileToken);
+    if (!laNguoiThat) {
+      return res
+        .status(400)
+        .json({ message: "Xác minh không thành công, vui lòng thử lại!" });
+    }
 
     const user = await User.findOne({ where: { email } });
+
+
     if (!user) {
-      return res.status(400).json({ message: "Email hoặc mật khẩu không đúng!" }); //dùng chung thông báo với sai mật khẩu để không lộ email nào đã đăng ký
+      return res
+        .status(400)
+        .json({ message: "Email hoặc mật khẩu không đúng!" }); //dùng chung thông báo với sai mật khẩu để không lộ email nào đã đăng ký
     }
 
     // Kiểm tra password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Email hoặc mật khẩu không đúng!" }); //trùng thông báo với email không tồn tại
+      return res
+        .status(400)
+        .json({ message: "Email hoặc mật khẩu không đúng!" }); //trùng thông báo với email không tồn tại
     }
 
     // sau khi đáp ứng đủ cấc bước trên thì tạo accessToken

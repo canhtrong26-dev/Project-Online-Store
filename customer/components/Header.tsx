@@ -23,6 +23,8 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false); // trạng thái mở/đóng menu hamburger trên điện thoại/màn hình nhỏ
   const { theme, setTheme } = useTheme();
 
+
+//cập nhât real time số lượng sp ở giỏ hàng khi user tác động lên các trang khác (thêm/xóa sp, đặt hàng thành công) 
   useEffect(() => {
     setMounted(true);
     const userData = localStorage.getItem('user');
