@@ -97,7 +97,7 @@ export default function Header() {
               <button
                 aria-label="Đăng xuất"
                 onClick={handleLogout}
-                className={linkClass}
+                className={`${linkClass} `}
               >
                 {t("logout")}
               </button>
