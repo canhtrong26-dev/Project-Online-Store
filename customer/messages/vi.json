@@ -11,7 +11,8 @@
   "home": {
     "all": "Tất cả",
     "products": "Sản phẩm",
-    "addToCart": "Thêm vào giỏ hàng"
+    "addToCart": "Thêm vào giỏ hàng",
+    "searchPlaceholder": "Tìm sản phẩm..."
   },
   "register": {
     "title": "Đăng ký",

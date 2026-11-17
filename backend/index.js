@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 const cleanupExpiredSessions = async () => {
   await Session.destroy({
     where: {
-      expires_at: { [Op.lt]: new Date() },
+      expires_at: { [Op.lt]: new Date() }, // Op.lt = (<): lấy các session có expires_at nhỏ hơn thời điểm hiện tại, tức là đã hết hạn 
     },
   });
 };
