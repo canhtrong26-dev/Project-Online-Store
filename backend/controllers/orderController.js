@@ -65,7 +65,11 @@ const create = async (req, res) => {
 
     // Kiểm tra quantity hợp lệ
     for (const item of items) {
-      if (!item.quantity || item.quantity <= 0) {
+      //ép về số nguyên vì chỗ trừ kho ghép thẳng quantity vào sequelize.literal (đừng coi nó là giá trị)
+      item.quantity = parseInt(item.quantity, 10);
+
+      //isInteger bắt được NaN, điều kiện cũ thì không
+      if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
         return res.status(400).json({ message: "Số lượng không hợp lệ!" });
       }
     }
@@ -97,7 +101,6 @@ const create = async (req, res) => {
       idKhach = user_id;
     }
 
-    
     const t = await sequelize.transaction(); //Mở transaction: tạo đơn, chi tiết đơn và trừ kho phải cùng thành công hoặc cùng huỷ
     try {
       // Tạo order chính (lưu luôn thông tin giao hàng lúc đặt - snapshot)
@@ -126,7 +129,7 @@ const create = async (req, res) => {
         );
 
         //gộp lại phần kiểm tra stock và trừ đơn hàng vào 1 lệnh  [affected] chống 2 người cùng đặt 1 đơn hàng mà kho chỉ còn 1 cái, nếu 1 người trừ kho thành công thì người kia sẽ bị lỗi affected = 0
-        const [affected] = await Product.update( 
+        const [affected] = await Product.update(
           { stock: sequelize.literal(`stock - ${item.quantity}`) }, //SET stock = stock - số lượng (dùng literal để DB tự tính trên giá trị mới nhất, không lấy số cũ từ code)
           {
             where: {
@@ -136,7 +139,7 @@ const create = async (req, res) => {
             transaction: t, //ok thì đi tiếp xuống phần await t.commit() bên dưới để chốt ghi nhận dữ liệu mới thật sự
           },
         );
-        if (affected === 0) { 
+        if (affected === 0) {
           await t.rollback();
           return res.status(400).json({
             message: `Sản phẩm "${product.name}" vừa hết hàng!`,
@@ -145,7 +148,6 @@ const create = async (req, res) => {
       }
       await t.commit(); // mọi thứ ok thì chốt transaction, dữ liệu mới thật sự được ghi
       res.status(201).json(order);
-
     } catch (loiTransaction) {
       // Có lỗi giữa chừng thì huỷ sạch: đơn, chi tiết, và trừ kho đều không được ghi
       await t.rollback();
@@ -154,8 +156,6 @@ const create = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-
-
 };
 // Sửa order
 const update = async (req, res) => {

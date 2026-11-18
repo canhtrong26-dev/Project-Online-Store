@@ -72,7 +72,7 @@ export default function Home() {
       <h2 className="font-serif text-4xl font-normal tracking-tight mb-6">
         {t("products")}
       </h2>
-      <input
+      <input //ô tìm kiếm sản phẩm home customer
         value={search}
         onChange={(e) => {
           setSearch(e.target.value);
