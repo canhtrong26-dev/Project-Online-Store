@@ -15,3 +15,9 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Anh goc cho script seed - da upload len Cloudinary, khong can nam trong repo
+backend/seed-images/
+
+# File tam cua Word/PowerPoint
+~$*
