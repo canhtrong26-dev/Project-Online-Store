@@ -17,10 +17,16 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
+  const [searchCho, setSearchCho] = useState("");
 
+  //chờ ngừng gõ 500ms rồi mới cập nhật từ khoá dùng để gọi API
+  useEffect(() => {
+    const dongHo = setTimeout(() => setSearchCho(search), 500);
+    return () => clearTimeout(dongHo);
+  }, [search]);
   //gọi lại API mỗi khi đổi trang hoặc đổi danh mục
   useEffect(() => {
-    getProducts({ page, limit: 8, category_id: selectedCategory, search }).then(
+    getProducts({ page, limit: 8, category_id: selectedCategory,  search: searchCho  }).then(
       (res) => {
         if (res && Array.isArray(res.data)) {
           setProducts(res.data);
@@ -28,7 +34,7 @@ export default function Home() {
         }
       },
     );
-  }, [page, selectedCategory, search]);
+  }, [page, selectedCategory, searchCho]);
 
   //danh mục chỉ cần lấy 1 lần
   useEffect(() => {
