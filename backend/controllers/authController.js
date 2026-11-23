@@ -62,7 +62,7 @@ const register = async (req, res) => {
       return res.status(400).json({ message: "Email đã tồn tại!" });
     }
 
-    // Thêm dòng này — kiểm tra phone đã tồn tại chưa
+    //kiểm tra phone đã tồn tại chưa
     const existingPhone = await User.findOne({ where: { phone } });
     if (existingPhone) {
       return res.status(400).json({ message: "Số điện thoại đã tồn tại!" });
@@ -102,7 +102,6 @@ const login = async (req, res) => {
 
     const user = await User.findOne({ where: { email } });
 
-
     if (!user) {
       return res
         .status(400)
@@ -119,9 +118,9 @@ const login = async (req, res) => {
 
     // sau khi đáp ứng đủ cấc bước trên thì tạo accessToken
     const accessToken = jwt.sign(
-      { id: user.id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: ACCESS_TOKEN_EXPIRES },
+      { id: user.id, role: user.role }, //gồm id và role của user
+      process.env.JWT_SECRET, //khoá bí mật của server, dùng chung để ký
+      { expiresIn: ACCESS_TOKEN_EXPIRES }, //thời hạn 15 phút
     );
 
     //rồi đến refreshToken
@@ -194,8 +193,9 @@ const refreshAccessToken = async (req, res) => {
 //đăng xuất
 const logout = async (req, res) => {
   try {
-    const { id } = req.user; //lấy từ middleware
-    await Session.destroy({ where: { user_id: id } }); //nếu đăng xuất thì tự động xóa refreshToken khỏi DB
+    const refreshToken = req.cookies[getCookieName(req)]; // lấy token của máy đang bấm đăng xuất
+    if (refreshToken)
+      await Session.destroy({ where: { refresh_token: refreshToken } }); //có cookie mới xoá, tránh lỗi undefined hieuur 
 
     //xoá cookie, phải trùng path và sameSite với lúc đặt
     res.clearCookie(getCookieName(req), {

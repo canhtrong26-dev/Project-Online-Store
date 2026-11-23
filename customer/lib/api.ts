@@ -12,6 +12,8 @@ export const getProducts = async (
   const query = new URLSearchParams();
   query.set("page", String(params.page ?? 1));
   query.set("limit", String(params.limit ?? 8));
+
+  //kiểm tra xem trước chỉ gửi khi có giá trị, rỗng hoặc null thì bỏ qua để không lọc sai
   if (params.category_id) query.set("category_id", String(params.category_id));
   if (params.search) query.set("search", params.search);
 
@@ -92,7 +94,7 @@ const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   //gọi API lần 1, tự gắn header Authorization
   let res = await fetch(url, {
     ...options,
-    credentials: "include",//cần cho logout: trình duyệt chỉ chịu xoá cookie nếu yêu cầu có gửi kèm cookie
+    credentials: "include", //cần cho logout: trình duyệt chỉ chịu xoá cookie nếu yêu cầu có gửi kèm cookie
     headers: {
       ...(options.headers as Record<string, string>),
       Authorization: `Bearer ${token}`,

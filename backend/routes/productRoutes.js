@@ -3,7 +3,7 @@ const router = express.Router();
 const { getAll, create, update, remove ,getOne} = require('../controllers/productController');
 const { verifyAdmin } = require('../middlewares/auth');  
 
-router.get('/', getAll);                       // chỉ admin
+router.get('/', getAll);         //ai cũng có thể xem             
 router.get('/:id', getOne)
 router.post('/', verifyAdmin, create);        // chỉ admin
 router.put('/:id', verifyAdmin, update);      // chỉ admin

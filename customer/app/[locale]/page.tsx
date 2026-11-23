@@ -26,11 +26,11 @@ export default function Home() {
   }, [search]);
   //gọi lại API mỗi khi đổi trang hoặc đổi danh mục
   useEffect(() => {
-    getProducts({ page, limit: 8, category_id: selectedCategory,  search: searchCho  }).then(
+    getProducts({ page: page, limit: 8, category_id: selectedCategory,  search: searchCho  }).then(
       (res) => {
-        if (res && Array.isArray(res.data)) {
-          setProducts(res.data);
-          setTotalPages(res.totalPages);
+        if (res && Array.isArray(res.data)) { //Array.isArray(res.data) phải là mảng vì nếu lỗi trả về message thì sẽ bị lỗi trắng trang
+          setProducts(res.data); //danh sách sản phẩm để hiện ra lưới
+          setTotalPages(res.totalPages);  //tổng số trang để vẽ ra nút 1 2 3..
         }
       },
     );

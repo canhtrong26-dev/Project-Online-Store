@@ -27,12 +27,12 @@ app.use(express.json());
 app.use(cookieParser()); //bật cookie-parser cho toàn app: mọi request đều đọc được cookie qua req.cookies
 
 
-app.use('/api/categories', categoryRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/upload', uploadRoutes);
+app.use('/api/categories', categoryRoutes); //danh mục: ai cũng xem được, chỉ admin thêm/sửa/xóa
+app.use('/api/products', productRoutes);     //sản phẩm: ai cũng xem được, chỉ admin thêm/sửa/xóa
+app.use('/api/users', userRoutes);           //quản lý người dùng: chỉ admin
+app.use('/api/orders', orderRoutes);         //đơn hàng: user đặt và xem đơn của mình, admin quản lý tất cả
+app.use('/api/auth', authRoutes);            //xác thực: đăng ký, đăng nhập, làm mới token, đăng xuất
+app.use('/api/upload', uploadRoutes);        //tải ảnh lên Cloudinary: chỉ admin
 
 app.get('/', (req, res) => {
   res.json({ message: 'Server đang chạy!' });

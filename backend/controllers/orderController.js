@@ -134,7 +134,7 @@ const create = async (req, res) => {
           {
             where: {
               id: item.product_id, //trừ cho đúng id này
-              stock: { [Op.gte]: item.quantity }, // stock >= item.quantity (lệnh thô của db đc tạo từ literal)
+              stock: { [Op.gte]: item.quantity },  // chỉ trừ khi stock >= số lượng mua
             },
             transaction: t, //ok thì đi tiếp xuống phần await t.commit() bên dưới để chốt ghi nhận dữ liệu mới thật sự
           },
