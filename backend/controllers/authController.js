@@ -22,9 +22,9 @@ const getCookieName = (req) =>
     ? "adminRefreshToken"
     : "refreshToken";
 
-//hàm TỰ TẠO: nhờ Cloudflare chấm xem người đang đăng nhập là người hay robot
+//nhờ Cloudflare chấm xem người đang đăng nhập là người hay robot
 const kiemTraTurnstile = async (token) => {
-  //CÔNG TẮC TẮT: chưa khai khoá bí mật thì bỏ qua, đăng nhập như bình thường
+  //chưa khai khoá bí mật thì bỏ qua, đăng nhập như bình thường
   if (!process.env.TURNSTILE_SECRET_KEY) return true;
 
   //chưa tích ô xác minh thì chặn luôn, khỏi mất công gọi Cloudflare

@@ -6,6 +6,7 @@ require('./models/index');
 
 //nạp thư viện cookie-parser: đọc cookie từ request thành object req.cookies
 const cookieParser = require('cookie-parser');
+
 const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');

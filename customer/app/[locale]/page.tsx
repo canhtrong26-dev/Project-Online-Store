@@ -24,6 +24,7 @@ export default function Home() {
     const dongHo = setTimeout(() => setSearchCho(search), 500);
     return () => clearTimeout(dongHo);
   }, [search]);
+
   //gọi lại API mỗi khi đổi trang hoặc đổi danh mục
   useEffect(() => {
     getProducts({ page: page, limit: 8, category_id: selectedCategory,  search: searchCho  }).then(

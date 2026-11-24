@@ -68,6 +68,7 @@ export const getMyOrders = async (token: string) => {
 
 //xin accessToken hết hạn bằng refreshToken
 const refreshAccessToken = async () => {
+
   //không còn đọc refreshToken từ localStorage nữa, trình duyệt tự gửi cookie
   const res = await fetch(`${API_URL}/auth/refresh`, {
     method: "POST",

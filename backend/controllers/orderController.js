@@ -65,10 +65,11 @@ const create = async (req, res) => {
 
     // Kiểm tra quantity hợp lệ
     for (const item of items) {
-      //ép về số nguyên vì chỗ trừ kho ghép thẳng quantity vào sequelize.literal (đừng coi nó là giá trị)
-      item.quantity = parseInt(item.quantity, 10);
 
-      //isInteger bắt được NaN, điều kiện cũ thì không
+      //ép về số nguyên để không còn là giá trị chữ hay đoạn sql nào nữa tránh lỗi nguy hiểm SQL Injection
+      item.quantity = parseInt(item.quantity, 10); 
+
+      //phải là số nguyên dương để không còn là giá trị chữ hay đoạn sql nào nữa tránh lỗi nguy hiểm SQL Injection
       if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
         return res.status(400).json({ message: "Số lượng không hợp lệ!" });
       }
@@ -192,7 +193,7 @@ const remove = async (req, res) => {
       });
       if (product) {
         await Product.update(
-          { stock: product.stock + item.quantity },
+          { stock: product.stock + item.quantity }, //cộng trả lại cho kho
           { where: { id: item.product_id }, transaction: t },
         );
       }
