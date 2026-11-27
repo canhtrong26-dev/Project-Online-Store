@@ -62,7 +62,7 @@ export const createOrder = async (data: object, token: string) => {
 
 // xem đơn hàng của user đang login
 export const getMyOrders = async (token: string) => {
-  const res = await fetchWithAuth(`${API_URL}/orders/my-orders`);
+  const res = await fetchWithAuth(`${API_URL}/orders/my-orders`);  
   return res.json();
 };
 
