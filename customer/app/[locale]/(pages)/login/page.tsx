@@ -8,7 +8,9 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
-import Script from "next/script";
+
+import { useRef, useState } from "react";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 
 type LoginForm = { email: string; password: string };
 
@@ -17,6 +19,12 @@ export default function LoginPage() {
   const t = useTranslations("login");
   const tMsg = useTranslations("msg");
   const locale = useLocale();
+
+  //token Cloudflare trả về sau khi người dùng qua ô xác minh
+  const [turnstileToken, setTurnstileToken] = useState("");
+
+  //móc để gọi lệnh reset ô xác minh khi đăng nhập sai
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   //đặt schema trong component để dùng được chuỗi đã dịch
   const schema = z.object({
@@ -33,14 +41,6 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginForm) => {
-
-    //đi tìm ô ẩn mà Cloudflare tự chèn vào trang, lấy token trong đó
-    const oAn = document.querySelector(
-      'input[name="cf-turnstile-response"]',
-    ) as HTMLInputElement | null;
-    const turnstileToken = oAn?.value;
-
-    //gửi lên backend: email + password (trải ra từ data) kèm token Turnstile
     //backend sẽ hỏi lại Cloudflare xem token có hợp lệ không (chống bot) rồi mới kiểm tra mật khẩu
     const res = await loginAPI({ ...data, turnstileToken });
 
@@ -51,18 +51,16 @@ export default function LoginPage() {
       router.push(`/${locale}`);
     } else {
       toast.error(res.message || tMsg("loginFailed"));
+
       //token chỉ dùng được 1 lần, phải làm mới ô xác minh để bấm lại được
-      (window as any).turnstile?.reset();
+      turnstileRef.current?.reset();
+      setTurnstileToken("");
     }
   };
 
   return (
     <div className="max-w-md mx-4 sm:mx-auto mt-16 rounded-2xl border border-line bg-surface p-8">
-      <Script // tải thư viện vẽ ô xác minh của Cloudflare
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-        async
-        defer
-      />
+     
       <h1 className="font-serif text-3xl font-normal tracking-tight mb-8">
         {t("title")}
       </h1>
@@ -85,7 +83,9 @@ export default function LoginPage() {
             className="field"
           />
           {errors.password && (
-            <p className="text-negative text-sm mt-1">{errors.password.message}</p>
+            <p className="text-negative text-sm mt-1">
+              {errors.password.message}
+            </p>
           )}
         </div>
         <button
@@ -95,10 +95,12 @@ export default function LoginPage() {
         >
           {isSubmitting ? "Đang đăng nhập..." : t("submit")}
         </button>
-        <div
-          className="cf-turnstile "
-          data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-          data-size="flexible"
+        <Turnstile
+          ref={turnstileRef}
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+          options={{ size: "flexible" }}
+          onSuccess={(token) => setTurnstileToken(token)}
+          onExpire={() => setTurnstileToken("")}
         />
       </form>
       <p className="text-center mt-6 text-sm text-fg-2">
