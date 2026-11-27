@@ -14,6 +14,7 @@ function ProductDetailContent() {
   const tMsg = useTranslations('msg')
   const [product, setProduct] = useState<any>(null)
 
+  //gọi api lấy chi tiết 1 sản phẩm id
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/products/${id}`)
       .then(res => res.json())

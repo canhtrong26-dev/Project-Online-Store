@@ -33,8 +33,8 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginForm) => {
-    //đi tìm ô ẩn mà Cloudflare tự chèn vào trang, lấy token trong đó
 
+    //đi tìm ô ẩn mà Cloudflare tự chèn vào trang, lấy token trong đó
     const oAn = document.querySelector(
       'input[name="cf-turnstile-response"]',
     ) as HTMLInputElement | null;

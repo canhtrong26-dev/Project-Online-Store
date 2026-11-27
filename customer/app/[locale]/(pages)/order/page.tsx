@@ -15,12 +15,12 @@ export default function OrderPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    if (!token) {
-      toast.error(tMsg('pleaseLogin'));
+    if (!token) {       //kiểm tra xem đã dăng nhập hay chưa 
+      toast.error(tMsg('pleaseLogin')); 
       router.push(`/${locale}/login`);
       return;
     }
-    const fetchOrders = async () => {
+    const fetchOrders = async () => {    //gọi api lấy danh sách đơn hàng của người dùng
       const data = await getMyOrders(token);
       if (Array.isArray(data)) {
         setOrders(data);
@@ -35,7 +35,7 @@ export default function OrderPage() {
     <main className="max-w-3xl mx-auto px-4 md:px-6 py-10">
       <h1 className="font-serif text-4xl font-normal tracking-tight mb-8">{t('title')}</h1>
 
-      {orders.length === 0 ? (
+      {orders.length === 0 ? ( //chưa có đơn nào
         <p className="rounded-2xl border border-line bg-surface text-center text-fg-2 py-16 px-4">{t('empty')}</p>
       ) : (
         <div className="flex flex-col gap-4">
@@ -43,8 +43,7 @@ export default function OrderPage() {
             <div key={order.id} className="rounded-2xl border border-line bg-surface p-5">
               <div className="flex justify-between items-center mb-3">
                 <span className="font-medium">
-                  {t('order')} <span className="font-mono text-fg-2">#{order.id}</span>
-                </span>
+                  {t('order')} <span className="font-mono text-fg-2">#{order.id}</span>                 </span>
                 <span className="font-mono text-xs text-fg-3 tabular-nums">
                   {new Date(order.createdAt).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US')}
                 </span>

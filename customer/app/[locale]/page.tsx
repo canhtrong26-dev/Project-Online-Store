@@ -13,11 +13,11 @@ export default function Home() {
   const locale = useLocale();
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null); //danh mục được chọn 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [search, setSearch] = useState("");
-  const [searchCho, setSearchCho] = useState("");
+  const [search, setSearch] = useState("");     
+  const [searchCho, setSearchCho] = useState("");   //từ khóa tìm kiếm
 
   //chờ ngừng gõ 500ms rồi mới cập nhật từ khoá dùng để gọi API
   useEffect(() => {
@@ -46,10 +46,10 @@ export default function Home() {
 
   const addToCart = (product: any) => {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const existingItem = cart.find((item: any) => item.id === product.id);
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
+    const existingItem = cart.find((item: any) => item.id === product.id); //check xem sản phẩm này đã có trong giỏ chưa
+    if (existingItem) { //nếu có thì tăng lên 1
+      existingItem.quantity += 1; 
+    } else {     //nếu chưa có thì thêm vào giỏ với các thông tin ở dưới 
       cart.push({
         id: product.id,
         name: product.name,
@@ -58,8 +58,8 @@ export default function Home() {
         quantity: 1,
       });
     }
-    localStorage.setItem("cart", JSON.stringify(cart));
-    window.dispatchEvent(new Event("cart-updated"));
+    localStorage.setItem("cart", JSON.stringify(cart));  //sau khi tăng hoặc thêm đủ thì cất vào localstorage
+    window.dispatchEvent(new Event("cart-updated"));  //phát tín hiệu để phần trong file header đếm lại số lượng trên icon nhỏ 
     toast.success(tMsg("addedToCart", { name: product.name }));
   };
 
@@ -104,7 +104,7 @@ export default function Home() {
           <button
             key={cat.id}
             onClick={() => {
-              setSelectedCategory(cat.id);
+              setSelectedCategory(cat.id); //biến nhớ user đang chọn danh mục nào ví dụ như: tất cả, quần, áo,..
               setPage(1);
             }}
             className={`${tabClass(selectedCategory === cat.id)} mb-3`}

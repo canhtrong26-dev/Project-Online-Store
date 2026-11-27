@@ -55,20 +55,20 @@ export default function CheckoutPage() {
   const maTinh = watch("province");
   const maHuyen = watch("district");
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
+  useEffect(() => { 
+    const token = localStorage.getItem("accessToken"); 
+    if (!token) {       //kiểm tra xem có accessToken chưa
       toast.error(tMsg("pleaseLogin"));
       router.push(`/${locale}/login`);
       return;
     }
     const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
-    if (cartData.length === 0) {
+    if (cartData.length === 0) {   //kiểm tra xem giỏ hàng có sản phẩm không 
       toast.error(tMsg("emptyCart"));
       router.push(`/${locale}`);
       return;
     }
-    setCart(cartData);
+    setCart(cartData); //hiện danh sách 
 
     //điền sẵn thông tin của người đang đăng nhập
     const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -77,7 +77,7 @@ export default function CheckoutPage() {
       if (user.phone) setValue("phone", user.phone);
     }
   }, []);
-
+  
   //lấy danh sách tỉnh 1 lần khi mở trang
   useEffect(() => {
     fetch(`${API_DIA_CHI}/p/`)
@@ -128,17 +128,17 @@ export default function CheckoutPage() {
     const address = `${data.detail}, ${tenXa}, ${tenHuyen}, ${tenTinh}`;
 
     const orderData = {
-      total,
-      name: data.name,
-      phone: data.phone,
+      total, //tổng tiền FE tính
+      name: data.name, //tên lấy từ form
+      phone: data.phone, //sdt lấy từ form
       address,
-      items: cart.map((item) => ({
+      items: cart.map((item) => ({ //gửi data về cho BE (chỉ id và số lượng)
         product_id: item.id,
         quantity: item.quantity,
       })),
     };
 
-    const res = await createOrder(orderData, token);
+    const res = await createOrder(orderData, token); //tạo đơn hàng 
     if (res.id) {
       setIsOrdered(true);
       localStorage.removeItem("cart");

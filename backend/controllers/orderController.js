@@ -75,7 +75,7 @@ const create = async (req, res) => {
       }
     }
 
-    // BE tự tính total không tin FE + kiểm tra đủ hàng
+    // phần giá BE tự tính total không tin FE + kiểm tra đủ hàng
     let total = 0;
     for (const item of items) {
       const product = await Product.findByPk(item.product_id);
@@ -88,7 +88,7 @@ const create = async (req, res) => {
           message: `Sản phẩm "${product.name}" chỉ còn ${product.stock} trong kho!`,
         });
       }
-      total = total + product.price * item.quantity;
+      total = total + product.price * item.quantity; //phần be tự tính 
     }
 
     // Sđt đã có trong DB thì cập nhật khách đó, chưa có thì ghi vào tài khoản đang đăng nhập
