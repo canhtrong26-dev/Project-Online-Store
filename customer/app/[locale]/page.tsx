@@ -13,11 +13,11 @@ export default function Home() {
   const locale = useLocale();
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null); //danh mục được chọn 
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null); //danh mục được chọn
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [search, setSearch] = useState("");     
-  const [searchCho, setSearchCho] = useState("");   //từ khóa tìm kiếm
+  const [search, setSearch] = useState("");
+  const [searchCho, setSearchCho] = useState(""); //từ khóa tìm kiếm
 
   //chờ ngừng gõ 500ms rồi mới cập nhật từ khoá dùng để gọi API
   useEffect(() => {
@@ -27,14 +27,18 @@ export default function Home() {
 
   //gọi lại API mỗi khi đổi trang hoặc đổi danh mục
   useEffect(() => {
-    getProducts({ page: page, limit: 8, category_id: selectedCategory,  search: searchCho  }).then(
-      (res) => {
-        if (res && Array.isArray(res.data)) { //Array.isArray(res.data) phải là mảng vì nếu lỗi trả về message thì sẽ bị lỗi trắng trang
-          setProducts(res.data); //danh sách sản phẩm để hiện ra lưới
-          setTotalPages(res.totalPages);  //tổng số trang để vẽ ra nút 1 2 3..
-        }
-      },
-    );
+    getProducts({
+      page: page,
+      limit: 8,
+      category_id: selectedCategory,
+      search: searchCho,
+    }).then((res) => {
+      if (res && Array.isArray(res.data)) {
+        //Array.isArray(res.data) phải là mảng vì nếu lỗi trả về message thì sẽ bị lỗi trắng trang
+        setProducts(res.data); //danh sách sản phẩm để hiện ra lưới
+        setTotalPages(res.totalPages); //tổng số trang để vẽ ra nút 1 2 3..
+      }
+    });
   }, [page, selectedCategory, searchCho]);
 
   //danh mục chỉ cần lấy 1 lần
@@ -47,9 +51,11 @@ export default function Home() {
   const addToCart = (product: any) => {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const existingItem = cart.find((item: any) => item.id === product.id); //check xem sản phẩm này đã có trong giỏ chưa
-    if (existingItem) { //nếu có thì tăng lên 1
-      existingItem.quantity += 1; 
-    } else {     //nếu chưa có thì thêm vào giỏ với các thông tin ở dưới 
+    if (existingItem) {
+      //nếu có thì tăng lên 1
+      existingItem.quantity += 1;
+    } else {
+      //nếu chưa có thì thêm vào giỏ với các thông tin ở dưới
       cart.push({
         id: product.id,
         name: product.name,
@@ -58,8 +64,8 @@ export default function Home() {
         quantity: 1,
       });
     }
-    localStorage.setItem("cart", JSON.stringify(cart));  //sau khi tăng hoặc thêm đủ thì cất vào localstorage
-    window.dispatchEvent(new Event("cart-updated"));  //phát tín hiệu để phần trong file header đếm lại số lượng trên icon nhỏ 
+    localStorage.setItem("cart", JSON.stringify(cart)); //sau khi tăng hoặc thêm đủ thì cất vào localstorage
+    window.dispatchEvent(new Event("cart-updated")); //phát tín hiệu để phần trong file header đếm lại số lượng trên icon nhỏ
     toast.success(tMsg("addedToCart", { name: product.name }));
   };
 
@@ -80,6 +86,9 @@ export default function Home() {
         {t("products")}
       </h2>
       <input //ô tìm kiếm sản phẩm home customer
+        id="search"
+        name="search"
+        type="search"
         value={search}
         onChange={(e) => {
           setSearch(e.target.value);
@@ -122,7 +131,7 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10">
-        {products.map((product: any) => (
+        {products.map((product: any, index: number) => (
           <div key={product.id} className="group flex flex-col">
             <Link href={`/${locale}/product/${product.id}`}>
               <div
@@ -134,6 +143,7 @@ export default function Home() {
                   alt={product.name}
                   width={400}
                   height={500}
+                  loading={index < 4 ? "eager" : "lazy"} //nếu vị trí nhỏ hơn 4 thì lấy giá trị trước dấu :, ngược lại lấy giá trị sau
                   className="h-full w-full object-cover"
                 />
               </div>

@@ -43,7 +43,7 @@ function ProductDetailContent() {
       </button>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 md:items-center">
         <div className="aspect-[4/5] overflow-hidden" style={{ backgroundColor: `var(--swatch-${(product.id % 5) + 1})` }}>
-          <Image src={product.image_url} alt={product.name} width={800} height={1000} className="h-full w-full object-cover" />
+          <Image src={product.image_url} alt={product.name} width={800} height={1000} loading="eager" className="h-full w-full object-cover" />
         </div>
         <div>
           <h1 className="font-serif text-4xl font-normal tracking-tight leading-tight mb-4">{product.name}</h1>
