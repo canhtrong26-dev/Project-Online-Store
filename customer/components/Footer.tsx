@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { BsGithub, BsEnvelope, BsGeoAlt } from 'react-icons/bs';
+import Image from 'next/image';
 
 export default function Footer() {
   const t = useTranslations('footer');
@@ -68,14 +69,21 @@ export default function Footer() {
 
         <div>
           <h4 className={headingClass}>{t('map')}</h4>
-          <iframe
-            src="https://www.google.com/maps?q=21.0277644,105.8341598&z=12&output=embed"
+                    <a
+            href="https://www.google.com/maps?q=21.0277644,105.8341598&z=14"
+            target="_blank"
+            rel="noopener noreferrer"
             title={t('map')}
-            className="w-full h-44 border border-white/10"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            allowFullScreen
-          />
+            className="block"
+          >
+            <Image
+              src="/images/ban-do.png"
+              alt={t('map')}
+              width={585}
+              height={425}
+              className="w-full h-44 object-cover border border-white/10 hover:opacity-90 transition-opacity"
+            />
+          </a>
         </div>
       </div>
 

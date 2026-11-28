@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { User, Session } = require("../models/index");
-
+const { sendError } = require("../utils/errors");
 const ACCESS_TOKEN_EXPIRES = "15m";
 const REFRESH_TOKEN_EXPIRES = "7d";
 
@@ -59,13 +59,13 @@ const register = async (req, res) => {
     // Kiểm tra email đã tồn tại chưa
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ message: "Email đã tồn tại!" });
+      return sendError(res, 400, "EMAIL_EXISTS");
     }
 
     //kiểm tra phone đã tồn tại chưa
     const existingPhone = await User.findOne({ where: { phone } });
     if (existingPhone) {
-      return res.status(400).json({ message: "Số điện thoại đã tồn tại!" });
+      return sendError(res, 400, "PHONE_EXISTS");
     }
 
     //băm password
@@ -83,7 +83,8 @@ const register = async (req, res) => {
 
     res.status(201).json({ message: "Đăng ký thành công!" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error); // in lỗi thật ở terminal server cho mình xem
+    return sendError(res, 500, "SERVER_ERROR"); // khách chỉ thấy câu chung chung, không lộ chi tiết
   }
 };
 
@@ -95,25 +96,19 @@ const login = async (req, res) => {
     //chặn robot TRƯỚC khi đụng tới database
     const laNguoiThat = await kiemTraTurnstile(turnstileToken);
     if (!laNguoiThat) {
-      return res
-        .status(400)
-        .json({ message: "Xác minh không thành công, vui lòng thử lại!" });
+      return sendError(res, 400, "TURNSTILE_FAILED");
     }
 
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return res
-        .status(400)
-        .json({ message: "Email hoặc mật khẩu không đúng!" }); //dùng chung thông báo với sai mật khẩu để không lộ email nào đã đăng ký
+      return sendError(res, 400, "INVALID_CREDENTIALS"); //dùng chung mã với sai mật khẩu để không lộ email nào đã đăng ký
     }
 
     // Kiểm tra password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res
-        .status(400)
-        .json({ message: "Email hoặc mật khẩu không đúng!" }); //trùng thông báo với email không tồn tại
+      return sendError(res, 400, "INVALID_CREDENTIALS"); //trùng mã với email không tồn tại
     }
 
     // sau khi đáp ứng đủ cấc bước trên thì tạo accessToken
@@ -154,7 +149,8 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
@@ -163,19 +159,19 @@ const refreshAccessToken = async (req, res) => {
   try {
     const refreshToken = req.cookies[getCookieName(req)];
     if (!refreshToken) {
-      return res.status(401).json({ message: "Không có refresh token!" });
+      return sendError(res, 401, "NO_REFRESH_TOKEN");
     }
 
     const session = await Session.findOne({
       where: { refresh_token: refreshToken },
     });
     if (!session) {
-      return res.status(401).json({ message: "Refresh token không hợp lệ!" });
+      return sendError(res, 401, "INVALID_REFRESH_TOKEN");
     }
 
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
       if (err) {
-        return res.status(401).json({ message: "Refresh token không hợp lệ!" });
+        return sendError(res, 401, "INVALID_REFRESH_TOKEN");
       }
 
       const accessToken = jwt.sign(
@@ -186,7 +182,8 @@ const refreshAccessToken = async (req, res) => {
       res.json({ accessToken });
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
@@ -195,7 +192,7 @@ const logout = async (req, res) => {
   try {
     const refreshToken = req.cookies[getCookieName(req)]; // lấy token của máy đang bấm đăng xuất
     if (refreshToken)
-      await Session.destroy({ where: { refresh_token: refreshToken } }); //có cookie mới xoá, tránh lỗi undefined hieuur 
+      await Session.destroy({ where: { refresh_token: refreshToken } }); //có cookie mới xoá, tránh lỗi undefined hieuur
 
     //xoá cookie, phải trùng path và sameSite với lúc đặt
     res.clearCookie(getCookieName(req), {
@@ -207,7 +204,8 @@ const logout = async (req, res) => {
 
     res.json({ message: "Đăng xuất thành công!" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 

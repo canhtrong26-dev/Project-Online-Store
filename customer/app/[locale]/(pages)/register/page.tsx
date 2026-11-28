@@ -32,13 +32,17 @@ export default function RegisterPage() {
     address: z.string().min(1, tMsg("errAddress")),
   });
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, } = useForm<RegisterForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterForm>({
     resolver: zodResolver(schema),
   });
 
   const onSubmit = async (data: RegisterForm) => {
     const res = await registerAPI(data);
-    if (res.message === "Đăng ký thành công!") {
+    if (!res.code) {
       toast.success(tMsg("registerSuccess"));
       router.push(`/${locale}/login`);
     } else {

@@ -1,9 +1,10 @@
 const cloudinary = require('../config/cloudinary');
+const { sendError } = require("../utils/errors");
 
 const uploadImage = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: 'Chưa chọn ảnh hoặc file không phải ảnh!' });
+      return sendError(res, 400, "NO_IMAGE");
     }
 
     const base64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;//đóng gói ảnh thành chuỗi để gửi được
@@ -12,7 +13,8 @@ const uploadImage = async (req, res) => {
 
     res.json({ url: result.secure_url }); // trả link đó cho fe (admin) để lưu vào db
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 

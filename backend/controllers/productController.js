@@ -1,7 +1,6 @@
-
 const { Op } = require("sequelize");
 const { Product, Category, OrderItem } = require("../models/index");
-
+const { sendError } = require("../utils/errors");
 // Lấy danh sách sản phẩm: phân trang, lọc theo danh mục, tìm theo tên
 const getAll = async (req, res) => {
   try {
@@ -32,38 +31,43 @@ const getAll = async (req, res) => {
       totalPages: Math.ceil(count / limit),
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
 const create = async (req, res) => {
   try {
-    const { name, price, image_url, description, category_id, stock } = req.body; 
+    const { name, price, image_url, description, category_id, stock } =
+      req.body;
     const product = await Product.create({
       name,
       price,
       image_url,
       description,
       category_id,
-      stock,  // số hàng tồn kho
+      stock, // số hàng tồn kho
     });
     res.status(201).json(product);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
 const update = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, image_url, description, category_id, stock } = req.body;  
+    const { name, price, image_url, description, category_id, stock } =
+      req.body;
     await Product.update(
-      { name, price, image_url, description, category_id, stock },  
+      { name, price, image_url, description, category_id, stock },
       { where: { id } },
     );
     res.json({ message: "Cập nhật thành công!" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
@@ -74,30 +78,38 @@ const remove = async (req, res) => {
 
     const product = await Product.findByPk(id);
     if (!product) {
-      return res.status(404).json({ message: "Không tìm thấy sản phẩm!" });
+      return sendError(res, 404, "PRODUCT_NOT_FOUND");
     }
 
     const soDonHang = await OrderItem.count({ where: { product_id: id } }); //nếu ai đã đặt thì không thể xóa vì xóa sẽ mất thông tin đã mua của user
     if (soDonHang > 0) {
-      return res.status(400).json({
-        message: `Không xoá được! Sản phẩm này đang nằm trong ${soDonHang} đơn hàng.`, 
+      return sendError(res, 400, "PRODUCT_IN_ORDERS", {
+        message: `Không xoá được! Sản phẩm này đang nằm trong ${soDonHang} đơn hàng.`,
+        count: soDonHang,
       });
     }
 
     await Product.destroy({ where: { id } });
     res.json({ message: "Xoá thành công!" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
 // Lấy sản phẩm theo id
 const getOne = async (req, res) => {
-  const product = await Product.findByPk(req.params.id, {
-    include: [{ model: Category }],
-  });
-  if (!product) return res.status(404).json({ message: "Không tìm thấy!" });
-  res.json(product);
+  try {
+    const product = await Product.findByPk(req.params.id, {
+      include: [{ model: Category }],
+    });
+    if (!product) return sendError(res, 404, "PRODUCT_NOT_FOUND");
+    res.json(product);
+  } catch (error) {
+    //phải thêm catch vì nếu DB lỗi thì Express trả về một trang lỗi HTML xấu thay vì JSON
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
+  }
 };
 
 module.exports = { getAll, getOne, create, update, remove };
