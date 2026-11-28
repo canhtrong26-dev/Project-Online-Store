@@ -15,6 +15,7 @@ const authRoutes = require('./routes/authRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
+app.set('trust proxy', 1); // Render đứng trước app 1 lớp proxy, cần dòng này để lấy đúng IP thật của khách
 
 //danh sách tên miền được phép gọi API
 const allowedOrigins = process.env.CORS_ORIGINS
