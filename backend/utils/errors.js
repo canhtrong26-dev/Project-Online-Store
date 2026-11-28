@@ -14,6 +14,7 @@ const ERRORS = {
   INVALID_CREDENTIALS: "Email hoặc mật khẩu không đúng!",
   NO_REFRESH_TOKEN: "Không có refresh token!",
   INVALID_REFRESH_TOKEN: "Refresh token không hợp lệ!",
+  TOO_MANY_ATTEMPTS: "Bạn đã thử sai quá nhiều lần, vui lòng thử lại sau 15 phút!",
 
   // sản phẩm, danh mục, khách hàng
   PRODUCT_NOT_FOUND: "Không tìm thấy sản phẩm!",
