@@ -68,9 +68,8 @@ const create = async (req, res) => {
 
     // Kiểm tra quantity hợp lệ
     for (const item of items) {
-
       //ép về số nguyên để không còn là giá trị chữ hay đoạn sql nào nữa tránh lỗi nguy hiểm SQL Injection
-      item.quantity = parseInt(item.quantity, 10); 
+      item.quantity = parseInt(item.quantity, 10);
 
       //phải là số nguyên dương để không còn là giá trị chữ hay đoạn sql nào nữa tránh lỗi nguy hiểm SQL Injection
       if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
@@ -93,18 +92,7 @@ const create = async (req, res) => {
           stock: product.stock,
         });
       }
-      total = total + product.price * item.quantity; //phần be tự tính 
-    }
-
-    // Sđt đã có trong DB thì cập nhật khách đó, chưa có thì ghi vào tài khoản đang đăng nhập
-    const khachTheoSdt = await User.findOne({ where: { phone } });
-    let idKhach;
-    if (khachTheoSdt) {
-      await User.update({ name, address }, { where: { id: khachTheoSdt.id } });
-      idKhach = khachTheoSdt.id;
-    } else {
-      await User.update({ name, phone, address }, { where: { id: user_id } });
-      idKhach = user_id;
+      total = total + product.price * item.quantity; //phần be tự tính
     }
 
     const t = await sequelize.transaction(); //Mở transaction: tạo đơn, chi tiết đơn và trừ kho phải cùng thành công hoặc cùng huỷ
@@ -112,7 +100,7 @@ const create = async (req, res) => {
       // Tạo order chính (lưu luôn thông tin giao hàng lúc đặt - snapshot)
       const order = await Order.create(
         {
-          user_id: idKhach,
+          user_id, // đơn luôn thuộc về người đang đăng nhập (lấy từ token)
           total,
           shipping_name: name,
           shipping_phone: phone,
@@ -140,7 +128,7 @@ const create = async (req, res) => {
           {
             where: {
               id: item.product_id, //trừ cho đúng id này
-              stock: { [Op.gte]: item.quantity },  // chỉ trừ khi stock >= số lượng mua
+              stock: { [Op.gte]: item.quantity }, // chỉ trừ khi stock >= số lượng mua
             },
             transaction: t, //ok thì đi tiếp xuống phần await t.commit() bên dưới để chốt ghi nhận dữ liệu mới thật sự
           },
