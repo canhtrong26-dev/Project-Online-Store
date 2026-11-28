@@ -1,6 +1,7 @@
 const { Order, OrderItem, Product, User } = require("../models/index");
 const sequelize = require("../config/database");
 const { Op } = require("sequelize");
+const { sendError } = require("../utils/errors");
 
 // Lấy order theo trang (phân trang): mỗi lần chỉ lấy tối đa `limit` order (mặc định 10), không lấy hết 1 lần
 const getAll = async (req, res) => {
@@ -26,7 +27,8 @@ const getAll = async (req, res) => {
       totalPages: Math.ceil(count / limit),
     }); // trả về: danh sách order của trang hiện tại, tổng số order, trang hiện tại, tổng số trang
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
@@ -43,7 +45,8 @@ const getMyOrders = async (req, res) => {
     });
     res.json(orders);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
@@ -55,12 +58,12 @@ const create = async (req, res) => {
 
     // Kiểm tra cart không rỗng
     if (!items || items.length === 0) {
-      return res.status(400).json({ message: "Giỏ hàng trống!" });
+      return sendError(res, 400, "CART_EMPTY");
     }
 
     // Kiểm tra thông tin giao hàng
     if (!name || !phone || !address) {
-      return res.status(400).json({ message: "Thiếu thông tin giao hàng!" });
+      return sendError(res, 400, "MISSING_SHIPPING_INFO");
     }
 
     // Kiểm tra quantity hợp lệ
@@ -71,7 +74,7 @@ const create = async (req, res) => {
 
       //phải là số nguyên dương để không còn là giá trị chữ hay đoạn sql nào nữa tránh lỗi nguy hiểm SQL Injection
       if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
-        return res.status(400).json({ message: "Số lượng không hợp lệ!" });
+        return sendError(res, 400, "INVALID_QUANTITY");
       }
     }
 
@@ -80,12 +83,14 @@ const create = async (req, res) => {
     for (const item of items) {
       const product = await Product.findByPk(item.product_id);
       if (!product) {
-        return res.status(400).json({ message: "Sản phẩm không tồn tại!" });
+        return sendError(res, 400, "PRODUCT_NOT_FOUND");
       }
       // kiểm tra đủ hàng trong kho không
       if (product.stock < item.quantity) {
-        return res.status(400).json({
+        return sendError(res, 400, "OUT_OF_STOCK", {
           message: `Sản phẩm "${product.name}" chỉ còn ${product.stock} trong kho!`,
+          productName: product.name,
+          stock: product.stock,
         });
       }
       total = total + product.price * item.quantity; //phần be tự tính 
@@ -142,8 +147,9 @@ const create = async (req, res) => {
         );
         if (affected === 0) {
           await t.rollback();
-          return res.status(400).json({
+          return sendError(res, 400, "OUT_OF_STOCK", {
             message: `Sản phẩm "${product.name}" vừa hết hàng!`,
+            productName: product.name,
           });
         }
       }
@@ -152,10 +158,12 @@ const create = async (req, res) => {
     } catch (loiTransaction) {
       // Có lỗi giữa chừng thì huỷ sạch: đơn, chi tiết, và trừ kho đều không được ghi
       await t.rollback();
-      res.status(500).json({ message: "Đặt hàng thất bại, vui lòng thử lại!" });
+      console.error(loiTransaction);
+      return sendError(res, 500, "ORDER_FAILED");
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 // Sửa order
@@ -165,12 +173,13 @@ const update = async (req, res) => {
     const { status } = req.body;
     // chỉ nhận đúng 2 trạng thái giao diện admin đang dùng, chặn ghi giá trị tuỳ ý vào DB
     if (!["pending", "completed"].includes(status)) {
-      return res.status(400).json({ message: "Trạng thái không hợp lệ!" });
+      return sendError(res, 400, "INVALID_STATUS");
     }
     await Order.update({ status }, { where: { id } });
     res.json({ message: "Cập nhật thành công!" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
@@ -207,7 +216,8 @@ const remove = async (req, res) => {
     res.json({ message: "Xoá thành công!" });
   } catch (error) {
     await t.rollback();
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 

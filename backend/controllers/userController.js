@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs"); //dùng để băm mật khẩu khi admin tạo user
 const { User, Order } = require('../models/index');
+const { sendError } = require("../utils/errors");
 
 // Lấy tất cả user
 const getAll = async (req, res) => {
@@ -9,7 +10,8 @@ const getAll = async (req, res) => {
     });
     res.json(users);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
@@ -23,7 +25,8 @@ const create = async (req, res) => {
     delete data.password; //không trả cột password ra ngoài API
     res.status(201).json(data);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
@@ -35,7 +38,8 @@ const update = async (req, res) => {
     await User.update({ name, email, phone, address }, { where: { id } });
     res.json({ message: 'Cập nhật thành công!' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
@@ -46,20 +50,22 @@ const remove = async (req, res) => {
 
     const user = await User.findByPk(id);
     if (!user) {
-      return res.status(404).json({ message: 'Không tìm thấy khách hàng!' });
+      return sendError(res, 404, "USER_NOT_FOUND");
     }
 
     const soDonHang = await Order.count({ where: { user_id: id } });
     if (soDonHang > 0) {
-      return res.status(400).json({
+      return sendError(res, 400, "USER_HAS_ORDERS", {
         message: `Không xoá được! Khách hàng này đang có ${soDonHang} đơn hàng.`,
+        count: soDonHang,
       });
     }
 
     await User.destroy({ where: { id } });
     res.json({ message: 'Xoá thành công!' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return sendError(res, 500, "SERVER_ERROR");
   }
 };
 
